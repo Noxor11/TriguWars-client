@@ -28,11 +28,14 @@ void draw_rectangle(int x, int y, int w, int h, Color color) {
 }
 
 void draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color) {
-    vita2d_color_vertex vertices[3] = {
-        {(float)x1, (float)y1, 0, RGBA8(color.r, color.g, color.b, color.a)},
-        {(float)x2, (float)y2, 0, RGBA8(color.r, color.g, color.b, color.a)},
-        {(float)x3, (float)y3, 0, RGBA8(color.r, color.g, color.b, color.a)},
-    };
+    vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
+                3 * sizeof(vita2d_color_vertex),
+                sizeof(vita2d_color_vertex));
+
+
+    vertices[0] = {(float)x1, (float)y1, 0, RGBA8(color.r, color.g, color.b, color.a)};
+    vertices[1] = {(float)x2, (float)y2, 0, RGBA8(color.r, color.g, color.b, color.a)};
+    vertices[2] = {(float)x3, (float)y3, 0, RGBA8(color.r, color.g, color.b, color.a)};
     vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLE_STRIP, vertices, 3);
 
 }
