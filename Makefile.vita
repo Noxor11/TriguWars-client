@@ -66,4 +66,4 @@ out/%.o : src/%.c #| $(OBJ_DIRS)
 	arm-vita-eabi-g++ -c -o $@ $< $(LIBS)
 
 clean:
-	rm -f $(project).velf $(PROJECT).elf $(PROJECT).vpk param.sfo eboot.bin
+	rm -f $(PROJECT).velf $(PROJECT).elf $(PROJECT).vpk param.sfo eboot.bin
