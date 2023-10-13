@@ -44,7 +44,7 @@ eboot.bin: $(PROJECT).velf
 	vita-make-fself $(PROJECT).velf eboot.bin
 
 param.sfo:
-	vita-mksfoex -s TITLE_ID="$(PROJECT_TITLEID)" "$(PROJECT_TITLE)" param.sfo
+	vita-mksfoex -s TITLE_ID="$(PROJECT_TITLEID)" "$(PROJECT_TITLE)" VERSION="No" param.sfo
 
 $(PROJECT).velf: $(PROJECT).elf
 	$(STRIP) -g $<
@@ -66,6 +66,4 @@ out/%.o : src/%.c #| $(OBJ_DIRS)
 	arm-vita-eabi-g++ -c -o $@ $< $(LIBS)
 
 clean:
-	#rm -f $(PROJECT).velf $(PROJECT).elf $(PROJECT).vpk param.sfo eboot.bin $(OBJS)
-	#rm -r $(abspath $(OBJ_DIRS))
-	rm -rf out
+	rm -f $(project).velf $(PROJECT).elf $(PROJECT).vpk param.sfo eboot.bin

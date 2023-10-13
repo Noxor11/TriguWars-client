@@ -2,3 +2,13 @@ compile_commands.json
 build
 .vscode
 .cache
+*.elf
+*.velf
+*.vpk
+eboot.bin
+param.sfo
+*.elf
+*.velf
+*.vpk
+eboot.bin
+param.sfo
