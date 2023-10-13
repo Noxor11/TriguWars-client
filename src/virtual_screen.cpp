@@ -15,3 +15,11 @@ float VirtualScreen::translate_h(float h) {
 float VirtualScreen::translate_w(float w) {
     return this->scale * w;
 }
+
+VirtualScreen::VirtualScreen(float x, float y, float w, float h, float scale) {
+    offset_x = x;
+    offset_y = y;
+    width = w;
+    height = h;
+    this->scale = scale;
+}

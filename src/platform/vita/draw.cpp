@@ -44,9 +44,9 @@ void graphics::draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, con
                 sizeof(vita2d_color_vertex));
 
 
-    vertices[0] = {(float)x1, (float)y1, 0, color.to_RGBA32()};
-    vertices[1] = {(float)x2, (float)y2, 0, color.to_RGBA32()};
-    vertices[2] = {(float)x3, (float)y3, 0, color.to_RGBA32()};
+    vertices[0] = {(float)x1, (float)y1, +0.5f, color.to_RGBA32()};
+    vertices[1] = {(float)x2, (float)y2, +0.5f, color.to_RGBA32()};
+    vertices[2] = {(float)x3, (float)y3, +0.5f, color.to_RGBA32()};
     vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLE_STRIP, vertices, 3);
 
 }
