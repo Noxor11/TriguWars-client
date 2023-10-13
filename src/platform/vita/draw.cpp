@@ -1,6 +1,8 @@
 #include "../../draw.hpp"
 
 #include <vita2d.h>
+#include <psp2/ctrl.h>
+#include <psp2/kernel/processmgr.h>
 
 void graphics_init() {
     vita2d_init();
@@ -23,4 +25,14 @@ void end_frame() {
 
 void draw_rectangle(int x, int y, int w, int h, Color color) {
     vita2d_draw_rectangle(x, y, w, h, RGBA8(color.r, color.g, color.b, color.a));
+}
+
+void draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, Color color) {
+    vita2d_color_vertex vertices[3] = {
+        {(float)x1, (float)y1, 0, RGBA8(color.r, color.g, color.b, color.a)},
+        {(float)x2, (float)y2, 0, RGBA8(color.r, color.g, color.b, color.a)},
+        {(float)x3, (float)y3, 0, RGBA8(color.r, color.g, color.b, color.a)},
+    };
+    vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLE_STRIP, vertices, 3);
+
 }
