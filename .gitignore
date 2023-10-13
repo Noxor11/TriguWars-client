@@ -1,6 +1,7 @@
 compile_commands.json
 build
 .vscode
+<<<<<<< Updated upstream
 .cache
 *.elf
 *.velf
@@ -12,3 +13,6 @@ param.sfo
 *.vpk
 eboot.bin
 param.sfo
+=======
+.cache
+>>>>>>> Stashed changes
