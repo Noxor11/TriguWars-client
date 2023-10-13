@@ -5,6 +5,7 @@ int main() {
 
     while (true) {
         graphics::start_frame();
+
         graphics::draw_rectangle(30, 30, 50, 50, Color{255, 0, 0, 255});
         graphics::draw_triangle(100, 100, 100, 200, 150, 150, Color{0, 0, 255, 255});
 

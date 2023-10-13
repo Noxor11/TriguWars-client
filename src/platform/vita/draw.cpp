@@ -1,4 +1,5 @@
-# ifdef __PSVITA__
+#ifdef __PSVITA__
+
 #include "../../../include/draw.hpp"
 
 #include <vita2d.h>
@@ -44,4 +45,5 @@ void graphics::draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, con
     vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLE_STRIP, vertices, 3);
 
 }
+
 #endif
