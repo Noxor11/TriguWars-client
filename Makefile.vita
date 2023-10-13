@@ -24,7 +24,7 @@ SRC_CPP :=$(call rwildcard, src/, *.cpp)
 
 #OBJ_DIRS := $(addprefix out/, $(dir $(SRC_C:src/%.c=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/%.cpp=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/platform/vita/%.cpp=%.o)))
 #OBJS := $(addprefix out/, $(SRC_C:src/%.c=%.o)) $(addprefix out/, $(SRC_CPP:src/%.cpp=%.o))
-OBJS = src/main.cpp src/platform/vita/draw.cpp
+OBJS = src/main.cpp src/platform/vita/draw.cpp src/virtual_screen.cpp
 OBJ_NAME = triguwars
 
 
