@@ -33,6 +33,11 @@ void graphics::draw_rectangle(int x, int y, int w, int h, const Color& color) {
     vita2d_draw_rectangle(x, y, w, h, color.to_RGBA32());
 }
 
+
+void graphics::draw_line(int x1, int y1, int x2, int y2, const Color &color) {
+    vita2d_draw_line(x1, y1, x2, y2, color.to_RGBA32());
+}
+
 void graphics::draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, const Color& color) {
     vita2d_color_vertex *vertices = (vita2d_color_vertex *)vita2d_pool_memalign(
                 3 * sizeof(vita2d_color_vertex),
