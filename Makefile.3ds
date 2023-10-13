@@ -33,13 +33,13 @@ include $(DEVKITARM)/3ds_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source
+SOURCES		:=	src
 DATA		:=	data
 INCLUDES	:=	include
-GRAPHICS	:=	gfx
-GFXBUILD	:=	$(BUILD)
-ROMFS		:=	romfs
-GFXBUILD	:=	$(ROMFS)/gfx
+#GRAPHICS	:=	gfx
+#GFXBUILD	:=	$(BUILD)
+#ROMFS		:=	romfs
+#GFXBUILD	:=	$(ROMFS)/gfx
 
 APP_TITLE			=	TriguWars
 APP_DESCRIPTION		=	Cool game

@@ -1,3 +1,4 @@
+#ifdef __3DS__
 #include "../../../include/draw.hpp"
 
 #include <3ds.h>
@@ -21,8 +22,8 @@ C2D_SpriteSheet spriteSheet;
 // 	return set;
 // }
 
-inline u32 Color::to_RGBA32() const {
-    C2D_Color32(this->r, this->g, this->b, this->a);
+inline unsigned int Color::to_RGBA32() const {
+    return C2D_Color32(this->r, this->g, this->b, this->a);
 }
 
 Color& Color::operator=(Color&& other){
@@ -31,8 +32,8 @@ Color& Color::operator=(Color&& other){
 
 
 // -----------------------------------------------------------------------------------------------------
-namespace Graphics {
-    namespace Screen {
+namespace graphics {
+    namespace screen {
         C3D_RenderTarget* top;
         C3D_RenderTarget* bottom;
         C3D_RenderTarget* selected;
@@ -42,8 +43,7 @@ namespace Graphics {
     int start_scene();
 };
 
-void Graphics::stopAndClean(int error){
-		
+void graphics::stopAndClean(int error){
 		switch (error){
 			case -4:
 				C3D_Fini();
@@ -61,7 +61,7 @@ void Graphics::stopAndClean(int error){
 
 	}
 
-int Graphics::start_scene() {
+int graphics::start_scene() {
 
     romfsInit();
     // apply_dsp_firm(); for sound to work
@@ -123,9 +123,9 @@ int Graphics::start_scene() {
     return 0;
 }
 
-void Graphics::init() {
+void graphics::init() {
     int code = 0;
-    if((code = Graphics::start_scene()) < 0) {
+    if((code = graphics::start_scene()) < 0) {
         gfxInitDefault();
         consoleInit(GFX_TOP, NULL);
         printf("Scene not initialised.\nError code: %d\n\n", code);
@@ -148,18 +148,18 @@ void Graphics::init() {
                 break;
         }
 
-        Graphics::stopAndClean(code);
+        graphics::stopAndClean(code);
         exit(-1);
     }
 
-    Graphics::Screen::top       = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
-	Graphics::Screen::bottom    = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
-    Graphics::Screen::selected  = Graphics::Screen::top;
+    graphics::screen::top       = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+	graphics::screen::bottom    = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
+    graphics::screen::selected  = graphics::screen::top;
 
 }
 
 
-void Graphics::close() {
+void graphics::close() {
     // tell threads to exit & wait for them to exit
     // runThreads = false;
     // for (int i = 0; i < NUMTHREADS; i ++)
@@ -179,20 +179,22 @@ void Graphics::close() {
     C2D_SpriteSheetFree(spriteSheet);
 }
 
-void Graphics::start_frame() {
+void graphics::start_frame() {
 
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-    C2D_TargetClear(Graphics::Screen::selected, C2D_Color32(0, 0, 0, 0xFF));
-    C2D_SceneBegin(Graphics::Screen::selected);
+    C2D_TargetClear(graphics::screen::selected, C2D_Color32(0, 0, 0, 0xFF));
+    C2D_SceneBegin(graphics::screen::selected);
 	
 }
 
-void Graphics::end_frame() {
+void graphics::end_frame() {
     C3D_FrameRate(60);
     C3D_FrameEnd(0);
     gspWaitForVBlank();
 }
 
-void Graphics::draw_rectangle(int x, int y, int w, int h, const Color& const color) {
+void graphics::draw_rectangle(int x, int y, int w, int h, const Color& color) {
 	C2D_DrawRectangle(x, y, 0, w, h, color.to_RGBA32(), color.to_RGBA32(), color.to_RGBA32(), color.to_RGBA32());
 }
+
+#endif

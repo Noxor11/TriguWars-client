@@ -17,7 +17,7 @@ LIBS = -lvita2d -lSceDisplay_stub -lSceGxm_stub \
 	-lSceSysmodule_stub -lSceCtrl_stub -lScePgf_stub -lScePvf_stub \
 	-lSceCommonDialog_stub -lfreetype -lpng -ljpeg -lz -lm -lc -lSceAppMgr_stub
 
-CXXFLAGS += -Wall
+CXXFLAGS += -Wall -D__PSVITA__
 
 SRC_C :=$(call rwildcard, src/, *.c)
 SRC_CPP :=$(call rwildcard, src/, *.cpp)
@@ -54,7 +54,7 @@ $(PROJECT).velf: $(PROJECT).elf
 #	$(CXX) $(CXXFLAGS) $(OBJS) $(LIBS) -o out/$(OBJ_NAME).elf
 
 $(PROJECT).elf: $(OBJS)
-	$(CXX) -Wl,-q $(OBJS) $(LIBS) -o $@
+	$(CXX) $(CXXFLAGS) -Wl,-q $(OBJS) $(LIBS) -o $@
 
 $(OBJ_DIRS):
 	mkdir -p $@
@@ -66,4 +66,4 @@ out/%.o : src/%.c #| $(OBJ_DIRS)
 	arm-vita-eabi-g++ -c -o $@ $< $(LIBS)
 
 clean:
-	rm -f $(PROJECT).velf $(PROJECT).elf $(PROJECT).vpk param.sfo eboot.bin
+	rm -f *.velf *.elf *.vpk *.sfo *.bin
