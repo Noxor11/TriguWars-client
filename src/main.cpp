@@ -6,7 +6,7 @@
 int main() {
 
     VirtualScreen screen = VirtualScreen(0, 0, 100, 100, 1.0);
-    Trigu trigito = Trigu(20, 20, 10, 20, Color{0, 255, 255, 255});
+    Trigu trigito = Trigu(20, 20, 10, 20, 1/8 * 3.14, Color{0, 255, 255, 255});
 
     graphics::init();
 
@@ -16,6 +16,7 @@ int main() {
     while (true) {
         i += 3.14 / 60;
         x += 2;
+        trigito.rotation += 0.1;
         if (x > 60) x = 0;
 
         graphics::start_frame();
@@ -25,7 +26,7 @@ int main() {
 
 
         screen.offset_x = std::cos(i) * 200 + 300;
-        screen.scale = std::cos(i) + 1.5;
+        //screen.scale = std::cos(i) + 1.5;
 
         //graphics::draw_rectangle(
         //    screen.translate_x(x), screen.translate_y(0), screen.translate_w(40), screen.translate_h(40), Color{0, 255, 0, 255}
