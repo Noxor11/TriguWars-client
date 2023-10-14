@@ -8,6 +8,8 @@ namespace input {
     };
 
     enum Buttons {
+        BUTTON_START,
+        BUTTON_SELECT,
         BUTTON_CONFIRM,
         BUTTON_CANCEL,
         BUTTON_AUX_UP,

@@ -16,6 +16,8 @@ SceCtrlButtons translate_enum(input::Buttons button) {
         case input::BUTTON_DPAD_RIGHT: return SCE_CTRL_RIGHT;
         case input::BUTTON_DPAD_UP: return SCE_CTRL_UP;
         case input::BUTTON_DPAD_DOWN: return SCE_CTRL_DOWN;
+        case input::BUTTON_SELECT: return SCE_CTRL_SELECT;
+        case input::BUTTON_START: return SCE_CTRL_START;
     }
 };
 
