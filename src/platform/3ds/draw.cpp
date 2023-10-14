@@ -1,4 +1,5 @@
 #include "draw.hpp"
+#include "text.hpp"
 
 #include <3ds.h>
 #include <citro2d.h>
@@ -8,31 +9,22 @@
 
 #include <unistd.h>
 #include <iostream>
+#include <array>
 
 C2D_SpriteSheet spriteSheet;
 
 using namespace graphics;
 
-
-// Settings initSettings(){
-// 	Settings set;
-// 	set.selected = INVERT_X;
-	
-// 	set.options.emplace(std::make_pair(INVERT_X, NO));
-// 	set.options.emplace(std::make_pair(INVERT_Y, NO));
-
-// 	return set;
-// }
-
-inline unsigned int Color::to_RGBA32() const {
+unsigned int Color::to_RGBA32() const {
     return C2D_Color32(this->r, this->g, this->b, this->a);
 }
-
 
 // -----------------------------------------------------------------------------------------------------
 C3D_RenderTarget* top;
 C3D_RenderTarget* bottom;
 C3D_RenderTarget* selected_screen;
+
+
 
 
 
@@ -70,8 +62,7 @@ int start_scene() {
     gfxInitDefault();
     u8 system_language;
     CFGU_GetSystemLanguage(&system_language);
-    // textScene::initTextScene(5);
-    
+
     if(!C3D_Init(C3D_DEFAULT_CMDBUF_SIZE) || !C2D_Init(C2D_DEFAULT_MAX_OBJECTS))
         return -3;
 
@@ -84,13 +75,6 @@ int start_scene() {
     
 
     // songs[0] = Mix_LoadMUS("romfs:/sound/music/background_loop.mp3");
-    // songs[1] = Mix_LoadMUS("romfs:/sound/music/background_2.mp3");
-    // songs[2] = Mix_LoadMUS("romfs:/sound/music/background_3.mp3");
-    // songs[3] = Mix_LoadMUS("romfs:/sound/music/background_4.mp3");
-    // songs[4] = Mix_LoadMUS("romfs:/sound/music/background_5.mp3");
-    // songs[5] = Mix_LoadMUS("romfs:/sound/music/background_6.mp3");
-    // songs[6] = Mix_LoadMUS("romfs:/sound/music/background_7.mp3");
-
     
     // if(!songs[0]){
     //     puts("Music could not be loaded.");
@@ -102,16 +86,13 @@ int start_scene() {
 
 
     // laser 			= Mix_LoadWAV("romfs:/sound/laser_shot.wav");
-    // heavy_bullet 	= Mix_LoadWAV("romfs:/sound/heavy_bullet.wav");
-    // hit 			= Mix_LoadWAV("romfs:/sound/8-bit-hit-7_NWM.wav");
-    // player_hit		= Mix_LoadWAV("romfs:/sound/player_hit.wav");
-    // game_over 		= Mix_LoadWAV("romfs:/sound/game_over.wav");
-    // low_health 		= Mix_LoadWAV("romfs:/sound/low_health.wav");
 
-    // move_up_menu 	= Mix_LoadWAV("romfs:/sound/move_up.wav");
-    // move_down_menu 	= Mix_LoadWAV("romfs:/sound/move_down.wav");
-    // confirm_select 	= Mix_LoadWAV("romfs:/sound/confirm_selection.wav");
-    // click		 	= Mix_LoadWAV("romfs:/sound/click.wav");
+    // top              = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+    consoleInit(GFX_TOP, NULL);
+	bottom           = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
+    selected_screen  = bottom;
+
+    text::init();
 
     return 0;
 }
@@ -145,10 +126,6 @@ void graphics::init() {
         exit(-1);
     }
 
-    // top              = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
-    consoleInit(GFX_TOP, NULL);
-	bottom           = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
-    selected_screen  = bottom;
 
 }
 
@@ -194,4 +171,5 @@ void graphics::draw_rectangle(int x, int y, int w, int h, const Color& color) {
 void graphics::draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, const Color& color){
     C2D_DrawTriangle(x1, y1, color.to_RGBA32(), x2, y2, color.to_RGBA32(), x3, y3, color.to_RGBA32(), 0);
 }
+
 

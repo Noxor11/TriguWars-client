@@ -1,4 +1,5 @@
 #include "draw.hpp"
+#include "text.hpp"
 #include "input.hpp"
 #include "virtual_screen.hpp"
 #include "trigu.hpp"
