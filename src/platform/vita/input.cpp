@@ -50,7 +50,6 @@ void input::scan() {
     input::joystick1.y = pad.ly - 127;
     input::joystick2.x = pad.rx - 127;
     input::joystick2.y = pad.ry - 127;
-    graphics::draw_text(200, 300, {255, 255, 255, 255}, str);
 }
 
 bool input::is_key_pressed(input::Buttons button) {
