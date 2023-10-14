@@ -25,7 +25,6 @@ void Trigu::render(VirtualScreen& vscreen) {
         x + w/2, y
         x+w, y+h
     */
-    // FIXME: Rota mal
 
     float tx = vscreen.translate_x(this->x);
     float ty = vscreen.translate_y(this->y);
