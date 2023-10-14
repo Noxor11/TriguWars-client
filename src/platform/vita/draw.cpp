@@ -1,4 +1,5 @@
 #include "draw.hpp"
+#include "text.hpp"
 
 #include <vita2d.h>
 #include <psp2/ctrl.h>
@@ -15,6 +16,7 @@ inline unsigned int Color::to_RGBA32() const {
 void graphics::init() {
     vita2d_init();
     vita2d_set_clear_color(RGBA8(0x00, 0x00, 0x00, 0xFF));
+    graphics::text::init();
 }
 
 void graphics::close() {
