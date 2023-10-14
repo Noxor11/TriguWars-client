@@ -3,10 +3,7 @@
 #include "virtual_screen.hpp"
 #include <cmath>
 
-struct Vector2 {
-    float x;
-    float y;
-};
+using namespace graphics;
 
 Vector2 rotate_vector(Vector2 vec, Vector2 center, float angle) {
     // https://en.wikipedia.org/wiki/Rotation_matrix
@@ -17,7 +14,6 @@ Vector2 rotate_vector(Vector2 vec, Vector2 center, float angle) {
     };
 };
 
-using namespace graphics;
 
 void Trigu::render(VirtualScreen& vscreen) {
     /*

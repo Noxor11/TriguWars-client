@@ -12,6 +12,10 @@ namespace graphics {
         inline unsigned int to_RGBA32() const;
     };
 
+    struct Vector2 {
+        float x;
+        float y;
+    };
     // Initialize graphics backend
     void init();
 
