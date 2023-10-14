@@ -2,6 +2,7 @@
 #include "input.hpp"
 #include "virtual_screen.hpp"
 #include "trigu.hpp"
+#include "title_screen.hpp"
 #include <cmath>
 #ifdef __3DS__
 #include <3ds.h>
@@ -17,6 +18,8 @@ int main() {
     graphics::init();
     input::init();
     VirtualScreen screen = VirtualScreen(0, 0, 100, 100, 1.0);
+    TitleScreen title_screen;
+    title_screen.init();
     Trigu trigito = Trigu(80, 80, 30, 30, 1/8 * 3.14, Color{0, 255, 255, 255});
 
     float i = 0;
@@ -36,6 +39,8 @@ int main() {
         if (input::is_key_down(input::BUTTON_DPAD_RIGHT)) {
             x += 2;
         }
+
+        title_screen.update();
 
         graphics::draw_rectangle(30, 30, 50, 50, Color{255, 0, 0, 255});
         graphics::draw_triangle(100, 100, 100, 200, 150, 150, Color{0, 0, 255, 255});
