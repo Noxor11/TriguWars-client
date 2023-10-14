@@ -7,6 +7,9 @@
 #include <3ds.h>
 #endif
 
+#include <iostream>
+#include <string>
+
 using namespace graphics;
 
 int main() {
@@ -15,7 +18,6 @@ int main() {
     input::init();
     VirtualScreen screen = VirtualScreen(0, 0, 100, 100, 1.0);
     Trigu trigito = Trigu(80, 80, 30, 30, 1/8 * 3.14, Color{0, 255, 255, 255});
-    input::touch_position touch_position = {80, 80};
 
     float i = 0;
     float x = 0.0;
@@ -46,12 +48,13 @@ int main() {
         graphics::draw_rectangle(screen.offset_x, screen.offset_y,
                                  screen.width * screen.scale, screen.height * screen.scale, Color{255, 255, 255, 255});
 
+        trigito.x += input::joystick1.x / 64;
+        trigito.y -= input::joystick1.y / 64;
 
         trigito.render(screen);
 
-
-        if (input::get_touch(&touch_position)) {
-            graphics::draw_rectangle(touch_position.px, touch_position.py, 40, 40, {225, 192, 203, 255});
+        if (input::get_touch()) {
+            graphics::draw_rectangle(input::touch.x, input::touch.y, 40, 40, {225, 192, 203, 255});
         }
 
         graphics::draw_rectangle(

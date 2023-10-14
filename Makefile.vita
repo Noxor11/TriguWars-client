@@ -21,11 +21,12 @@ CXXFLAGS += -Wall -D__PSVITA__
 
 SRC_C :=$(call rwildcard, src/, *.c)
 SRC_CPP :=$(call rwildcard, src/, *.cpp)
-SRC_CPP :=$(call rwildcard, src/platform/vita/, *.cpp)
+FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
+SRC_CPP := $(call FILTER_OUT,3ds, $(SRC_CPP))
 
 #OBJ_DIRS := $(addprefix out/, $(dir $(SRC_C:src/%.c=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/%.cpp=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/platform/vita/%.cpp=%.o)))
 #OBJS := $(addprefix out/, $(SRC_C:src/%.c=%.o)) $(addprefix out/, $(SRC_CPP:src/%.cpp=%.o))
-OBJS = src/main.cpp src/platform/vita/draw.cpp src/virtual_screen.cpp src/trigu.cpp src/platform/vita/input.cpp
+OBJS = ${SRC_CPP}
 OBJ_NAME = triguwars
 
 

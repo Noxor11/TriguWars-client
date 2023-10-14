@@ -145,7 +145,8 @@ void graphics::init() {
         exit(-1);
     }
 
-    top              = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+    // top              = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+    consoleInit(GFX_TOP, NULL);
 	bottom           = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
     selected_screen  = bottom;
 

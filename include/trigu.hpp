@@ -1,3 +1,5 @@
+#pragma once
+
 #include "draw.hpp"
 #include "virtual_screen.hpp"
 
