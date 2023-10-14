@@ -16,7 +16,9 @@ Vector2 rotate_vector(Vector2 vec, Vector2 center, float angle) {
     };
 };
 
-void Trigu::render(VirtualScreen &vscreen) {
+using namespace graphics;
+
+void Trigu::render(VirtualScreen& vscreen) {
     /*
     Puntos:
         x, y+h
@@ -46,11 +48,6 @@ void Trigu::render(VirtualScreen &vscreen) {
                             this->color);
 }
 
-Trigu::Trigu(float x, float y, float w, float h, float rotation, const Color &color) {
-    this->x = x;
-    this->y = y;
-    this->w = w;
-    this->h = h;
-    this->rotation = rotation;
-    this->color = color;
-}
+
+Trigu::Trigu(float x, float y, float w, float h, float rotation, const Color& color) :
+    x{x}, y{y}, w{w}, h{h}, rotation{rotation}, color{color} {}

@@ -21,6 +21,7 @@ CXXFLAGS += -Wall -D__PSVITA__
 
 SRC_C :=$(call rwildcard, src/, *.c)
 SRC_CPP :=$(call rwildcard, src/, *.cpp)
+SRC_CPP :=$(call rwildcard, src/platform/vita/, *.cpp)
 
 #OBJ_DIRS := $(addprefix out/, $(dir $(SRC_C:src/%.c=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/%.cpp=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/platform/vita/%.cpp=%.o)))
 #OBJS := $(addprefix out/, $(SRC_C:src/%.c=%.o)) $(addprefix out/, $(SRC_CPP:src/%.cpp=%.o))
@@ -51,7 +52,7 @@ $(PROJECT).velf: $(PROJECT).elf
 	vita-elf-create $< $@
 
 #$(PROJECT).elf: $(OBJS):
-#	$(CXX) $(CXXFLAGS) $(OBJS) $(LIBS) -o out/$(OBJ_NAME).elf
+#	$(CXX) $(CXXFLAGS) $(OBJS) $(LIBS) -o build/$(OBJ_NAME).elf
 
 $(PROJECT).elf: $(OBJS)
 	$(CXX) $(CXXFLAGS) -Wl,-q $(OBJS) $(LIBS) -o $@
@@ -62,8 +63,8 @@ $(OBJ_DIRS):
 out/%.o : src/%.cpp #| $(OBJ_DIRS)
 	arm-vita-eabi-g++ -c $(CXXFLAGS) -o $@ $< $(LIBS)
 
-out/%.o : src/%.c #| $(OBJ_DIRS)
-	arm-vita-eabi-g++ -c -o $@ $< $(LIBS)
+# build/%.o : src/%.c #| $(OBJ_DIRS)
+# 	arm-vita-eabi-g++ -c -o $@ $< $(LIBS)
 
 clean:
 	rm -f *.velf *.elf *.vpk *.sfo *.bin

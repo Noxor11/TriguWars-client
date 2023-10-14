@@ -1,4 +1,3 @@
-#ifdef __3DS__
 #include "draw.hpp"
 
 #include <3ds.h>
@@ -6,10 +5,13 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_audio.h>
 #include <SDL/SDL_mixer.h>
+
 #include <unistd.h>
+#include <iostream>
 
 C2D_SpriteSheet spriteSheet;
 
+using namespace graphics;
 
 
 // Settings initSettings(){
@@ -143,9 +145,9 @@ void graphics::init() {
         exit(-1);
     }
 
-    top       = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
-	bottom    = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
-    selected_screen  = top;
+    top              = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+	bottom           = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
+    selected_screen  = bottom;
 
 }
 
@@ -159,7 +161,7 @@ void graphics::close() {
     //     threadFree(threads[i]);
     // }
 
-    SDL_Quit();
+    // SDL_Quit();
     C2D_Fini();
     C3D_Fini();
     gfxExit();
@@ -167,7 +169,7 @@ void graphics::close() {
     romfsExit();
     
     // Delete graphics
-    C2D_SpriteSheetFree(spriteSheet);
+    // C2D_SpriteSheetFree(spriteSheet);
 }
 
 void graphics::start_frame() {
@@ -192,4 +194,3 @@ void graphics::draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, con
     C2D_DrawTriangle(x1, y1, color.to_RGBA32(), x2, y2, color.to_RGBA32(), x3, y3, color.to_RGBA32(), 0);
 }
 
-#endif

@@ -1,16 +1,16 @@
 #pragma once
 #include <cstdint>
 
-struct Color {
-    int r;
-    int g;
-    int b;
-    int a;
-
-    inline unsigned int to_RGBA32() const;
-};
-
 namespace graphics {
+
+    struct Color {
+        int r;
+        int g;
+        int b;
+        int a;
+
+        inline unsigned int to_RGBA32() const;
+    };
 
     // Initialize graphics backend
     void init();

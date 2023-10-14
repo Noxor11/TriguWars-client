@@ -50,7 +50,7 @@ APP_AUTHOR			=	Tau and Nox
 #---------------------------------------------------------------------------------
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft -flto
 
-CFLAGS	:=	-Wall -O2 -mword-relocations \
+CFLAGS	:=	-Wall -O0 -mword-relocations \
 			-ffunction-sections \
 			$(ARCH)
 

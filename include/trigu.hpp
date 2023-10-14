@@ -7,6 +7,8 @@ class Trigu {
         float y;
         float w;
         float h;
-        Color color;
-        void render(VirtualScreen vscreen);
+        float rotation; // rotation of trigu in radians
+        graphics::Color color;
+        void render(VirtualScreen &vscreen);
+        Trigu(float x, float y, float w, float h, float rotation, const graphics::Color& color);
 };
