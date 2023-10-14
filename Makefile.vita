@@ -14,7 +14,7 @@ PROJECT_TITLEID := NOXTAU001
 PROJECT := triguwars
 
 LIBS = -lvita2d -lSceDisplay_stub -lSceGxm_stub \
-	-lSceSysmodule_stub -lSceCtrl_stub -lScePgf_stub -lScePvf_stub \
+	-lSceSysmodule_stub -lSceCtrl_stub -lSceTouch_stub -lScePgf_stub -lScePvf_stub \
 	-lSceCommonDialog_stub -lfreetype -lpng -ljpeg -lz -lm -lc -lSceAppMgr_stub -I./include
 
 CXXFLAGS += -Wall -D__PSVITA__
@@ -25,7 +25,7 @@ SRC_CPP :=$(call rwildcard, src/platform/vita/, *.cpp)
 
 #OBJ_DIRS := $(addprefix out/, $(dir $(SRC_C:src/%.c=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/%.cpp=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/platform/vita/%.cpp=%.o)))
 #OBJS := $(addprefix out/, $(SRC_C:src/%.c=%.o)) $(addprefix out/, $(SRC_CPP:src/%.cpp=%.o))
-OBJS = src/main.cpp src/platform/vita/draw.cpp src/virtual_screen.cpp src/trigu.cpp
+OBJS = src/main.cpp src/platform/vita/draw.cpp src/virtual_screen.cpp src/trigu.cpp src/platform/vita/input.cpp
 OBJ_NAME = triguwars
 
 

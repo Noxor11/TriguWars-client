@@ -7,13 +7,27 @@ namespace input {
 	    unsigned short py;
     };
 
+    enum Buttons {
+        BUTTON_CONFIRM,
+        BUTTON_CANCEL,
+        BUTTON_AUX_UP,
+        BUTTON_AUX_LEFT,
+        BUTTON_DPAD_LEFT,
+        BUTTON_DPAD_RIGHT,
+        BUTTON_DPAD_UP,
+        BUTTON_DPAD_DOWN
+    };
+
+    void init();
     void scan();
 
-    unsigned int keys_down();
-    unsigned int keys_downRepeat();
-    unsigned int keys_held();
-    unsigned int keys_up();
+    bool is_key_pressed(Buttons button);
+    bool is_key_down(Buttons button);
+    bool is_key_up(Buttons button);
 
-    void touch(touch_position* touch_position);
+    /**
+     * @returns true if being touched or false if not or if error
+    */
+    bool get_touch(touch_position* touch_position);
 
 }

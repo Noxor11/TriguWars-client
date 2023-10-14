@@ -1,19 +1,21 @@
 #include "draw.hpp"
+#include "input.hpp"
 #include "virtual_screen.hpp"
 #include "trigu.hpp"
 #include <cmath>
 #ifdef __3DS__
 #include <3ds.h>
-#endif 
+#endif
 
 using namespace graphics;
 
 int main() {
 
     graphics::init();
+    input::init();
     VirtualScreen screen = VirtualScreen(0, 0, 100, 100, 1.0);
     Trigu trigito = Trigu(80, 80, 30, 30, 1/8 * 3.14, Color{0, 255, 255, 255});
-
+    input::touch_position touch_position = {80, 80};
 
     float i = 0;
     float x = 0.0;
@@ -23,10 +25,12 @@ int main() {
 #else
     while (true) {
 #endif
+        input::scan();
         i += 3.14 / 60;
-        x += 2;
+        if (input::is_key_down(input::BUTTON_DPAD_RIGHT)) {
+            x += 2;
+        }
         trigito.rotation += 0.1;
-        if (x > 60) x = 0;
 
         graphics::start_frame();
 
@@ -37,9 +41,6 @@ int main() {
         //screen.offset_x = std::cos(i) * 200 + 300;
         //screen.scale = std::cos(i) + 1.5;
 
-        //graphics::draw_rectangle(
-        //    screen.translate_x(x), screen.translate_y(0), screen.translate_w(40), screen.translate_h(40), Color{0, 255, 0, 255}
-        //);
 
         // VirtualScreen demo
         graphics::draw_rectangle(screen.offset_x, screen.offset_y,
@@ -48,6 +49,14 @@ int main() {
 
         trigito.render(screen);
 
+
+        if (input::get_touch(&touch_position)) {
+            graphics::draw_rectangle(touch_position.px, touch_position.py, 40, 40, {225, 192, 203, 255});
+        }
+
+        graphics::draw_rectangle(
+            screen.translate_x(x), screen.translate_y(0), screen.translate_w(40), screen.translate_h(40), Color{0, 255, 0, 255}
+        );
 
         graphics::end_frame();
     }
