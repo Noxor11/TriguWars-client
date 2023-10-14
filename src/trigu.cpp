@@ -11,8 +11,8 @@ struct Vector2 {
 Vector2 rotate_vector(Vector2 vec, Vector2 center, float angle) {
     // https://en.wikipedia.org/wiki/Rotation_matrix
     return {
-        (vec.x - center.x) * std::cos(angle) + (vec.y - center.y) * std::sin(angle),
-        (vec.x - center.x) * -std::sin(angle) + (vec.y - center.y) * std::cos(angle)
+        (vec.x - center.x) * std::cos(angle) + (vec.y - center.y) * std::sin(angle) + center.x,
+        (vec.x - center.x) * -std::sin(angle) + (vec.y - center.y) * std::cos(angle) + center.y
     };
 };
 
