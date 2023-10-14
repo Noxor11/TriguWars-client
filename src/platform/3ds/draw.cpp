@@ -1,5 +1,5 @@
 #ifdef __3DS__
-#include "../../../include/draw.hpp"
+#include "draw.hpp"
 
 #include <3ds.h>
 #include <citro2d.h>
@@ -26,24 +26,15 @@ inline unsigned int Color::to_RGBA32() const {
     return C2D_Color32(this->r, this->g, this->b, this->a);
 }
 
-Color& Color::operator=(Color&& other){
-    return *this;
-}
-
 
 // -----------------------------------------------------------------------------------------------------
-namespace graphics {
-    namespace screen {
-        C3D_RenderTarget* top;
-        C3D_RenderTarget* bottom;
-        C3D_RenderTarget* selected;
-    }
+C3D_RenderTarget* top;
+C3D_RenderTarget* bottom;
+C3D_RenderTarget* selected_screen;
 
-    void stopAndClean(int error);
-    int start_scene();
-};
 
-void graphics::stopAndClean(int error){
+
+void stopAndClean(int error){
 		switch (error){
 			case -4:
 				C3D_Fini();
@@ -61,17 +52,17 @@ void graphics::stopAndClean(int error){
 
 	}
 
-int graphics::start_scene() {
+int start_scene() {
 
     romfsInit();
     // apply_dsp_firm(); for sound to work
 
-    if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0){
-        return -1;
-    }
+    // if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0){
+    //     return -1;
+    // }
 
-    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048) == -1)
-        return -2;
+    // if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048) == -1)
+    //     return -2;
     
     cfguInit(); // Allow C2D_FontLoadSystem to work
     gfxInitDefault();
@@ -85,9 +76,9 @@ int graphics::start_scene() {
     C2D_Prepare();		
 
     // Load graphics
-    spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
-    if (!spriteSheet) 
-        return -4;
+    // spriteSheet = C2D_SpriteSheetLoad("romfs:/gfx/sprites.t3x");
+    // if (!spriteSheet) 
+    //     return -4;
     
 
     // songs[0] = Mix_LoadMUS("romfs:/sound/music/background_loop.mp3");
@@ -125,7 +116,7 @@ int graphics::start_scene() {
 
 void graphics::init() {
     int code = 0;
-    if((code = graphics::start_scene()) < 0) {
+    if((code = start_scene()) < 0) {
         gfxInitDefault();
         consoleInit(GFX_TOP, NULL);
         printf("Scene not initialised.\nError code: %d\n\n", code);
@@ -148,13 +139,13 @@ void graphics::init() {
                 break;
         }
 
-        graphics::stopAndClean(code);
+        stopAndClean(code);
         exit(-1);
     }
 
-    graphics::screen::top       = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
-	graphics::screen::bottom    = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
-    graphics::screen::selected  = graphics::screen::top;
+    top       = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+	bottom    = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
+    selected_screen  = top;
 
 }
 
@@ -182,8 +173,8 @@ void graphics::close() {
 void graphics::start_frame() {
 
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-    C2D_TargetClear(graphics::screen::selected, C2D_Color32(0, 0, 0, 0xFF));
-    C2D_SceneBegin(graphics::screen::selected);
+    C2D_TargetClear(selected_screen, C2D_Color32(0, 0, 0, 0xFF));
+    C2D_SceneBegin(selected_screen);
 	
 }
 
@@ -195,6 +186,10 @@ void graphics::end_frame() {
 
 void graphics::draw_rectangle(int x, int y, int w, int h, const Color& color) {
 	C2D_DrawRectangle(x, y, 0, w, h, color.to_RGBA32(), color.to_RGBA32(), color.to_RGBA32(), color.to_RGBA32());
+}
+
+void graphics::draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, const Color& color){
+    C2D_DrawTriangle(x1, y1, color.to_RGBA32(), x2, y2, color.to_RGBA32(), x3, y3, color.to_RGBA32(), 0);
 }
 
 #endif
