@@ -1,6 +1,11 @@
 #include "input.hpp"
 #include <psp2/ctrl.h>
 #include <psp2/touch.h>
+#include <vita2d.h>
+#include <string>
+#include "draw.hpp"
+#include <ostream>
+#include <numeric>
 
 SceCtrlData pad;
 SceCtrlData pad_prev;
@@ -40,6 +45,12 @@ void input::init() {
 void input::scan() {
     pad_prev = pad;
     sceCtrlPeekBufferPositiveExt2(0, &pad, 1);
+    // NOTE: Tiene un bias de 1 hacia uno de los lados por imprecisión
+    input::joystick1.x = pad.lx - 127;
+    input::joystick1.y = pad.ly - 127;
+    input::joystick2.x = pad.rx - 127;
+    input::joystick2.y = pad.ry - 127;
+    graphics::draw_text(200, 300, {255, 255, 255, 255}, str);
 }
 
 bool input::is_key_pressed(input::Buttons button) {

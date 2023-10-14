@@ -13,9 +13,9 @@ PROJECT_TITLEID := NOXTAU001
 
 PROJECT := triguwars
 
-LIBS = -lvita2d -lSceDisplay_stub -lSceGxm_stub \
+LIBS = -lvita2d -lSceDisplay_stub -lSceGxm_stub -lSceLibKernel_stub \
 	-lSceSysmodule_stub -lSceCtrl_stub -lSceTouch_stub -lScePgf_stub -lScePvf_stub \
-	-lSceCommonDialog_stub -lfreetype -lpng -ljpeg -lz -lm -lc -lSceAppMgr_stub -I./include
+	-lSceCommonDialog_stub -lfreetype -lpng -ljpeg -lz -lm -lc -lSceAppMgr_stub -I./include -I./include/platform/vita
 
 CXXFLAGS += -Wall -D__PSVITA__
 
@@ -26,7 +26,7 @@ SRC_CPP := $(call FILTER_OUT,3ds, $(SRC_CPP))
 
 #OBJ_DIRS := $(addprefix out/, $(dir $(SRC_C:src/%.c=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/%.cpp=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/platform/vita/%.cpp=%.o)))
 #OBJS := $(addprefix out/, $(SRC_C:src/%.c=%.o)) $(addprefix out/, $(SRC_CPP:src/%.cpp=%.o))
-OBJS = ${SRC_CPP}
+OBJS = ${SRC_CPP} ${SRC_C}
 OBJ_NAME = triguwars
 
 

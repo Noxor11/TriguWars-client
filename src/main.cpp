@@ -27,14 +27,15 @@ int main() {
 #else
     while (true) {
 #endif
+        trigito.rotation += 0.1;
+
+        graphics::start_frame();
+
         input::scan();
         i += 3.14 / 60;
         if (input::is_key_down(input::BUTTON_DPAD_RIGHT)) {
             x += 2;
         }
-        trigito.rotation += 0.1;
-
-        graphics::start_frame();
 
         graphics::draw_rectangle(30, 30, 50, 50, Color{255, 0, 0, 255});
         graphics::draw_triangle(100, 100, 100, 200, 150, 150, Color{0, 0, 255, 255});
@@ -48,8 +49,8 @@ int main() {
         graphics::draw_rectangle(screen.offset_x, screen.offset_y,
                                  screen.width * screen.scale, screen.height * screen.scale, Color{255, 255, 255, 255});
 
-        trigito.x += input::joystick1.x / 64;
-        trigito.y -= input::joystick1.y / 64;
+        trigito.x += input::joystick1.x / 32;
+        trigito.y -= input::joystick1.y / 32;
 
         trigito.render(screen);
 

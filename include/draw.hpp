@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <string>
 
 namespace graphics {
 
@@ -35,4 +36,5 @@ namespace graphics {
     void draw_rectangle(int x, int y, int w, int h, const Color& color);
     void draw_line(int x1, int y1, int x2, int y2, const Color& color);
     void draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, const Color& color);
+    void draw_text(int x, int y, const Color &color, const std::string &string);
 }
