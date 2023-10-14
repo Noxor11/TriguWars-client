@@ -8,11 +8,11 @@ struct Vector2 {
     float y;
 };
 
-Vector2 rotate_vector(Vector2 vec, float angle) {
+Vector2 rotate_vector(Vector2 vec, Vector2 center, float angle) {
     // https://en.wikipedia.org/wiki/Rotation_matrix
     return {
-        vec.x * std::cos(angle) - vec.y * std::sin(angle),
-        vec.x * std::sin(angle) + vec.y * std::cos(angle)
+        (vec.x - center.x) * std::cos(angle) + (vec.y - center.y) * std::sin(angle),
+        (vec.x - center.x) * -std::sin(angle) + (vec.y - center.y) * std::cos(angle)
     };
 };
 
@@ -33,10 +33,11 @@ void Trigu::render(VirtualScreen &vscreen) {
     Vector2 vec1 = {tx + tw / 2.0f, ty};
     Vector2 vec2 = {tx + tw, ty + th};
     Vector2 vec3 = {tx, ty + th};
+    Vector2 center = {tx + tw / 2.0f, ty + h / 2.0f};
 
-    vec1 = rotate_vector(vec1, this->rotation);
-    vec2 = rotate_vector(vec2, this->rotation);
-    vec3 = rotate_vector(vec3, this->rotation);
+    vec1 = rotate_vector(vec1, center, this->rotation);
+    vec2 = rotate_vector(vec2, center, this->rotation);
+    vec3 = rotate_vector(vec3, center, this->rotation);
 
     graphics::draw_triangle(
                             vec1.x, vec1.y,

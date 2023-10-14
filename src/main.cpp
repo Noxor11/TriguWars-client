@@ -6,7 +6,7 @@
 int main() {
 
     VirtualScreen screen = VirtualScreen(0, 0, 100, 100, 1.0);
-    Trigu trigito = Trigu(20, 20, 10, 20, 1/8 * 3.14, Color{0, 255, 255, 255});
+    Trigu trigito = Trigu(80, 80, 30, 30, 1/8 * 3.14, Color{0, 255, 255, 255});
 
     graphics::init();
 
@@ -25,7 +25,7 @@ int main() {
         graphics::draw_triangle(100, 100, 100, 200, 150, 150, Color{0, 0, 255, 255});
 
 
-        screen.offset_x = std::cos(i) * 200 + 300;
+        //screen.offset_x = std::cos(i) * 200 + 300;
         //screen.scale = std::cos(i) + 1.5;
 
         //graphics::draw_rectangle(
