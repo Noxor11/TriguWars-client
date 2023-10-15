@@ -38,6 +38,15 @@ void Trigu::move_y_by(float units){
     }
 }
 
+
+void Triu::set_x(float x) {
+   this->x = x;
+}
+
+void Triu::set_y(float y) {
+   this->y = y;
+}
+
 void Trigu::rotate_by(float rotation){
     this->rotation += rotation;
 

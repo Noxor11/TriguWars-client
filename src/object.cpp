@@ -24,6 +24,10 @@ const graphics::Vector2& Object::get_vector2() const {
 }
 
 
+void Object::set_vector2(const graphics::Vector2& vector2) {
+    this->vector2 = vector2;
+}
+
 float Object::get_rotation() const {
     return rotation;
 }
