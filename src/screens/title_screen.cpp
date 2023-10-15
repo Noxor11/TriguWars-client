@@ -6,10 +6,10 @@
 
 void TitleScreen::update() {
     graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320/2),
-                        {255,255,255,255}, "TriguWars");
+                        {255,255,255,255}, "TriguWars", 30);
 
     graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320 * 0.75f),
-                        {255,255,255,255}, "Press X or A to continue");
+                        {255,255,255,255}, "Press X or A to continue", 30);
 }
 
 void TitleScreen::init() {
