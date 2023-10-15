@@ -19,9 +19,29 @@ Vector2& rotate_vector(Vector2& vec, Vector2 center, float angle) {
     return vec;
 };
 
+void Trigu::update_rotation() {
+   calculate_vertices();
+   auto& center = calculate_center();
+
+   rotate_vector(vertices[0], center, this->rotation);
+   rotate_vector(vertices[1], center, this->rotation);
+   rotate_vector(vertices[2], center, this->rotation);
+}
+
 void Trigu::update_params(){
     calculate_center();
     calculate_vertices();
+}
+
+void Trigu::set_vector2(const graphics::Vector2 &vector2) {
+    this->vector2 = vector2;
+    update_params();
+}
+
+void Trigu::set_rotation(float rotation) {
+    this->rotation = rotation;
+    update_rotation();
+    update_params();
 }
 
 void Trigu::move_x_by(float units){
@@ -51,14 +71,8 @@ void Triu::set_y(float y) {
 
 void Trigu::rotate_by(float rotation){
     this->rotation += rotation;
+    update_rotation()
 
-    calculate_vertices();
-    auto& center = calculate_center();
-
-    rotate_vector(vertices[0], center, this->rotation);
-    rotate_vector(vertices[1], center, this->rotation);
-    rotate_vector(vertices[2], center, this->rotation);
-    
 }
 
 void Trigu::render(const VirtualScreen& vscreen) {
