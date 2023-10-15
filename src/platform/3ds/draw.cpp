@@ -20,12 +20,16 @@ unsigned int Color::to_RGBA32() const {
 }
 
 // -----------------------------------------------------------------------------------------------------
-C3D_RenderTarget* top;
+C3D_RenderTarget* top1;
+C3D_RenderTarget* top2;
+
 C3D_RenderTarget* bottom;
 C3D_RenderTarget* selected_screen;
 
 
-
+namespace graphics {
+    Screen selected;
+}
 
 
 void stopAndClean(int error){
@@ -87,8 +91,9 @@ int start_scene() {
 
     // laser 			= Mix_LoadWAV("romfs:/sound/laser_shot.wav");
 
-    // top              = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
     consoleInit(GFX_TOP, NULL);
+    // top1             = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+    // top2             = C2D_CreateScreenTarget(GFX_TOP, GFX_RIGHT);
 	bottom           = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
     selected_screen  = bottom;
 
@@ -156,6 +161,16 @@ void graphics::start_frame() {
     C2D_TargetClear(selected_screen, C2D_Color32(0, 0, 0, 0xFF));
     C2D_SceneBegin(selected_screen);
 	
+}
+
+void graphics::set_screen(Screen scr) {
+    switch (scr) {
+        case TOP1: selected_screen = top1; break;
+        case TOP2: selected_screen = top2; break;
+        case BOTTOM: selected_screen = bottom; break;
+    
+        default: break;
+    }
 }
 
 void graphics::end_frame() {

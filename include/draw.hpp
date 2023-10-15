@@ -5,6 +5,12 @@
 
 namespace graphics {
 
+    #ifdef __3DS__
+    enum Screen {
+        TOP1, TOP2, BOTTOM
+    };
+    #endif
+
     struct Color {
         int r;
         int g;
@@ -29,7 +35,7 @@ namespace graphics {
     void start_frame();
 
     #ifdef __3DS__
-    void set_screen();
+    void set_screen(Screen scr);
     #endif
 
     // Run when frame is finished drawing to flip screen

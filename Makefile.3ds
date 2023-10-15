@@ -36,10 +36,10 @@ BUILD		:=	build
 SOURCES		:=	src src/platform/3ds src/screens
 DATA		:=	data
 INCLUDES	:=	include
-#GRAPHICS	:=	gfx
-#GFXBUILD	:=	$(BUILD)
-#ROMFS		:=	romfs
-#GFXBUILD	:=	$(ROMFS)/gfx
+GRAPHICS	:=	gfx gfx/fonts/
+GFXBUILD	:=	$(BUILD)
+ROMFS		:=	romfs
+GFXBUILD	:=	$(ROMFS)/gfx
 
 APP_TITLE			=	TriguWars
 APP_DESCRIPTION		=	Cool game
@@ -92,7 +92,7 @@ SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 PICAFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.v.pica)))
 SHLISTFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.shlist)))
 GFXFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.t3s)))
-FONTFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/fonts/*.ttf)))
+FONTFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.ttf)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 
 #---------------------------------------------------------------------------------
@@ -117,7 +117,7 @@ export T3XFILES :=  $(GFXFILES:.t3s=.t3x)
 else
 #---------------------------------------------------------------------------------
 export ROMFS_T3XFILES	:=	$(patsubst %.t3s, $(GFXBUILD)/%.t3x, $(GFXFILES))
-export ROMFS_FONTFILES	:=	$(patsubst %.ttf, $(GFXBUILD)/%.bcfnt, $(FONTFILES))
+export ROMFS_FONTFILES	:=	$(patsubst %.ttf, $(GFXBUILD)/fonts/%.bcfnt, $(FONTFILES))
 export T3XHFILES		:=	$(patsubst %.t3s, $(BUILD)/%.h, $(GFXFILES))
 #---------------------------------------------------------------------------------
 endif
