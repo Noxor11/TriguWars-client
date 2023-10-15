@@ -1,18 +1,18 @@
 #include "virtual_screen.hpp"
 
-float VirtualScreen::translate_x(float x) {
+float VirtualScreen::translate_x(float x) const {
     return this->offset_x + x;
 };
 
-float VirtualScreen::translate_y(float y) {
+float VirtualScreen::translate_y(float y) const {
     return this->offset_y + y;
 };
 
-float VirtualScreen::translate_h(float h) {
+float VirtualScreen::translate_h(float h) const {
     return this->scale * h;
 }
 
-float VirtualScreen::translate_w(float w) {
+float VirtualScreen::translate_w(float w) const {
     return this->scale * w;
 }
 

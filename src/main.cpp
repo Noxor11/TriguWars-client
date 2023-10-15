@@ -4,11 +4,12 @@
 #include "virtual_screen.hpp"
 #include "trigu.hpp"
 #include "title_screen.hpp"
-#include <cmath>
 #ifdef __3DS__
 #include <3ds.h>
 #endif
 
+
+#include <cmath>
 #include <iostream>
 #include <string>
 
@@ -32,8 +33,7 @@ int main() {
 #else
     while (true) {
 #endif
-        trigito.rotation += 0.1;
-
+        
         graphics::start_frame();
 
         input::scan();
@@ -56,8 +56,11 @@ int main() {
         graphics::draw_rectangle(screen.offset_x, screen.offset_y,
                                  screen.width * screen.scale, screen.height * screen.scale, Color{255, 255, 255, 255});
 
-        trigito.x += input::joystick1.x / 32;
-        trigito.y -= input::joystick1.y / 32;
+        trigito.move_x_by(input::joystick1.x / 32);
+        trigito.move_y_by(input::joystick1.y / 32);
+
+
+        trigito.rotate_by(0.1);
 
         trigito.render(screen);
 

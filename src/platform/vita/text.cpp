@@ -6,7 +6,7 @@
 #include <psp2/kernel/processmgr.h>
 #include <sstream>
 
-vita2d_font* font;
+vita2d_font* font = nullptr;
 
 void graphics::text::init(){
 }
@@ -15,6 +15,7 @@ bool graphics::text::set_font(const std::string& name) {
     std::stringstream str;
     str << "app0:gfx/fonts/" << name << ".ttf";
     font = vita2d_load_font_file(str.str().c_str());
+    return font != NULL;
 }
 
 void graphics::text::draw_text(int x, int y, const Color &color, const std::string &string, unsigned int size) {

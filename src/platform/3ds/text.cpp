@@ -1,18 +1,18 @@
 #include "text.hpp"
 #include "draw.hpp"
+
 #include <3ds.h>
 #include <citro2d.h>
 
 #include <array>
 #include <unordered_map>
-
 #include <iostream>
 #include <sstream>
 
 C2D_TextBuf g_staticBuf;
 std::array<C2D_Text, 21> g_staticText;
 std::unordered_map<char, C2D_Text> letters;
-C2D_Font font;
+C2D_Font font = nullptr;
 
 void create_glyphs_with_selected_font(){
     int i;
@@ -52,6 +52,9 @@ void graphics::text::init(){
 }
 
 bool graphics::text::set_font(const std::string& name){
+    if (font)
+        C2D_FontFree(font);
+        
     std::stringstream s;
     
     s << "romfs:/gfx/fonts/" << name << ".bcfnt";
@@ -61,17 +64,14 @@ bool graphics::text::set_font(const std::string& name){
     return font != NULL;
 }
 
-void graphics::text::draw_text(int x, int y, const graphics::Color &color, const std::string &text){
-
-    const int size = 1;
-
+void graphics::text::draw_text(int x, int y, const graphics::Color &color, const std::string &text, unsigned int size){
     
     //	For every char in the score, convert to int and display it
     int xPos = x;
 
     for(int i = 0; i < (int) text.length(); i++){
         const auto& letterFont = &letters[text.at(i)];
-        C2D_DrawText(letterFont, C2D_AtBaseline | C2D_AlignCenter | C2D_WithColor, xPos, y, 0.0f, size, size, color.to_RGBA32());
+        C2D_DrawText(letterFont, C2D_AtBaseline | C2D_WithColor, xPos, y, 0.0f, size, size, color.to_RGBA32());
 
         xPos += letterFont->width;
     }

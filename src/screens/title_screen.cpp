@@ -23,9 +23,6 @@ void TitleScreen::update() {
                         {255,255,255,255}, "Press X or A to continue", 30);
 }
 
-void TitleScreen::init() {
-}
-
 #ifdef __PSVITA__
 #define TITLESCREEN_VSCREEN_SCALE 2.26f
 #elif defined __3DS__

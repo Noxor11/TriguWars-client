@@ -183,8 +183,13 @@ void graphics::draw_rectangle(int x, int y, int w, int h, const Color& color) {
 	C2D_DrawRectangle(x, y, 0, w, h, color.to_RGBA32(), color.to_RGBA32(), color.to_RGBA32(), color.to_RGBA32());
 }
 
+
 void graphics::draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, const Color& color){
     C2D_DrawTriangle(x1, y1, color.to_RGBA32(), x2, y2, color.to_RGBA32(), x3, y3, color.to_RGBA32(), 0);
+}
+
+void graphics::draw_line(int x1, int y1, int x2, int y2, const Color &color) {
+    C2D_DrawLine(x1, y1, color.to_RGBA32(), x2, y2, color.to_RGBA32(), 1, 1);
 }
 
 

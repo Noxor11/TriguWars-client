@@ -3,7 +3,6 @@
 class TitleScreen : public Screen {
     public:
         void update();
-        void init();
         TitleScreen();
 };
 

@@ -8,9 +8,9 @@ class VirtualScreen {
         float height;
         float scale;
 
-        float translate_x(float x);
-        float translate_y(float y);
-        float translate_w(float w);
-        float translate_h(float h);
+        float translate_x(float x) const;
+        float translate_y(float y) const;
+        float translate_w(float w) const;
+        float translate_h(float h) const;
         VirtualScreen(float x, float y, float w, float h, float scale);
 };
