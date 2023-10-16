@@ -20,7 +20,12 @@ bool graphics::text::set_font(const std::string& name) {
 
 void graphics::text::draw_text(int x, int y, const Color &color, const std::string &string, unsigned int size) {
     if (font == NULL) return;
+    if (size < 1) return;
     vita2d_font_draw_text(font, x, y, color.to_RGBA32(), size, string.c_str());
+}
+
+float graphics::text::measure_height(const std::string &string, unsigned int size) {
+    return vita2d_font_text_height(font, size, string.c_str());
 }
 
 void graphics::text::close(){

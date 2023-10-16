@@ -15,6 +15,7 @@ namespace graphics{
         void init();
         bool set_font(const std::string& name);
         void draw_text(int x, int y, const Color &color, const std::string& string, unsigned int size = 1);
+        float measure_height(const std::string &string, unsigned int size);
         void close();
     }
 }
