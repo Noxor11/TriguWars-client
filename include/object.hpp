@@ -3,36 +3,22 @@
 #include "draw.hpp"
 #include "virtual_screen.hpp"
 
+#include <functional>
+#include <box2d/box2d.h>
 
 class Object {
-    protected:
-        graphics::Vector2 center;
+    public:
+        b2Body* body;
+        b2Vec2* vertices;
+        signed int vertices_count;
 
-        union {
-            struct {
-                float x;
-                float y;
-            };
-            
-            graphics::Vector2 vector2;
-        };
-
-        float w;
-        float h;
-        float rotation; // rotation of trigu in radians
-
+        std::function<void(const b2Vec2*, const b2Vec2& position)> drawing_function;
+   
     public:
 
-        const graphics::Vector2& calculate_center();
-        const graphics::Vector2& get_vector2() const;
-        void set_vector2(const graphics::Vector2& vector2);
-        float get_rotation() const;
+        Object(b2Body* body, std::function<void(const b2Vec2*, const b2Vec2& position)> drawing_function);
+        ~Object();
 
-        void set_rotation(float rotation);
-        void move_x_by(float units);
-        void move_y_by(float units);
-        void set_x(float x);
-        void set_y(float y);
-
-        Object(float x, float y, float w, float h, float rotation);
+        void calculate_vertices();
+        void draw();
 };

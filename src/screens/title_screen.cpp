@@ -17,10 +17,10 @@ void TitleScreen::update() {
     graphics::draw_line(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320/2), this->vscreen.translate_x(240/2)+30*9, this->vscreen.translate_y(320/2), {0, 0, 255, 255});
 
     graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320/2),
-                        {255,255,255,255}, "TriguWars", 30);
+                        {255,255,255,255}, "TriguWars", 2);
 
     graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320 * 0.75f),
-                        {255,255,255,255}, "Press X or A to continue", 30);
+                        {255,255,255,255}, "Press X or A to continue");
 }
 
 #ifdef __PSVITA__

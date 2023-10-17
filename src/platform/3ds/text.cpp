@@ -73,7 +73,7 @@ void graphics::text::draw_text(int x, int y, const graphics::Color &color, const
         const auto& letterFont = &letters[text.at(i)];
         C2D_DrawText(letterFont, C2D_AtBaseline | C2D_WithColor, xPos, y, 0.0f, size, size, color.to_RGBA32());
 
-        xPos += letterFont->width;
+        xPos += letterFont->width * size;
     }
 
 }

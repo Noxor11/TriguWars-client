@@ -1,48 +1,52 @@
 #include "object.hpp"
 #include "draw.hpp"
 #include "virtual_screen.hpp"
+
 #include <cmath>
+#include <box2d/box2d.h>
 
 using namespace graphics;
 
-// Vector2 rotate_vector(Vector2 vec, Vector2 center, float angle) {
-//     // https://en.wikipedia.org/wiki/Rotation_matrix
-//     // https://danceswithcode.net/engineeringnotes/rotations_in_2d/rotations_in_2d.html
-//     return {
-//         (vec.x - center.x) * std::cos(angle) + (vec.y - center.y) * std::sin(angle) + center.x,
-//         (vec.x - center.x) * -std::sin(angle) + (vec.y - center.y) * std::cos(angle) + center.y
-//     };
-// };
+void rotate_vector(b2Vec2* vec, int vertices_count, const b2Vec2& center, float angle) {
+    // https://en.wikipedia.org/wiki/Rotation_matrix
+    // https://danceswithcode.net/engineeringnotes/rotations_in_2d/rotations_in_2d.html
+    
+    for (int i = 0; i < vertices_count; i++){
+        vec[i] = {
+            (vec[i].x - center.x) * std::cos(angle) + (vec[i].y - center.y) * std::sin(angle) + center.x,
+            (vec[i].x - center.x) * -std::sin(angle) + (vec[i].y - center.y) * std::cos(angle) + center.y
+        };
+    }
 
-const Vector2& Object::calculate_center() {
-    center = Vector2{x + w / 2.0f, y + h / 2.0f};
-    return center;
+};
+
+Object::Object(b2Body* body, std::function<void(const b2Vec2*, const b2Vec2& position)> drawing_function) :
+    body{body}, drawing_function{drawing_function} {
+
+        calculate_vertices();
+        // memcpy(this->vertices, vertices, sizeof(b2Vec2) * vertices_count);
 }
 
-const graphics::Vector2& Object::get_vector2() const {
-    return vector2;
+Object::~Object(){
+    // delete[] vertices;
+}
+
+void Object::calculate_vertices(){
+    for (b2Fixture* fix = body->GetFixtureList(); fix; fix->GetNext()){
+        if (fix->GetType() == b2Shape::e_polygon){
+            auto shape = (b2PolygonShape*)fix->GetShape();
+            
+                
+            this->vertices = shape->m_vertices;
+            this->vertices_count = shape->m_count;
+            break;
+        }
+    }
 }
 
 
-void Object::set_vector2(const graphics::Vector2& vector2) {
-    this->vector2 = vector2;
+void Object::draw(){
+    const b2Vec2& pos = body->GetPosition();
+    rotate_vector(vertices, vertices_count, body->GetLocalCenter(), body->GetAngle());
+    drawing_function(vertices, pos);
 }
-
-float Object::get_rotation() const {
-    return rotation;
-}
-
-void Object::set_rotation(float rotation){
-    this->rotation = rotation;
-}
-
-void Object::move_x_by(float units){
-    x += units;
-}
-
-void Object::move_y_by(float units){
-    y -= units;
-}
-
-Object::Object(float x, float y, float w, float h, float rotation) :
-    x{x}, y{y}, w{w}, h{h}, rotation{rotation} {}
