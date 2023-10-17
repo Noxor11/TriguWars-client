@@ -30,7 +30,8 @@ void Game::update(float dt) {
                 b2PolygonShape* shape = (b2PolygonShape*)f->GetShape();
                 graphics::Vector2 vertices[shape->m_count];
                 for (int i = 0; i < shape->m_count; i++) {
-                    vertices[i] = {shape->m_vertices[i].x, shape->m_vertices[i].y};
+                    auto v = b2Mul(b->GetTransform(), shape->m_vertices[i]);
+                    vertices[i] = {v.x, v.y};
                 }
                 // FIXME: No hay colores, no se adapta a la pantalla ni na'
                 graphics::draw_vertices(vertices, shape->m_count, graphics::Color {255, 0, 0, 255});
