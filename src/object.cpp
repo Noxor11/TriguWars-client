@@ -20,7 +20,7 @@ void rotate_vector(b2Vec2* vec, int vertices_count, const b2Vec2& center, float 
 
 };
 
-Object::Object(b2Body* body, std::function<void(const b2Vec2*, const b2Vec2& position)> drawing_function) :
+Object::Object(b2Body* body, std::function<void(const b2Vec2*)> drawing_function) :
     body{body}, drawing_function{drawing_function} {
 
         calculate_vertices();
@@ -46,7 +46,13 @@ void Object::calculate_vertices(){
 
 
 void Object::draw(){
-    const b2Vec2& pos = body->GetPosition();
-    rotate_vector(vertices, vertices_count, body->GetLocalCenter(), body->GetAngle());
-    drawing_function(vertices, pos);
+    const auto& pos = body->GetTransform();
+    
+    b2Vec2 vec[vertices_count];
+
+    for (int i = 0; i < vertices_count; i++){
+        vec[i] = b2Mul(pos, vertices[i]);
+    }
+    
+    drawing_function(vec);
 }

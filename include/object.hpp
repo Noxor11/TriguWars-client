@@ -12,11 +12,11 @@ class Object {
         b2Vec2* vertices;
         signed int vertices_count;
 
-        std::function<void(const b2Vec2*, const b2Vec2& position)> drawing_function;
+        std::function<void(const b2Vec2*)> drawing_function;
    
     public:
 
-        Object(b2Body* body, std::function<void(const b2Vec2*, const b2Vec2& position)> drawing_function);
+        Object(b2Body* body, std::function<void(const b2Vec2*)> drawing_function);
         ~Object();
 
         void calculate_vertices();
