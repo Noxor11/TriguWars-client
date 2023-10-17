@@ -14,7 +14,7 @@ PROJECT_TITLEID := NOXTAU001
 PROJECT := triguwars
 
 LIBS = -lvita2d -lSceDisplay_stub -lSceGxm_stub -lSceLibKernel_stub \
-	-lSceSysmodule_stub -lSceCtrl_stub -lSceTouch_stub -lScePgf_stub -lScePvf_stub \
+	-lSceSysmodule_stub -lSceCtrl_stub -lSceTouch_stub -lScePgf_stub -lScePvf_stub -lbox2d \
 	-lSceCommonDialog_stub -lfreetype -lbz2 -lpng -ljpeg -lz -lm -lc -lSceAppMgr_stub -I./include -I./include/platform/vita
 
 CXXFLAGS += -Wall -D__PSVITA__ -g -std=gnu++20

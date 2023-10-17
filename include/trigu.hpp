@@ -5,7 +5,7 @@
 class Trigu {
     b2Body* body;
 
-    Trigu(b2World world, float x, float y, float w, float h, float density, float friction, const graphics::Color& color);
+    Trigu(b2World* world, float x, float y, float w, float h, float density, float friction, const graphics::Color& color);
 
     private:
     // La forma es inmutable
