@@ -1,111 +1,23 @@
 #include "trigu.hpp"
-#include "draw.hpp"
-#include "virtual_screen.hpp"
-#include <cmath>
+#include <box2d/box2d.h>
 
-using namespace graphics;
+Trigu::Trigu(b2World world, float x, float y, float w, float h, float density, float friction, const graphics::Color& color) {
+    b2Vec2 vertices[3];
+    // NOTE: No cambiar el orden! Tiene que ser según las agujas del reloj
+    vertices[0].Set(x+w / 2.0f, y);
+    vertices[2].Set(x, y+h);
+    vertices[1].Set(x+w, y+h);
+    shape.Set(vertices, 3);
 
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position.Set(x, y);
 
+    body = world.CreateBody(&bodyDef);
 
-Vector2& rotate_vector(Vector2& vec, Vector2 center, float angle) {
-    // https://en.wikipedia.org/wiki/Rotation_matrix
-    // https://danceswithcode.net/engineeringnotes/rotations_in_2d/rotations_in_2d.html
-    
-    vec = {
-        (vec.x - center.x) * std::cos(angle) + (vec.y - center.y) * std::sin(angle) + center.x,
-        (vec.x - center.x) * -std::sin(angle) + (vec.y - center.y) * std::cos(angle) + center.y
-    };
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &shape;
 
-    return vec;
-};
-
-void Trigu::update_rotation() {
-   calculate_vertices();
-   auto& center = calculate_center();
-
-   rotate_vector(vertices[0], center, this->rotation);
-   rotate_vector(vertices[1], center, this->rotation);
-   rotate_vector(vertices[2], center, this->rotation);
+    fixtureDef.density = density;
+    fixtureDef.friction = friction;
 }
-
-void Trigu::update_params(){
-    calculate_center();
-    calculate_vertices();
-}
-
-void Trigu::set_vector2(const graphics::Vector2 &vector2) {
-    this->vector2 = vector2;
-    update_params();
-}
-
-void Trigu::set_rotation(float rotation) {
-    this->rotation = rotation;
-    update_rotation();
-    update_params();
-}
-
-void Trigu::move_x_by(float units){
-    if (units != 0) {
-        x += units;
-        update_params();
-    }
-}
-
-void Trigu::move_y_by(float units){
-    if (units != 0){
-        y -= units;
-        update_params();
-    }
-}
-
-
-void Trigu::set_x(float x) {
-    this->x = x;
-    update_params();
-}
-
-void Trigu::set_y(float y) {
-    this->y = y;
-    update_params();
-}
-
-void Trigu::rotate_by(float rotation){
-    this->rotation += rotation;
-    update_rotation();
-
-}
-
-void Trigu::render(const VirtualScreen& vscreen) {
-
-    graphics::draw_triangle(
-                        vscreen.translate_x(vertices[0].x), vscreen.translate_y(vertices[0].y),
-                        vscreen.translate_x(vertices[1].x), vscreen.translate_y(vertices[1].y),
-                        vscreen.translate_x(vertices[2].x), vscreen.translate_y(vertices[2].y),
-                        this->color);
-}
-
-std::array<graphics::Vector2, 3>& Trigu::calculate_vertices(){
-
-    /*
-    Vertices:
-        x, y+h
-        x + w/2, y
-        x+w, y+h
-    */
-    
-    Vector2 vec1 = {x + w / 2.0f, y};
-    Vector2 vec2 = {x + w, y + h};
-    Vector2 vec3 = {x, y + h};
-
-    vertices[0] = vec1;
-    vertices[1] = vec2;
-    vertices[2] = vec3;
-
-    return vertices;
-}
-
-Trigu::Trigu(float x, float y, float w, float h, float rotation, const Color& color) :
-    Object(x, y, w, h, rotation), color(color) {
-            
-        update_params();
-    }
