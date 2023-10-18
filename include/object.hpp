@@ -1,24 +1,15 @@
 #pragma once
 
 #include "draw.hpp"
-#include "virtual_screen.hpp"
-
-#include <functional>
 #include <box2d/box2d.h>
 
 class Object {
     public:
+        b2World* world;
         b2Body* body;
-        b2Vec2* vertices;
-        signed int vertices_count;
+        graphics::Color color;
 
-        std::function<void(const b2Vec2*)> drawing_function;
-   
     public:
-
-        Object(b2Body* body, std::function<void(const b2Vec2*)> drawing_function);
+        Object(b2World* world, b2Body* body, const graphics::Color &color): world(world), body(body), color(color) {};
         ~Object();
-
-        void calculate_vertices();
-        void draw();
 };

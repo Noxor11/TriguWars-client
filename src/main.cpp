@@ -67,24 +67,24 @@ int main() {
     int32 positionIterations = 2;
 
 
-    auto ground = Object(groundBody, [](const b2Vec2* vec) {
-        graphics::draw_line(vec[0].x, vec[0].y,
-                            vec[1].x, vec[1].y, {120, 24, 20, 255});
-        
-        graphics::draw_line(vec[1].x, vec[1].y,
-                            vec[2].x, vec[2].y, {120, 24, 20, 255});
-        
-        graphics::draw_line(vec[2].x, vec[2].y,
-                            vec[3].x, vec[3].y, {120, 24, 20, 255});
-        
-        graphics::draw_line(vec[3].x, vec[3].y,
-                            vec[0].x, vec[0].y, {120, 24, 20, 255});
+    //auto ground = Object(groundBody, [](const b2Vec2* vec) {
+    //    graphics::draw_line(vec[0].x, vec[0].y,
+    //                        vec[1].x, vec[1].y, {120, 24, 20, 255});
+    //
+    //    graphics::draw_line(vec[1].x, vec[1].y,
+    //                        vec[2].x, vec[2].y, {120, 24, 20, 255});
+    //
+    //    graphics::draw_line(vec[2].x, vec[2].y,
+    //                        vec[3].x, vec[3].y, {120, 24, 20, 255});
+    //
+    //    graphics::draw_line(vec[3].x, vec[3].y,
+    //                        vec[0].x, vec[0].y, {120, 24, 20, 255});
 
-    });
+    //});
 
-    auto box = Object(body, [](const b2Vec2* vec){
-        graphics::draw_triangle(vec[0].x, vec[0].y, vec[1].x, vec[1].y, vec[2].x, vec[2].y, Color{255,0, 0, 255});
-    });
+    //auto box = Object(body, [](const b2Vec2* vec){
+    //    graphics::draw_triangle(vec[0].x, vec[0].y, vec[1].x, vec[1].y, vec[2].x, vec[2].y, Color{255,0, 0, 255});
+    //});
 
 #ifdef __3DS__
     while (aptMainLoop()) {
@@ -128,8 +128,8 @@ int main() {
         // update world
         world->Step(timeStep, velocityIterations, positionIterations);
         b2Vec2 position = body->GetPosition();
-        ground.draw();
-        box.draw();
+        //ground.draw();
+        //box.draw();
 
 
         std::cout << position.y << "\n";
