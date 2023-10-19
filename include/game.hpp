@@ -10,12 +10,12 @@
 class Game {
     public:
 
-    std::vector<std::shared_ptr<PolygonalObject>> polygonal_objects;
-    std::vector<Trigu> players;
-    std::unique_ptr<Trigu> player;
-
-    b2World world;
+    b2World* world;
     VirtualScreen vscreen;
+    std::vector<PolygonalObject> polygonal_objects;
+    std::vector<Trigu> players;
+    Trigu player;
+
 
     // Box2D recommends 8 velocity iterations
     int velocity_iterations;
@@ -23,7 +23,7 @@ class Game {
     int position_iterations;
 
     void update(float dt);
-    void register_polygonal_object(PolygonalObject* plobject);
+    void register_polygonal_object(const PolygonalObject& plobject);
     Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations);
-
+    ~Game();
 };

@@ -130,12 +130,10 @@ int main() {
             body->SetAwake(true);
             // box.calculate_vertices();
         }
-
-        graphics::draw_rectangle(
-            screen.translate_x(x), screen.translate_y(0), screen.translate_w(40), screen.translate_h(40), Color{0, 255, 0, 255}
-        );
+*/
 
 
+/*
 
         // update world
         world->Step(timeStep, velocityIterations, positionIterations);

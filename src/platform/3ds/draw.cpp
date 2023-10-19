@@ -192,4 +192,7 @@ void graphics::draw_line(int x1, int y1, int x2, int y2, const Color &color) {
     C2D_DrawLine(x1, y1, color.to_RGBA32(), x2, y2, color.to_RGBA32(), 1, 1);
 }
 
-
+void graphics::draw_vertices(const Vector2 *vertices, int n_vertices, const Color& color) {
+    // NOTE: Puede que TRIANGLE_STRIP no sea lo correcto, pueden ocurrir error para cosas que no sean triángulos
+    C3D_DrawArrays(GPU_Primitive_t::GPU_TRIANGLE_STRIP, (int)vertices, n_vertices);
+}

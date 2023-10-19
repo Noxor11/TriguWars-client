@@ -27,4 +27,3 @@ Trigu CreateTrigu(b2World* world, float x, float y, float w, float h, float dens
 
     return Trigu(world, vertices, 3, body, color);
 }
-

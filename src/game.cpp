@@ -3,7 +3,7 @@
 #include "trigu.hpp"
 
 Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3)
-    : world(b2World(gravity)), vscreen(VirtualScreen(0, 0, 0, 0, 0.0f)), velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
+    : world(new b2World(gravity)), vscreen(VirtualScreen(0, 0, 0, 0, 0.0f)), player{CreateTrigu(this->world, 0, 0, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})}, velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
     vscreen.width = 480;
     vscreen.height = 320;
     vscreen.offset_y = 0;
@@ -21,43 +21,33 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     vscreen.scale = 1.0f;
     #endif
 
-    players.push_back(CreateTrigu(&world, 0, 0, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255}));
-    player.reset(&players[0]);
-    register_polygonal_object(player.get());
+    players.emplace_back(player);
+    register_polygonal_object(player);
 }
 
 
-void Game::register_polygonal_object(PolygonalObject* plobject) {
-    polygonal_objects.push_back(std::shared_ptr<PolygonalObject>(plobject));
+void Game::register_polygonal_object(const PolygonalObject& plobject) {
+    polygonal_objects.emplace_back(PolygonalObject(plobject));
 }
-
+#include <iostream>
 void Game::update(float dt) {
-    world.Step(dt, velocity_iterations, position_iterations);
-    // render
-    //for (b2Body* b = world.GetBodyList(); b; b = b->GetNext()) {
-    //    for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
-    //        if ( f->GetType() == b2Shape::e_polygon) {
-    //            b2PolygonShape* shape = (b2PolygonShape*)f->GetShape();
-    //            graphics::Vector2 vertices[shape->m_count];
-    //            for (int i = 0; i < shape->m_count; i++) {
-    //                auto v = b2Mul(b->GetTransform(), shape->m_vertices[i]);
-    //                vertices[i] = {v.x, v.y};
-    //            }
-    //            // FIXME: No hay colores, no se adapta a la pantalla ni na'
-    //            graphics::draw_vertices(vertices, shape->m_count, graphics::Color {255, 0, 0, 255});
-    //        }
-    //    }
-    //}
+    world->Step(dt, velocity_iterations, position_iterations);
 
-    for(int i = 0; i < polygonal_objects.size(); i++) {
-        graphics::Vector2 vertices[polygonal_objects[i]->vertices_count];
-        for (int i = 0; i < polygonal_objects[i]->vertices_count; i++) {
-            auto v = b2Mul(polygonal_objects[i]->body->GetTransform(), polygonal_objects[i]->vertices[i]);
+    for(auto& poly_obj : polygonal_objects) {
+        graphics::Vector2 vertices[poly_obj.vertices_count];
+        for (int i = 0; i < poly_obj.vertices_count; i++) {
+            auto v = b2Mul(poly_obj.body->GetTransform(), poly_obj.vertices[i]);
             vertices[i] = {v.x, v.y};
         }
+        std::cout << vertices[1].x << "\n";
+        // graphics::draw_triangle(poly_obj.vertices[0].x, poly_obj.vertices[0].y, poly_obj.vertices[1].x, poly_obj.vertices[1].y, poly_obj.vertices[2].x, poly_obj.vertices[2].y, {255,0, 0, 255});
+        graphics::draw_vertices(vertices, poly_obj.vertices_count, poly_obj.color);
 
-        graphics::draw_vertices(vertices, polygonal_objects[i]->vertices_count, polygonal_objects[i]->color);
     }
 
+
+}
+
+Game::~Game(){
 
 }
