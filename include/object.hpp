@@ -12,7 +12,8 @@ class Object {
         graphics::Color color;
 
     public:
-        Object(b2World* world, b2Body* body, const graphics::Color &color): world(world), body(body), color(color) {};
+        Object(b2World* world, b2Body* body, const graphics::Color &color):
+            world(world), body(body), color(color) {};
         ~Object();
 
         virtual void update() {};

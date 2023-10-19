@@ -11,23 +11,19 @@
 
 C2D_TextBuf g_staticBuf;
 std::array<C2D_Text, 21> g_staticText;
-std::unordered_map<char, C2D_Text> letters;
+std::unordered_map<char, C2D_Text> characters;
 C2D_Font font = nullptr;
+
+#define FIRST_ASCII_CHARACTER 32
+#define LAST_ASCII_CHARACTER  126
 
 void create_glyphs_with_selected_font(){
     int i;
-    for (i = 'A'; i < 'Z' + 1; i++){
+    for (i = FIRST_ASCII_CHARACTER; i < LAST_ASCII_CHARACTER + 1; i++){
         char str[2] = {(char)i, '\0'};
-		C2D_TextFontParse(&letters[i], font, g_staticBuf, str);
-    }
-
-    for ( i = 'a'; i < 'z' + 1; i++){
-        char str[2] = {(char)i, '\0'};
-		C2D_TextFontParse(&letters[i], font, g_staticBuf, str);
+		C2D_TextFontParse(&characters[i], font, g_staticBuf, str);
     }
     
-    C2D_TextFontParse(&letters[' '], font, g_staticBuf, " \0");
-
     //	------------------------------Set strings---------------------------------
 	// C2D_TextFontParse(&g_staticText[NO], 			        font, g_staticBuf, "No");
 	// C2D_TextFontParse(&g_staticText[SI], 	                font, g_staticBuf, "Sí");
@@ -37,7 +33,7 @@ void create_glyphs_with_selected_font(){
 		C2D_TextOptimize(&txt);
 	}
 
-	for(auto& items: letters){
+	for(auto& items: characters){
 		C2D_TextOptimize(&items.second);
 	}
 	// ----------------------------------------------------
@@ -70,7 +66,7 @@ void graphics::text::draw_text(int x, int y, const graphics::Color &color, const
     int xPos = x;
 
     for(int i = 0; i < (int) text.length(); i++){
-        const auto& letterFont = &letters[text.at(i)];
+        const auto& letterFont = &characters[text.at(i)];
         C2D_DrawText(letterFont, C2D_AtBaseline | C2D_WithColor, xPos, y, 0.0f, size, size, color.to_RGBA32());
 
         xPos += letterFont->width * size;
