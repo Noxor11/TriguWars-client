@@ -12,5 +12,5 @@ class PolygonalObject : public Object {
         Object(world, body, color), vertices(vertices), vertices_count(vertices_count) {}
 
 
-    void draw(const VirtualScreen &vscreen, bool rotate = false) override;
+    virtual void draw(const VirtualScreen &vscreen, bool rotate = false) override;
 };

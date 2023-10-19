@@ -3,6 +3,7 @@
 #include "draw.hpp"
 #include "virtual_screen.hpp"
 #include <box2d/box2d.h>
+#include <type_traits>
 
 class Object {
     public:

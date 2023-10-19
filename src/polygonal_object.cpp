@@ -10,7 +10,6 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
         // TODO: Escalar en base a vscreen
         if (!rotate) {
             vertices[i] = {vscreen.translate_x(v.x), vscreen.translate_y(v.y)};
-            graphics::text::draw_text(0, 0, {255, 255, 255, 255}, std::to_string(v.x).append("!!!"), 30);
             std::cout << v.x << "!!" << std::endl;
         } else {
             vertices[i] = {vscreen.translate_x(v.y), vscreen.translate_y(v.x)};

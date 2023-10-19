@@ -7,6 +7,10 @@
 #include <memory>
 #include "object.hpp"
 
+
+template<class T, class U>
+concept Derived = std::is_base_of<U, T>::value;
+
 class Game {
     public:
 
@@ -23,7 +27,9 @@ class Game {
     int position_iterations;
 
     void update(float dt);
-    void register_object(const Object& object);
+
+    template<Derived<Object> T>
+    void register_object(const T& object);
     Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations);
     ~Game();
 };

@@ -1,7 +1,12 @@
 #include "game.hpp"
 #include "draw.hpp"
 #include "trigu.hpp"
+
+#include <cassert>
 #include <iostream>
+#include <concepts>
+
+
 
 Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3)
     : world(new b2World(gravity)), vscreen(VirtualScreen(0, 0, 0, 0, 0.0f)), player{CreateTrigu(this->world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})}, velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
@@ -26,8 +31,10 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     register_object(player);
 }
 
-void Game::register_object(const Object &object) {
-    objects.emplace_back(std::make_shared<Object>(object));
+
+template<Derived<Object> T>
+void Game::register_object(const T& object) {
+    objects.emplace_back(std::make_shared<T>(object));
 }
 
 void Game::update(float dt) {
