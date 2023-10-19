@@ -26,6 +26,7 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     #endif
 
     players.emplace_back(player);
+    register_object(player);
 }
 
 Trigu* Game::create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color){
@@ -47,7 +48,7 @@ void Game::update(float dt) {
         #ifdef __3DS__
         obj->draw(vscreen, true);
         #else
-        ((PolygonalObject*)obj.get())->draw(vscreen, false);
+        obj->draw(vscreen, false);
         #endif
 
     }
