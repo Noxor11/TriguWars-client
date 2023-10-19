@@ -1,9 +1,10 @@
 #include "game.hpp"
 #include "draw.hpp"
 #include "trigu.hpp"
+#include <iostream>
 
 Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3)
-    : world(new b2World(gravity)), vscreen(VirtualScreen(0, 0, 0, 0, 0.0f)), player{CreateTrigu(this->world, 0, 0, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})}, velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
+    : world(new b2World(gravity)), vscreen(VirtualScreen(0, 0, 0, 0, 0.0f)), player{CreateTrigu(this->world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})}, velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
     vscreen.width = 480;
     vscreen.height = 320;
     vscreen.offset_y = 0;
@@ -22,26 +23,24 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     #endif
 
     players.emplace_back(player);
-    register_polygonal_object(player);
+    register_object(player);
 }
 
-
-void Game::register_polygonal_object(const PolygonalObject& plobject) {
-    polygonal_objects.emplace_back(PolygonalObject(plobject));
+void Game::register_object(const Object &object) {
+    objects.emplace_back(std::make_shared<Object>(object));
 }
-#include <iostream>
+
 void Game::update(float dt) {
     world->Step(dt, velocity_iterations, position_iterations);
 
-    for(auto& poly_obj : polygonal_objects) {
-        graphics::Vector2 vertices[poly_obj.vertices_count];
-        for (int i = 0; i < poly_obj.vertices_count; i++) {
-            auto v = b2Mul(poly_obj.body->GetTransform(), poly_obj.vertices[i]);
-            vertices[i] = {v.x, v.y};
-        }
-        std::cout << vertices[1].x << "\n";
-        // graphics::draw_triangle(poly_obj.vertices[0].x, poly_obj.vertices[0].y, poly_obj.vertices[1].x, poly_obj.vertices[1].y, poly_obj.vertices[2].x, poly_obj.vertices[2].y, {255,0, 0, 255});
-        graphics::draw_vertices(vertices, poly_obj.vertices_count, poly_obj.color);
+    for(auto& obj : objects) {
+        obj->update();
+
+        #ifdef __3DS__
+        obj->draw(vscreen, true);
+        #else
+        obj->draw(vscreen, false);
+        #endif
 
     }
 
