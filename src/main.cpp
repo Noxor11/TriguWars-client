@@ -1,4 +1,5 @@
 #include "draw.hpp"
+#include "game.hpp"
 #include "text.hpp"
 #include "input.hpp"
 #include "virtual_screen.hpp"
@@ -23,6 +24,8 @@ int main() {
     graphics::init();
     graphics::text::set_font("CubicCoreMono");
     input::init();
+
+    /*
     VirtualScreen screen = VirtualScreen(0, 0, 100, 100, 1.0);
     TitleScreen title_screen;
     // Trigu trigito = Trigu(80, 80, 30, 30, 1/8 * 3.14, Color{0, 255, 255, 255});
@@ -85,16 +88,25 @@ int main() {
     //auto box = Object(body, [](const b2Vec2* vec){
     //    graphics::draw_triangle(vec[0].x, vec[0].y, vec[1].x, vec[1].y, vec[2].x, vec[2].y, Color{255,0, 0, 255});
     //});
+    */
+
+    Game game(b2Vec2(0.0f, 0.0f), 4, 2);
+
 
 #ifdef __3DS__
     while (aptMainLoop()) {
 #else
     while (true) {
 #endif
-        
+
         graphics::start_frame();
 
         input::scan();
+
+        game.update(0.16f);
+
+        graphics::end_frame();
+        /*
         i += 3.14 / 60;
         if (input::is_key_down(input::BUTTON_DPAD_RIGHT)) {
             x += 2;
@@ -137,6 +149,7 @@ int main() {
         
 
         graphics::end_frame();
+        */
     }
 
     graphics::close();

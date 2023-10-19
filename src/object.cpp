@@ -56,3 +56,7 @@ using namespace graphics;
 //
 //    drawing_function(vec);
 //}
+
+Object::~Object() {
+
+}

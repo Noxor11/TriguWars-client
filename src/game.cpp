@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "draw.hpp"
+#include "trigu.hpp"
 
 Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3)
     : world(b2World(gravity)), vscreen(VirtualScreen(0, 0, 0, 0, 0.0f)), velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
@@ -19,11 +20,15 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     #else
     vscreen.scale = 1.0f;
     #endif
+
+    players.push_back(CreateTrigu(&world, 0, 0, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255}));
+    player.reset(&players[0]);
+    register_polygonal_object(player.get());
 }
 
 
 void Game::register_polygonal_object(PolygonalObject* plobject) {
-    polygonal_objects.push_back(plobject);
+    polygonal_objects.push_back(std::shared_ptr<PolygonalObject>(plobject));
 }
 
 void Game::update(float dt) {
