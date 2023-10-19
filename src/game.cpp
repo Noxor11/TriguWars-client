@@ -1,15 +1,13 @@
 #include "game.hpp"
 #include "draw.hpp"
+#include "object.hpp"
+#include "polygonal_object.hpp"
 #include "trigu.hpp"
-
-#include <cassert>
-#include <iostream>
-#include <concepts>
-
+#include <memory>
 
 
 Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3)
-    : world(new b2World(gravity)), vscreen(VirtualScreen(0, 0, 0, 0, 0.0f)), player{CreateTrigu(this->world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})}, velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
+    : world(new b2World(gravity)), vscreen(VirtualScreen(0, 0, 0, 0, 0.0f)), player{CreateTrigu(world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})}, velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
     vscreen.width = 480;
     vscreen.height = 320;
     vscreen.offset_y = 0;
@@ -28,13 +26,16 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     #endif
 
     players.emplace_back(player);
-    register_object(player);
 }
 
+Trigu* Game::create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color){
+    return register_object(CreateTrigu(world, x, y, w, h, density, friction, color));
+}
 
 template<Derived<Object> T>
-void Game::register_object(const T& object) {
+T* Game::register_object(const T& object) {
     objects.emplace_back(std::make_shared<T>(object));
+    return (T*)objects[objects.size()].get();
 }
 
 void Game::update(float dt) {
@@ -46,7 +47,7 @@ void Game::update(float dt) {
         #ifdef __3DS__
         obj->draw(vscreen, true);
         #else
-        obj->draw(vscreen, false);
+        ((PolygonalObject*)obj.get())->draw(vscreen, false);
         #endif
 
     }
@@ -55,5 +56,5 @@ void Game::update(float dt) {
 }
 
 Game::~Game(){
-
+    delete world;
 }

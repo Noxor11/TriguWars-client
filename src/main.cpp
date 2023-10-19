@@ -17,10 +17,7 @@
 
 using namespace graphics;
 
-
-
 int main() {
-
     graphics::init();
     graphics::text::set_font("CubicCoreMono");
     input::init();

@@ -27,9 +27,10 @@ class Game {
     int position_iterations;
 
     void update(float dt);
+    Trigu* create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color);
 
     template<Derived<Object> T>
-    void register_object(const T& object);
+    T* register_object(const T& object);
     Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations);
     ~Game();
 };
