@@ -6,6 +6,11 @@
 
 using graphics::draw_triangle;
 
+// In case we port this to DS
+#ifdef __3DS__
+#define TOP_SCREEN_HEIGHT 240
+#endif
+
 void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     graphics::Vector2 vertices[this->vertices_count];
     int screen = 0; // 0 = upper, 1 = lower, 2 = both
@@ -33,7 +38,24 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     //             this->vertices[2].x, this->vertices[2].y,
     //             {255, 0, 0, 255});
 
+    #ifdef __3DS__
+    if (max_y < TOP_SCREEN_HEIGHT) {
+      screen = 1;
+    } else if (max_y > TOP_SCREEN_HEIGHT) {
+      screen = 2;
+    } else {
+      screen = 3;
+    }
+
+    if (screen % 2 != 0) {
+
+    }
+    #endif
+
+    #ifndef __3DS__
     graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
+    #endif
+
 };
 
 PolygonalObject::PolygonalObject(b2World* world, b2Body* body, b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color, bool filled):
