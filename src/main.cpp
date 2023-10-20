@@ -5,9 +5,11 @@
 #include "virtual_screen.hpp"
 #include "trigu.hpp"
 #include "title_screen.hpp"
+#include "connected_line_object.hpp"
 #include "object.hpp"
 #ifdef __3DS__
 #include <3ds.h>
+#include <citro2d.h>
 #endif
 
 #include <box2d/box2d.h>
@@ -87,9 +89,14 @@ int main() {
     //});
     */
 
-    Game game(b2Vec2(0.0f, 0.0f), 4, 2);
 
 
+    Game game = Game(b2Vec2(0.0f, 0.0f), 4, 2);
+
+    b2Vec2 vertices[] = {{10 + 100, 20+ 100}, {0+ 100, 20+ 100}, {-10+ 100,0 + 100}, {0+ 100, -5 + 100}, {20+ 100, 0+ 100}};
+    // auto obj = game.create_connected_line_object(vertices, 5, 1,2, Color{255,255,255,255});
+    // obj->body->SetTransform({100, 100}, 0);
+    
 #ifdef __3DS__
     while (aptMainLoop()) {
 #else
@@ -100,7 +107,16 @@ int main() {
 
         input::scan();
 
-        game.update(0.16f);
+        game.update(1);
+        // float magnitude=2.5f;
+        // if (input::joystick1.x != 0 || input::joystick1.y != 0){
+
+        //     b2Vec2 force = b2Vec2(cos(game.player.body->GetAngle()) * input::joystick1.x, sin(game.player.body->GetAngle()) * input::joystick1.y);
+        //     game.player.body->SetLinearVelocity(force);
+        // }
+
+        graphics::draw_vertices((Vector2*)vertices, 5, {255,255,255,255});
+
 
         graphics::end_frame();
         /*

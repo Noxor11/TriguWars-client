@@ -195,6 +195,12 @@ void graphics::draw_line(int x1, int y1, int x2, int y2, const Color &color) {
 void graphics::draw_vertices(const Vector2 *vertices, int n_vertices, const Color& color) {
     // Triangle fan
     for (int i = 0; i < n_vertices-1; i+=2) {
-       C2D_DrawTriangle(vertices[i].x, vertices[i].y, color.to_RGBA32(), vertices[i+1].x, vertices[i+1].y, color.to_RGBA32(), vertices[i+2 % n_vertices].x, vertices[i+2 % n_vertices].y, color.to_RGBA32(), 0);
+       C2D_DrawTriangle(
+        vertices[i].x, vertices[i].y, 
+        color.to_RGBA32(), 
+        vertices[i+1].x, vertices[i+1].y, 
+        color.to_RGBA32(), 
+        vertices[i+2 % n_vertices].x,  vertices[i+2 % n_vertices].y, 
+        color.to_RGBA32(), 0);
     }
 }

@@ -10,8 +10,8 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     graphics::Vector2 vertices[this->vertices_count];
     int screen = 0; // 0 = upper, 1 = lower, 2 = both
     #ifdef __3DS__
-    float max_y = 0
-    float min_y = 0
+    float max_y = 0;
+    float min_y = 0;
     #endif
     for (int i = 0; i < this->vertices_count; i++) {
       auto v = b2Mul(this->body->GetTransform(), this->vertices[i]);
@@ -24,7 +24,7 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
         #ifdef __3DS__
         if (i == 0) min_y = vertices[i].y;
         if (min_y > vertices[i].y) min_y = vertices[i].y;
-        if (max_y < vertices[i].y) max_y = vertices[i].y
+        if (max_y < vertices[i].y) max_y = vertices[i].y;
         #endif
       }
     }

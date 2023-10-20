@@ -1,6 +1,7 @@
 #pragma once
 
 #include "trigu.hpp"
+#include "connected_line_object.hpp"
 #include "virtual_screen.hpp"
 #include <box2d/box2d.h>
 #include <vector>
@@ -28,6 +29,7 @@ class Game {
 
     void update(float dt);
     Trigu* create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color);
+    ConnectedLineObject* create_connected_line_object(b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color);
 
     template<Derived<Object> T>
     T* register_object(const T& object);

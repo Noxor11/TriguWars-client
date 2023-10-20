@@ -61,15 +61,23 @@ bool graphics::text::set_font(const std::string& name){
 }
 
 void graphics::text::draw_text(int x, int y, const graphics::Color &color, const std::string &text, unsigned int size){
-    
+    const int VITA_ADJUSTMENT = 30;
     //	For every char in the score, convert to int and display it
     int xPos = x;
 
     for(int i = 0; i < (int) text.length(); i++){
         const auto& letterFont = &characters[text.at(i)];
-        C2D_DrawText(letterFont, C2D_AtBaseline | C2D_WithColor, xPos, y, 0.0f, size, size, color.to_RGBA32());
+        C2D_DrawText(
+            letterFont, 
+            C2D_AtBaseline | C2D_WithColor, 
+            xPos, 
+            y, 
+            0.0f,
+            size / VITA_ADJUSTMENT, 
+            size / VITA_ADJUSTMENT, 
+            color.to_RGBA32());
 
-        xPos += letterFont->width * size;
+        xPos += letterFont->width * size / 30;
     }
 
 }

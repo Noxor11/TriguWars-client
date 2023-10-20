@@ -3,6 +3,7 @@
 #include "text.hpp"
 #include "object.hpp"
 #include "polygonal_object.hpp"
+#include "connected_line_object.hpp"
 #include "trigu.hpp"
 #include <memory>
 
@@ -32,6 +33,10 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
 
 Trigu* Game::create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color){
     return register_object(CreateTrigu(world, x, y, w, h, density, friction, color));
+}
+
+ConnectedLineObject* Game::create_connected_line_object(b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color){
+    return register_object(ConnectedLineObject(world, vertices, vertices_count, density, friction, color));
 }
 
 template<Derived<Object> T>
