@@ -5,7 +5,6 @@
 #include "virtual_screen.hpp"
 #include "trigu.hpp"
 #include "title_screen.hpp"
-#include "connected_line_object.hpp"
 #include "object.hpp"
 #ifdef __3DS__
 #include <3ds.h>
@@ -94,7 +93,7 @@ int main() {
     Game game = Game(b2Vec2(0.0f, 0.0f), 4, 2);
 
     b2Vec2 vertices[] = {{10 + 100, 20+ 100}, {0+ 100, 20+ 100}, {-10+ 100,0 + 100}, {0+ 100, -5 + 100}, {20+ 100, 0+ 100}};
-    //auto obj = game.create_connected_line_object(vertices, 5, 1,2, Color{255,255,255,255});
+    auto obj = game.create_polygonal_object(vertices, 5, 1,2, Color{255,255,255,255}, false);
     // obj->body->SetTransform({100, 100}, 0);
     
 #ifdef __3DS__
@@ -115,7 +114,7 @@ int main() {
         //     game.player.body->SetLinearVelocity(force);
         // }
 
-        graphics::draw_vertices((Vector2*)vertices, 5, {255,255,255,255});
+        // graphics::draw_vertices((Vector2*)vertices, 5, {255,255,255,255});
 
 
         graphics::end_frame();

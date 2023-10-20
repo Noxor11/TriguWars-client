@@ -13,3 +13,5 @@ class PolygonalObject : public Object {
     ~PolygonalObject();
     virtual void draw(const VirtualScreen &vscreen, bool rotate = false) override;    
 };
+
+PolygonalObject CreatePolygonalObject(b2World* world, b2Vec2* vertices, unsigned int vertices_count, float density, float friction, const graphics::Color &color, bool filled);

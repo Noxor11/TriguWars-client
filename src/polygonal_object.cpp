@@ -13,7 +13,7 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     float max_y = 0;
     float min_y = 0;
     #endif
-    for (int i = 0; i < this->vertices_count; i++) {
+    for (unsigned int i = 0; i < this->vertices_count; i++) {
       auto v = b2Mul(this->body->GetTransform(), this->vertices[i]);
       // TODO: Escalar en base a vscreen
       if (!rotate) {
@@ -47,3 +47,22 @@ PolygonalObject::~PolygonalObject(){
   delete[] vertices;
 }
 
+PolygonalObject CreatePolygonalObject(b2World* world, b2Vec2* vertices, unsigned int vertices_count, float density, float friction, const graphics::Color &color, bool filled) {
+    b2PolygonShape shape;
+    shape.Set(vertices, vertices_count);
+
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+
+    b2Body* body = world->CreateBody(&bodyDef);
+
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &shape;
+
+    fixtureDef.density = density;
+    fixtureDef.friction = friction;
+
+    body->CreateFixture(&fixtureDef);
+
+    return PolygonalObject(world, body, vertices, vertices_count, color, filled);
+}
