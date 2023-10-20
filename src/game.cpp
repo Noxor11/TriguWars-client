@@ -2,9 +2,10 @@
 #include "draw.hpp"
 #include "text.hpp"
 #include "object.hpp"
-#include "polygonal_object.hpp"
-#include "connected_line_object.hpp"
 #include "trigu.hpp"
+#include "polygonal_object.hpp"
+#include "dimensions.hpp"
+
 #include <memory>
 
 
@@ -14,18 +15,14 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     vscreen.height = 320;
     vscreen.offset_y = 0;
     #ifdef __PSVITA__
-    vscreen.offset_x = (966 - 480 * 1.7f) / 2;
+    vscreen.scale = SCREEN_HEIGHT / vscreen.height;
+    vscreen.offset_x = (SCREEN_WIDTH - vscreen.width * vscreen.scale) / 2;
     #else
     // NOTE: 3DS has to handle offset in between screens
+    vscreen.scale = 1.0f;
     vscreen.offset_x = 0;
     #endif
 
-    #ifdef __PSVITA__
-    // 544 / 320 = 1,7
-    vscreen.scale = 1.7f;
-    #else
-    vscreen.scale = 1.0f;
-    #endif
 
     players.emplace_back(player);
     register_object(player);
@@ -35,14 +32,14 @@ Trigu* Game::create_trigu(float x, float y, float w, float h, float density, flo
     return register_object(CreateTrigu(world, x, y, w, h, density, friction, color));
 }
 
-ConnectedLineObject* Game::create_connected_line_object(b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color){
-    return register_object(ConnectedLineObject(world, vertices, vertices_count, density, friction, color));
+PolygonalObject* Game::create_polygonal_object(b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color, bool filled){
+    return register_object(CreatePolygonalObject(world, vertices, vertices_count, density, friction, color, filled));
 }
 
 template<Derived<Object> T>
 T* Game::register_object(const T& object) {
     objects.emplace_back(std::make_shared<T>(object));
-    return (T*)objects[objects.size()].get();
+    return (T*)(objects[objects.size()-1].get());
 }
 
 void Game::update(float dt) {

@@ -204,9 +204,11 @@ void graphics::draw_vertices(const Vector2 *vertices, int n_vertices, const Colo
             vertices[i+2 % n_vertices].x,  vertices[i+2 % n_vertices].y,
             color.to_RGBA32(), 0);
         }
-    } else {
-        for (int i = 0; i < n_vertices/2; i+=2) {
-            graphics::draw_line(vertices[i].x, vertices[i].y, vertices[(i + 1) % n_vertices].x, vertices[(i + 1) % n_vertices].y, color);
+    } else {        
+        int i;
+        for (i = 0; i < n_vertices - 1; ++i) {
+            graphics::draw_line(vertices[i].x, vertices[i].y, vertices[i+1].x, vertices[i+1].y, color);
         }
+        graphics::draw_line(vertices[i].x, vertices[i].y, vertices[0].x, vertices[0].y, color);
     }
 }

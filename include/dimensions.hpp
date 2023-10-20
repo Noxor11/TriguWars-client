@@ -14,5 +14,6 @@
     #define BOTTOM_HEIGHT_CENTER	BOTTOM_SCREEN_HEIGHT / 2
 
 #elif defined __PSVITA__
-    #define SCREEN_WIDTH            0
+    #define SCREEN_WIDTH            966
+    #define SCREEN_HEIGHT           544
 #endif
