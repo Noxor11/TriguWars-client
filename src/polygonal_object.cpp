@@ -1,4 +1,5 @@
 #include "polygonal_object.hpp"
+#include "3ds/services/gsplcd.h"
 #include "draw.hpp"
 #include "text.hpp"
 #include <iostream>
@@ -48,7 +49,12 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     }
 
     if (screen % 2 != 0) {
-
+      graphics::set_screen(graphics::TOP1);
+      graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
+    }
+    if (screen == 2) {
+      graphics::set_screen(graphics::TOP1);
+      graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
     }
     #endif
 
