@@ -53,7 +53,7 @@ void Game::update(float dt) {
         #ifdef __3DS__
         obj->draw(vscreen, true);
         #else
-        obj->draw(vscreen, true);
+        obj->draw(vscreen, false);
         #endif
 
     }
