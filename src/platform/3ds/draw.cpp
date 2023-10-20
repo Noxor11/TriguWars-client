@@ -24,12 +24,12 @@ C3D_RenderTarget* top1;
 C3D_RenderTarget* top2;
 
 C3D_RenderTarget* bottom;
-C3D_RenderTarget* selected_screen;
-
+C3D_RenderTarget* selected_screen_target;
 
 namespace graphics {
-    Screen selected;
+    Screen selected_screen;
 }
+
 
 
 void stopAndClean(int error){
@@ -91,11 +91,11 @@ int start_scene() {
 
     // laser 			= Mix_LoadWAV("romfs:/sound/laser_shot.wav");
 
-    consoleInit(GFX_TOP, NULL);
-    // top1             = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
-    // top2             = C2D_CreateScreenTarget(GFX_TOP, GFX_RIGHT);
+    //consoleInit(GFX_TOP, NULL);
+    top1             = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+    top2             = C2D_CreateScreenTarget(GFX_TOP, GFX_RIGHT);
 	bottom           = C2D_CreateScreenTarget(GFX_BOTTOM, GFX_LEFT);
-    selected_screen  = bottom;
+    selected_screen_target  = top1;
 
     text::init();
 
@@ -158,19 +158,24 @@ void graphics::close() {
 void graphics::start_frame() {
 
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
-    C2D_TargetClear(selected_screen, C2D_Color32(0, 0, 0, 0xFF));
-    C2D_SceneBegin(selected_screen);
-	
+    C2D_TargetClear(bottom, C2D_Color32(0, 0, 0, 0xFF));
+    C2D_TargetClear(top1, C2D_Color32(0, 0, 0, 0xFF));
+    C2D_TargetClear(top2, C2D_Color32(0, 0, 0, 0xFF));
+    C2D_SceneBegin(selected_screen_target);
 }
 
 void graphics::set_screen(Screen scr) {
     switch (scr) {
-        case TOP1: selected_screen = top1; break;
-        case TOP2: selected_screen = top2; break;
-        case BOTTOM: selected_screen = bottom; break;
+        case TOP1: selected_screen_target = top1; graphics::selected_screen = TOP1; break;
+        case TOP2: selected_screen_target = top2; graphics::selected_screen = TOP2; break;
+        case BOTTOM: selected_screen_target = bottom; graphics::selected_screen = BOTTOM; break;
     
         default: break;
     }
+    // https://github.com/devkitPro/3ds-examples/blob/master/graphics/gpu/both_screens/source/main.c
+    //C3D_FrameDrawOn(selected_screen_target);
+    C2D_SceneBegin(selected_screen_target);
+    // C2D_TargetClear(selected_screen_target, C2D_Color32(0, 0, 0, 0xFF));
 }
 
 void graphics::end_frame() {

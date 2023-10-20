@@ -20,7 +20,7 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     #else
     // NOTE: 3DS has to handle offset in between screens
     vscreen.scale = 1.0f;
-    vscreen.offset_x = 0;
+    vscreen.offset_x = 40;
     #endif
 
 

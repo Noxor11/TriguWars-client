@@ -1,5 +1,5 @@
 #include "polygonal_object.hpp"
-#include "3ds/services/gsplcd.h"
+#include "dimensions.hpp"
 #include "draw.hpp"
 #include "text.hpp"
 #include <iostream>
@@ -7,10 +7,14 @@
 
 using graphics::draw_triangle;
 
-// In case we port this to DS
-#ifdef __3DS__
-#define TOP_SCREEN_HEIGHT 240
-#endif
+#define RENDER_TOP screen % 2 != 0
+#define RENDER_BOTTOM screen > 1
+
+enum SCREENS {
+  TOP     = 1,
+  BOTTOM  = 2,
+  BOTH    = 3
+};
 
 void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     graphics::Vector2 vertices[this->vertices_count];
@@ -40,20 +44,28 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     //             {255, 0, 0, 255});
 
     #ifdef __3DS__
-    if (max_y < TOP_SCREEN_HEIGHT) {
-      screen = 1;
-    } else if (max_y > TOP_SCREEN_HEIGHT) {
-      screen = 2;
-    } else {
-      screen = 3;
+    if (max_y < TOP_SCREEN_HEIGHT) { // if the polygon is in the top screen
+      screen = TOP;
+      this->color = {255, 0, 0, 255};
+    } else if (max_y > TOP_SCREEN_HEIGHT && min_y > TOP_SCREEN_HEIGHT) { // si el polígono está entremedias
+      screen = BOTTOM;
+      this->color = {255, 255, 0, 255};
+    } else { // if the polygon is in the bottom screen
+      screen = BOTH;
+      this->color = {0, 255, 0, 255};
     }
 
-    if (screen % 2 != 0) {
+    if (RENDER_TOP) {
       graphics::set_screen(graphics::TOP1);
       graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
     }
-    if (screen == 2) {
-      graphics::set_screen(graphics::TOP1);
+
+    if (RENDER_BOTTOM) {
+      graphics::set_screen(graphics::BOTTOM);
+      for (int i = 0; i < this->vertices_count; i++) {
+        vertices[i].y -= BOTTOM_SCREEN_HEIGHT;
+        vertices[i].x -= (TOP_SCREEN_WIDTH - BOTTOM_SCREEN_WIDTH) / 2;
+      }
       graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
     }
     #endif

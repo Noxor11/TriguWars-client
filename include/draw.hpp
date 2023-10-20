@@ -9,6 +9,8 @@ namespace graphics {
     enum Screen {
         TOP1, TOP2, BOTTOM
     };
+    
+    extern Screen selected_screen;
     #endif
 
     struct Color {

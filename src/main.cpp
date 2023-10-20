@@ -101,18 +101,19 @@ int main() {
 #else
     while (true) {
 #endif
-
+        
         graphics::start_frame();
 
         input::scan();
 
         game.update(1);
         // float magnitude=2.5f;
-        // if (input::joystick1.x != 0 || input::joystick1.y != 0){
+        if (input::joystick1.x != 0 || input::joystick1.y != 0){
 
-        //     b2Vec2 force = b2Vec2(cos(game.player.body->GetAngle()) * input::joystick1.x, sin(game.player.body->GetAngle()) * input::joystick1.y);
-        //     game.player.body->SetLinearVelocity(force);
-        // }
+             b2Vec2 force = b2Vec2(cos(game.player.body->GetAngle()) * input::joystick1.x, sin(game.player.body->GetAngle()) * input::joystick1.y);
+             game.player.body->ApplyLinearImpulseToCenter(force, true);
+        }
+        obj->body->SetAngularVelocity(2);
 
         // graphics::draw_vertices((Vector2*)vertices, 5, {255,255,255,255});
 
