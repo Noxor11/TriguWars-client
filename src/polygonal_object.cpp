@@ -33,11 +33,11 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     //             this->vertices[2].x, this->vertices[2].y,
     //             {255, 0, 0, 255});
 
-    graphics::draw_vertices(vertices, this->vertices_count, this->color);
+    graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
 };
 
-PolygonalObject::PolygonalObject(b2World* world, b2Body* body, b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color):
-    Object(world, body, color), vertices(new b2Vec2[vertices_count]), vertices_count(vertices_count) {
+PolygonalObject::PolygonalObject(b2World* world, b2Body* body, b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color, bool filled):
+    Object(world, body, color, filled), vertices(new b2Vec2[vertices_count]), vertices_count(vertices_count) {
         for (unsigned int i = 0; i < vertices_count; ++i){
             this->vertices[i] = vertices[i];
         }

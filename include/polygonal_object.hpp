@@ -9,7 +9,7 @@ class PolygonalObject : public Object {
     b2Vec2* vertices;
     unsigned int vertices_count;
 
-    PolygonalObject(b2World* world, b2Body* body, b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color);
+    PolygonalObject(b2World* world, b2Body* body, b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color, bool filled = true);
     ~PolygonalObject();
     virtual void draw(const VirtualScreen &vscreen, bool rotate = false) override;    
 };

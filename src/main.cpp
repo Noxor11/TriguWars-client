@@ -94,7 +94,7 @@ int main() {
     Game game = Game(b2Vec2(0.0f, 0.0f), 4, 2);
 
     b2Vec2 vertices[] = {{10 + 100, 20+ 100}, {0+ 100, 20+ 100}, {-10+ 100,0 + 100}, {0+ 100, -5 + 100}, {20+ 100, 0+ 100}};
-    // auto obj = game.create_connected_line_object(vertices, 5, 1,2, Color{255,255,255,255});
+    //auto obj = game.create_connected_line_object(vertices, 5, 1,2, Color{255,255,255,255});
     // obj->body->SetTransform({100, 100}, 0);
     
 #ifdef __3DS__
