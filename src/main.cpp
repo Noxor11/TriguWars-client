@@ -92,13 +92,7 @@ int main() {
 
     Game game = Game(b2Vec2(0.0f, 0.0f), 4, 2);
 
-    b2Vec2 vertices[5];
-    vertices[0].Set(20.0f + 100.0f, 0.0f + 100.0f);
-    vertices[1].Set(0.0f + 100.0f, -5.0f + 100.0f);
-    vertices[2].Set(-10.0f + 100.0f, 0.0f + 100.0f);
-    vertices[3].Set(0.0f + 100.0f, 20.0f + 100.0f);
-    vertices[4].Set(10.0f + 100.0f, 20.0f + 100.0f);
-    std::cout << "1. " << vertices[0].x << ", " << vertices[0].y << " sb (110, 120)";
+    b2Vec2 vertices[] = {{10 + 100, 20+ 100}, {0+ 100, 20+ 100}, {-10+ 100,0 + 100}, {0+ 100, -5 + 100}, {20+ 100, 0+ 100}};
     auto obj = game.create_polygonal_object(vertices, 5, 1,2, Color{255,255,255,255}, false);
     // obj->body->SetTransform({100, 100}, 0);
     

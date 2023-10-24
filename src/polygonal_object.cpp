@@ -36,7 +36,7 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
         vertices[i] = {vscreen.translate_x(v.x), vscreen.translate_y(v.y)};
         std::cout << v.x << "!!" << std::endl;
       } else {
-        vertices[i] = {vscreen.translate_x((vscreen.height - v.y) * vscreen.scale), vscreen.translate_y(v.x * vscreen.scale)};
+        vertices[i] = {vscreen.translate_x((vscreen.height - v.x) * vscreen.scale), vscreen.translate_y(v.y * vscreen.scale)};
         #ifdef __3DS__
         if (i == 0) min_y = vertices[i].y;
         if (min_y > vertices[i].y) min_y = vertices[i].y;
