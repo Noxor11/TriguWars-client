@@ -92,7 +92,13 @@ int main() {
 
     Game game = Game(b2Vec2(0.0f, 0.0f), 4, 2);
 
-    b2Vec2 vertices[] = {{10 + 100, 20+ 100}, {0+ 100, 20+ 100}, {-10+ 100,0 + 100}, {0+ 100, -5 + 100}, {20+ 100, 0+ 100}};
+    b2Vec2 vertices[5];
+    vertices[0].Set(20.0f + 100.0f, 0.0f + 100.0f);
+    vertices[1].Set(0.0f + 100.0f, -5.0f + 100.0f);
+    vertices[2].Set(-10.0f + 100.0f, 0.0f + 100.0f);
+    vertices[3].Set(0.0f + 100.0f, 20.0f + 100.0f);
+    vertices[4].Set(10.0f + 100.0f, 20.0f + 100.0f);
+    std::cout << "1. " << vertices[0].x << ", " << vertices[0].y << " sb (110, 120)";
     auto obj = game.create_polygonal_object(vertices, 5, 1,2, Color{255,255,255,255}, false);
     // obj->body->SetTransform({100, 100}, 0);
     
@@ -106,16 +112,21 @@ int main() {
 
         input::scan();
 
-        game.update(1);
+        game.update(0.16);
         // float magnitude=2.5f;
-        if (input::joystick1.x != 0 || input::joystick1.y != 0){
+        //if (input::joystick1.x != 0 || input::joystick1.y != 0){
+            b2Vec2 force = b2Vec2(sin(game.player.body->GetAngle()) * 100, -cos(game.player.body->GetAngle()) * 100);
+            game.player.body->SetLinearVelocity(force);
+        //} else {
+        //    game.player.body->SetLinearVelocity({0,0});
+        //}
 
-             b2Vec2 force = b2Vec2(cos(game.player.body->GetAngle()) * input::joystick1.x, sin(game.player.body->GetAngle()) * input::joystick1.y);
-             game.player.body->ApplyLinearImpulseToCenter(force, true);
+        if (input::joystick1.x != 0) {
+            game.player.body->ApplyAngularImpulse(input::joystick1.x * 4, true);
         }
-        obj->body->SetAngularVelocity(2);
+        obj->body->SetAngularVelocity(0.25);
 
-        // graphics::draw_vertices((Vector2*)vertices, 5, {255,255,255,255});
+        graphics::draw_vertices((Vector2*)vertices, 5, {255,255,255,255});
 
 
         graphics::end_frame();

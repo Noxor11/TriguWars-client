@@ -27,7 +27,13 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
       auto v = b2Mul(this->body->GetTransform(), this->vertices[i]);
       // TODO: Escalar en base a vscreen
       if (!rotate) {
-        vertices[i] = {vscreen.translate_x(v.x * vscreen.scale), vscreen.translate_y(v.y * vscreen.scale)};
+        if (i == 0 && !filled) {
+          std::cout << "2. " << this->vertices[0].x << ", " << this->vertices[0].y << " sb (110, 120)";
+          graphics::text::draw_text(30, 90, {255,255,255,255}, std::string("2. ").append(std::to_string(this->vertices[0].x).append(", ").append(std::to_string(this->vertices[0].y))), 30);
+          graphics::text::draw_text(30, 120, {255,255,255,255}, std::string("3. ").append(std::to_string(v.x).append(", ").append(std::to_string(v.y))), 30);
+          std::cout << "3. " << v.x << ", " << v.y << " sb (110, 120)";
+        }
+        vertices[i] = {vscreen.translate_x(v.x), vscreen.translate_y(v.y)};
         std::cout << v.x << "!!" << std::endl;
       } else {
         vertices[i] = {vscreen.translate_x((vscreen.height - v.y) * vscreen.scale), vscreen.translate_y(v.x * vscreen.scale)};
