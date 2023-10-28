@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 #include "object.hpp"
-
+#include "screen_transitions.hpp"
 
 template<class T, class U>
 concept Derived = std::is_base_of<U, T>::value;
@@ -20,6 +20,7 @@ class Game {
     std::vector<Trigu> players;
     Trigu player;
 
+    ScreenManager& screen_manager = ScreenManager::get_instance();
 
     // Box2D recommends 8 velocity iterations
     int velocity_iterations;

@@ -13,7 +13,6 @@
 
 #include <box2d/box2d.h>
 #include <cmath>
-#include <iostream>
 #include <string>
 
 using namespace graphics;

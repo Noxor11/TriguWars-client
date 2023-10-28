@@ -1,5 +1,4 @@
 #include "polygonal_object.hpp"
-#include "3ds/services/gsplcd.h"
 #include "draw.hpp"
 #include "text.hpp"
 #include <iostream>

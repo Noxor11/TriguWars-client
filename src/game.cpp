@@ -5,12 +5,18 @@
 #include "trigu.hpp"
 #include "polygonal_object.hpp"
 #include "dimensions.hpp"
+#include "title_screen.hpp"
+#include "input.hpp"
+#include "settings_screen.hpp"
 
 #include <memory>
 
 
 Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3)
-    : world(new b2World(gravity)), vscreen(0, 0, 0, 0, 0.0f), player{CreateTrigu(world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})}, velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
+    : world(new b2World(gravity)), vscreen(0, 0, 0, 0, 0.0f), 
+      player{CreateTrigu(world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})},
+      velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
+
     vscreen.width = 480;
     vscreen.height = 320;
     vscreen.offset_y = 0;
@@ -26,6 +32,20 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
 
     players.emplace_back(player);
     register_object(player);
+
+    TitleScreen* title_screen = new TitleScreen();
+    screen_manager.add_screen(ScreenName::TITLE, title_screen);
+    screen_manager.set_current_screen(ScreenName::TITLE);
+
+    SettingsScreen* settings_screen = new SettingsScreen();
+    screen_manager.add_screen(ScreenName::SETTINGS, settings_screen);
+    
+    ScreenTransition title_to_settings = ScreenTransition(title_screen, settings_screen, [](Screen* scr1, Screen* scr2){return true;});
+    ScreenTransition settings_to_title = ScreenTransition(settings_screen, title_screen, [](Screen* scr1, Screen* scr2){return true;});
+
+    screen_manager.add_transition(title_to_settings);
+    screen_manager.add_transition(settings_to_title);
+    
 }
 
 Trigu* Game::create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color){
@@ -45,20 +65,23 @@ T* Game::register_object(const T& object) {
 void Game::update(float dt) {
     world->Step(dt, velocity_iterations, position_iterations);
 
-    graphics::text::draw_text(30, 30, {255, 255, 255, 255}, std::to_string(objects.size()).append("objs"), 30);
 
-    graphics::draw_line(0, 35, 200, 35, {0, 0, 255, 255});
+    // graphics::text::draw_text(30, 30, {255, 255, 255, 255}, std::to_string(objects.size()).append("objs"), 30);
+    screen_manager.get_current_screen()->update();
 
-    for(auto& obj : objects) {
-        obj->update();
 
-        #ifdef __3DS__
-        obj->draw(vscreen, true);
-        #else
-        obj->draw(vscreen, false);
-        #endif
+    // graphics::draw_line(0, 35, 200, 35, {0, 0, 255, 255});
 
-    }
+    // for(auto& obj : objects) {
+    //     obj->update();
+
+    //     #ifdef __3DS__
+    //     obj->draw(vscreen, true);
+    //     #else
+    //     obj->draw(vscreen, false);
+    //     #endif
+
+    // }
 
 
 }

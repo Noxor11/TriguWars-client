@@ -3,8 +3,10 @@
 #include "text.hpp"
 #include "screen.hpp"
 #include "title_screen.hpp"
+#include "screen_transitions.hpp"
+#include "input.hpp"
 
-void TitleScreen::update() {
+void TitleScreen::update() const {
     // Debug
     graphics::draw_rectangle(vscreen.offset_x, vscreen.offset_y, vscreen.translate_w(vscreen.width), vscreen.translate_h(vscreen.height), {75, 75, 75, 255});
 
@@ -21,6 +23,10 @@ void TitleScreen::update() {
 
     graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320 * 0.75f),
                         {255,255,255,255}, "Press X or A to continue");
+
+    if (input::is_key_down(input::Buttons::BUTTON_CONFIRM)) {
+        ScreenManager::get_instance().transition_to(ScreenName::SETTINGS);
+    }
 }
 
 #ifdef __PSVITA__
