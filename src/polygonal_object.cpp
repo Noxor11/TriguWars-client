@@ -50,6 +50,8 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
       this->color = {0, 255, 0, 255};
     }
 
+    auto last_screen = graphics::selected_screen;
+
     if (RENDER_TOP) {
       graphics::set_screen(graphics::TOP1);
       graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
@@ -63,6 +65,7 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
       }
       graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
     }
+    graphics::set_screen(last_screen);
     #endif
 
     #ifndef __3DS__
