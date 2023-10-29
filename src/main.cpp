@@ -7,6 +7,7 @@
 #include "title_screen.hpp"
 #include "object.hpp"
 #include "text.hpp"
+#include "audio.hpp"
 #ifdef __3DS__
 #include <3ds.h>
 #include <citro2d.h>
@@ -22,7 +23,11 @@ int main() {
     graphics::init();
     graphics::text::set_font("CubicCoreMono");
     input::init();
-
+    audio::init();
+    
+    audio::register_sound(Sounds::LASER, "laser_shot.wav");
+    audio::register_song("background.mp3");
+    audio::start_playing_music();
     /*
     VirtualScreen screen = VirtualScreen(0, 0, 100, 100, 1.0);
     TitleScreen title_screen;
@@ -173,5 +178,6 @@ int main() {
     }
 
     graphics::close();
+    audio::close();
     return 0;
 }

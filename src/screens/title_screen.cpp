@@ -5,6 +5,7 @@
 #include "title_screen.hpp"
 #include "screen_transitions.hpp"
 #include "input.hpp"
+#include "audio.hpp"
 
 void TitleScreen::update() const {
     // Debug
@@ -26,6 +27,7 @@ void TitleScreen::update() const {
 
     if (input::is_key_down(input::Buttons::BUTTON_CONFIRM)) {
         ScreenManager::get_instance().transition_to(ScreenName::SETTINGS);
+        audio::play_sound(Sounds::LASER);
     }
 }
 

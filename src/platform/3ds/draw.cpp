@@ -54,15 +54,7 @@ void stopAndClean(int error){
 int start_scene() {
 
     romfsInit();
-    // apply_dsp_firm(); for sound to work
 
-    // if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0){
-    //     return -1;
-    // }
-
-    // if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048) == -1)
-    //     return -2;
-    
     cfguInit(); // Allow C2D_FontLoadSystem to work
     gfxInitDefault();
     u8 system_language;
@@ -148,7 +140,7 @@ void graphics::close() {
     //     threadFree(threads[i]);
     // }
 
-    // SDL_Quit();
+    text::close();
     C2D_Fini();
     C3D_Fini();
     gfxExit();
@@ -172,6 +164,7 @@ void graphics::start_frame() {
 }
 
 void graphics::set_screen(Screen scr) {
+#ifndef DEBUG
     switch (scr) {
         case TOP1: selected_screen_target = top1; graphics::selected_screen = TOP1; break;
         case TOP2: selected_screen_target = top2; graphics::selected_screen = TOP2; break;
@@ -183,6 +176,7 @@ void graphics::set_screen(Screen scr) {
     //C3D_FrameDrawOn(selected_screen_target);
     C2D_SceneBegin(selected_screen_target);
     // C2D_TargetClear(selected_screen_target, C2D_Color32(0, 0, 0, 0xFF));
+#endif
 }
 
 void graphics::end_frame() {

@@ -18,7 +18,6 @@ enum SCREENS {
 
 void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     graphics::Vector2 vertices[this->vertices_count];
-    int screen = 0; // 0 = upper, 1 = lower, 2 = both
     #ifdef __3DS__
     float max_y = 0;
     float min_y = 0;
@@ -39,7 +38,10 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     }
 
     #ifdef __3DS__
+    int screen = 0; // 0 = upper, 1 = lower, 2 = both
+
     if (max_y < TOP_SCREEN_HEIGHT) { // if the polygon is in the top screen
+    
       screen = TOP;
       this->color = {255, 0, 0, 255};
     } else if (max_y > TOP_SCREEN_HEIGHT && min_y > TOP_SCREEN_HEIGHT) { // si el polígono está entremedias
