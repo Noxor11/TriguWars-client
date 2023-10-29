@@ -1,4 +1,5 @@
 #include "polygonal_object.hpp"
+#include "dimensions.hpp"
 #include "draw.hpp"
 #include "text.hpp"
 #include <iostream>
@@ -6,10 +7,14 @@
 
 using graphics::draw_triangle;
 
-// In case we port this to DS
-#ifdef __3DS__
-#define TOP_SCREEN_HEIGHT 240
-#endif
+#define RENDER_TOP screen % 2 != 0
+#define RENDER_BOTTOM screen > 1
+
+enum SCREENS {
+  TOP     = 1,
+  BOTTOM  = 2,
+  BOTH    = 3
+};
 
 void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     graphics::Vector2 vertices[this->vertices_count];
@@ -23,7 +28,6 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
       // TODO: Escalar en base a vscreen
       if (!rotate) {
         vertices[i] = {vscreen.translate_x(v.x * vscreen.scale), vscreen.translate_y(v.y * vscreen.scale)};
-        std::cout << v.x << "!!" << std::endl;
       } else {
         vertices[i] = {vscreen.translate_x((vscreen.height - v.y) * vscreen.scale), vscreen.translate_y(v.x * vscreen.scale)};
         #ifdef __3DS__
@@ -33,26 +37,30 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
         #endif
       }
     }
-    // draw_triangle(this->vertices[0].x, this->vertices[0].y,
-    //             this->vertices[1].x, this->vertices[1].y,
-    //             this->vertices[2].x, this->vertices[2].y,
-    //             {255, 0, 0, 255});
 
     #ifdef __3DS__
-    if (max_y < TOP_SCREEN_HEIGHT) {
-      screen = 1;
-    } else if (max_y > TOP_SCREEN_HEIGHT) {
-      screen = 2;
-    } else {
-      screen = 3;
+    if (max_y < TOP_SCREEN_HEIGHT) { // if the polygon is in the top screen
+      screen = TOP;
+      this->color = {255, 0, 0, 255};
+    } else if (max_y > TOP_SCREEN_HEIGHT && min_y > TOP_SCREEN_HEIGHT) { // si el polígono está entremedias
+      screen = BOTTOM;
+      this->color = {255, 255, 0, 255};
+    } else { // if the polygon is in the bottom screen
+      screen = BOTH;
+      this->color = {0, 255, 0, 255};
     }
 
-    if (screen % 2 != 0) {
+    if (RENDER_TOP) {
       graphics::set_screen(graphics::TOP1);
       graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
     }
-    if (screen == 2) {
-      graphics::set_screen(graphics::TOP1);
+
+    if (RENDER_BOTTOM) {
+      graphics::set_screen(graphics::BOTTOM);
+      for (int i = 0; i < this->vertices_count; i++) {
+        vertices[i].y -= BOTTOM_SCREEN_HEIGHT;
+        vertices[i].x -= (TOP_SCREEN_WIDTH - BOTTOM_SCREEN_WIDTH) / 2;
+      }
       graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
     }
     #endif
@@ -64,14 +72,10 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
 };
 
 PolygonalObject::PolygonalObject(b2World* world, b2Body* body, b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color, bool filled):
-    Object(world, body, color, filled), vertices(new b2Vec2[vertices_count]), vertices_count(vertices_count) {
-        for (unsigned int i = 0; i < vertices_count; ++i){
-            this->vertices[i] = vertices[i];
-        }
+    Object(world, body, color, filled), vertices(vertices, vertices + vertices_count), vertices_count(vertices_count) {
     }
 
 PolygonalObject::~PolygonalObject(){
-  delete[] vertices;
 }
 
 PolygonalObject CreatePolygonalObject(b2World* world, b2Vec2* vertices, unsigned int vertices_count, float density, float friction, const graphics::Color &color, bool filled) {

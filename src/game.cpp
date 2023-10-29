@@ -26,7 +26,7 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     #else
     // NOTE: 3DS has to handle offset in between screens
     vscreen.scale = 1.0f;
-    vscreen.offset_x = 0;
+    vscreen.offset_x = 40;
     #endif
 
 
@@ -66,22 +66,22 @@ void Game::update(float dt) {
     world->Step(dt, velocity_iterations, position_iterations);
 
 
-    // graphics::text::draw_text(30, 30, {255, 255, 255, 255}, std::to_string(objects.size()).append("objs"), 30);
+    graphics::text::draw_text(30, 30, {255, 255, 255, 255}, std::to_string(objects.size()).append("objs"), 30);
     screen_manager.get_current_screen()->update();
 
 
-    // graphics::draw_line(0, 35, 200, 35, {0, 0, 255, 255});
+    graphics::draw_line(0, 35, 200, 35, {0, 0, 255, 255});
 
-    // for(auto& obj : objects) {
-    //     obj->update();
+    for(auto& obj : objects) {
+        obj->update();
 
-    //     #ifdef __3DS__
-    //     obj->draw(vscreen, true);
-    //     #else
-    //     obj->draw(vscreen, false);
-    //     #endif
+        #ifdef __3DS__
+        obj->draw(vscreen, true);
+        #else
+        obj->draw(vscreen, false);
+        #endif
 
-    // }
+    }
 
 
 }

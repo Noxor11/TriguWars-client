@@ -6,6 +6,7 @@
 #include "trigu.hpp"
 #include "title_screen.hpp"
 #include "object.hpp"
+#include "text.hpp"
 #ifdef __3DS__
 #include <3ds.h>
 #include <citro2d.h>
@@ -93,27 +94,37 @@ int main() {
 
     b2Vec2 vertices[] = {{10 + 100, 20+ 100}, {0+ 100, 20+ 100}, {-10+ 100,0 + 100}, {0+ 100, -5 + 100}, {20+ 100, 0+ 100}};
     auto obj = game.create_polygonal_object(vertices, 5, 1,2, Color{255,255,255,255}, false);
-    // obj->body->SetTransform({100, 100}, 0);
-    
+    obj->body->SetTransform({150, 200}, 0);
+
+
+    auto obj2 = game.create_polygonal_object(vertices, 5, 1,2, Color{255,255,255,255}, false);
+    obj2->body->SetTransform({40, 100}, 0);
+
 #ifdef __3DS__
     while (aptMainLoop()) {
 #else
     while (true) {
 #endif
-
+        
         graphics::start_frame();
 
         input::scan();
 
-        game.update(1);
+        game.update(0.16);
         // float magnitude=2.5f;
-        // if (input::joystick1.x != 0 || input::joystick1.y != 0){
+        //if (input::joystick1.x != 0 || input::joystick1.y != 0){
+            b2Vec2 force = b2Vec2(sin(game.player.body->GetAngle()) * 100, -cos(game.player.body->GetAngle()) * 100);
+            game.player.body->SetLinearVelocity(force);
+        //} else {
+        //    game.player.body->SetLinearVelocity({0,0});
+        //}
 
-        //     b2Vec2 force = b2Vec2(cos(game.player.body->GetAngle()) * input::joystick1.x, sin(game.player.body->GetAngle()) * input::joystick1.y);
-        //     game.player.body->SetLinearVelocity(force);
-        // }
+        if (input::joystick1.x != 0) {
+            game.player.body->ApplyAngularImpulse(input::joystick1.x * 4, true);
+        }
+        obj->body->SetAngularVelocity(0.25);
 
-        // graphics::draw_vertices((Vector2*)vertices, 5, {255,255,255,255});
+        graphics::draw_vertices((Vector2*)obj->vertices.data(), 5, {255,255,255,255});
 
 
         graphics::end_frame();

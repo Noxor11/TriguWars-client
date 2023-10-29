@@ -66,7 +66,7 @@ void graphics::draw_vertices(const Vector2 *vertices, int n_vertices, const Colo
         // NOTE: Puede que TRIANGLE_STRIP no sea lo correcto, pueden ocurrir error para cosas que no sean triángulos
         vita2d_draw_array(SCE_GXM_PRIMITIVE_TRIANGLE_FAN, v2d_vertices, n_vertices);
     } else {
-        for (int i = 0; i < n_vertices/2; i+=2) {
+        for (int i = 0; i < n_vertices; i++) {
             vita2d_draw_line(vertices[i].x, vertices[i].y, vertices[(i + 1) % n_vertices].x, vertices[(i + 1) % n_vertices].y, color.to_RGBA32());
         }
     }
