@@ -3,10 +3,11 @@
 #include "object.hpp"
 #include <box2d/b2_math.h>
 #include <cstring>
+#include <vector>
 
 class PolygonalObject : public Object {
     public:
-    b2Vec2* vertices;
+    std::vector<b2Vec2> vertices;
     unsigned int vertices_count;
 
     PolygonalObject(b2World* world, b2Body* body, b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color, bool filled = true);
