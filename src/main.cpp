@@ -124,7 +124,7 @@ int main() {
         }
         obj->body->SetAngularVelocity(0.25);
 
-        graphics::draw_vertices((Vector2*)obj->vertices.data(), 5, {255,255,255,255});
+        graphics::draw_vertices((Vector2*)obj->vertices, 5, {255,255,255,255});
 
 
         graphics::end_frame();

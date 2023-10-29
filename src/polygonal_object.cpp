@@ -71,11 +71,28 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
 
 };
 
-PolygonalObject::PolygonalObject(b2World* world, b2Body* body, b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color, bool filled):
-    Object(world, body, color, filled), vertices(vertices, vertices + vertices_count), vertices_count(vertices_count) {
-    }
+PolygonalObject::PolygonalObject(b2World* world, b2Body* body, b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color, bool filled) :
+    Object(world, body, color, filled), vertices(new b2Vec2[vertices_count]), vertices_count(vertices_count) {
+        memcpy(this->vertices, vertices, sizeof(b2Vec2) * vertices_count);
+}
+
+PolygonalObject::PolygonalObject(const PolygonalObject& other) :
+    Object(other.world, other.body, other.color, other.filled), 
+    vertices(new b2Vec2[other.vertices_count]), 
+    vertices_count(other.vertices_count) {
+        memcpy(this->vertices, other.vertices, sizeof(b2Vec2) * vertices_count);
+}
+
+PolygonalObject& PolygonalObject::operator=(const PolygonalObject& other) {
+  this->vertices_count = other.vertices_count;
+  this->vertices = new b2Vec2[vertices_count];
+  memcpy(this->vertices, other.vertices, sizeof(b2Vec2) * vertices_count);
+  return *this;
+}
+
 
 PolygonalObject::~PolygonalObject(){
+  delete[] this->vertices;
 }
 
 PolygonalObject CreatePolygonalObject(b2World* world, b2Vec2* vertices, unsigned int vertices_count, float density, float friction, const graphics::Color &color, bool filled) {
