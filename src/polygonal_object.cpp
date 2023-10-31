@@ -16,7 +16,7 @@ enum SCREENS {
   BOTH    = 3
 };
 
-void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
+void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate, float scale) {
     graphics::Vector2 vertices[this->vertices_count];
     int screen = 0; // 0 = upper, 1 = lower, 2 = both
     #ifdef __3DS__
@@ -25,6 +25,11 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate) {
     #endif
     for (unsigned int i = 0; i < this->vertices_count; i++) {
       auto v = b2Mul(this->body->GetTransform(), this->vertices[i]);
+
+      // Ajustar la escala para que quepa en la pantalla, ver Game::adjust_scale
+      v.x = v.x * scale + vscreen.width / 2;
+      v.y = v.y * scale + vscreen.height / 2;
+
       // TODO: Escalar en base a vscreen
       if (!rotate) {
         vertices[i] = {vscreen.translate_x(v.x * vscreen.scale), vscreen.translate_y(v.y * vscreen.scale)};

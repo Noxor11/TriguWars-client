@@ -18,5 +18,5 @@ class Object {
         ~Object();
 
         virtual void update() {};
-        virtual void draw(const VirtualScreen &vscreen, bool rotate = false) {};
+        virtual void draw(const VirtualScreen &vscreen, bool rotate = false, float scale = 1.0) {};
 };

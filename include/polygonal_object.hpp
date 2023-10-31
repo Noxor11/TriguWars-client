@@ -15,7 +15,7 @@ class PolygonalObject : public Object {
     PolygonalObject& operator=(const PolygonalObject& other);
 
     ~PolygonalObject();
-    virtual void draw(const VirtualScreen &vscreen, bool rotate = false) override;    
+    virtual void draw(const VirtualScreen &vscreen, bool rotate = false, float scale = 1.0) override;
 };
 
 PolygonalObject CreatePolygonalObject(b2World* world, b2Vec2* vertices, unsigned int vertices_count, float density, float friction, const graphics::Color &color, bool filled);

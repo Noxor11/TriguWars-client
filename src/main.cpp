@@ -110,6 +110,7 @@ int main() {
 
         input::scan();
 
+        game.adjust_scale();
         game.update(0.16);
         // float magnitude=2.5f;
         //if (input::joystick1.x != 0 || input::joystick1.y != 0){

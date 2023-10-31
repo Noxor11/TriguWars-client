@@ -67,8 +67,9 @@ void Game::update(float dt) {
 
 
     graphics::text::draw_text(30, 30, {255, 255, 255, 255}, std::to_string(objects.size()).append("objs"), 30);
-    screen_manager.get_current_screen()->update();
+    graphics::text::draw_text(30, 60, {255, 255, 255, 255}, std::to_string(scale).append("scale"), 30);
 
+    screen_manager.get_current_screen()->update();
 
     graphics::draw_line(0, 35, 200, 35, {0, 0, 255, 255});
 
@@ -76,13 +77,66 @@ void Game::update(float dt) {
         obj->update();
 
         #ifdef __3DS__
-        obj->draw(vscreen, true);
+        obj->draw(vscreen, true, scale);
         #else
-        obj->draw(vscreen, false);
+        obj->draw(vscreen, false, scale);
         #endif
 
     }
 
+
+}
+
+void Game::adjust_scale() {
+    float min_x = -0.1;
+    float max_x = 0.1;
+    float min_y = -0.1;
+    float max_y = 0.1;
+
+    for (auto& obj : objects) {
+        if (((std::dynamic_pointer_cast<PolygonalObject>)(obj))->vertices != NULL) {
+            auto pobj = (std::dynamic_pointer_cast<PolygonalObject>)(obj);
+            for (int i = 0; i < pobj->vertices_count; i++) {
+                auto v = b2Mul(pobj->body->GetTransform(), pobj->vertices[i]);
+                if (v.x < min_x) {
+                   min_x = v.x;
+                } else if (v.x > max_x) {
+                   max_x = v.x;
+                }
+
+                if (v.y < min_y) {
+                    min_y = v.y;
+                } else if (v.y > max_y) {
+                    max_y = v.y;
+                }
+            }
+        }
+    }
+
+    float scale_min_x = -(vscreen.width / 2) / min_x;
+    float scale_max_x = (vscreen.width / 2) / max_x;
+    float scale_min_y = -(vscreen.height / 2) / min_y;
+    float scale_max_y = (vscreen.height / 2) / max_y;
+
+    float scale_x = 0;
+    float scale_y = 0;
+    if (scale_min_x < scale_max_x) {
+        scale_x = scale_min_x;
+    } else {
+        scale_x = scale_max_x;
+    }
+
+    if (scale_min_y < scale_max_y) {
+        scale_y = scale_min_y;
+    } else {
+        scale_y = scale_max_y;
+    }
+
+    if (scale_x < scale_y) {
+        scale = scale_x;
+    } else {
+        scale = scale_y;
+    }
 
 }
 

@@ -27,12 +27,16 @@ class Game {
     // Box2D recommends 3 position iterations
     int position_iterations;
 
+    // adjusts automatically with Game::adjust_scale
+    float scale = 1.0;
+
     void update(float dt);
     Trigu* create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color);
     PolygonalObject* create_polygonal_object(b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color, bool fill);
 
     template<Derived<Object> T>
     T* register_object(const T& object);
+    void adjust_scale();
     Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations);
     ~Game();
 };
