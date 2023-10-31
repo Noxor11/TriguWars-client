@@ -94,8 +94,8 @@ void Game::adjust_scale() {
     float max_y = 0.1;
 
     for (auto& obj : objects) {
-        if (((std::dynamic_pointer_cast<PolygonalObject>)(obj))->vertices != NULL) {
-            auto pobj = (std::dynamic_pointer_cast<PolygonalObject>)(obj);
+        if (((std::static_pointer_cast<PolygonalObject>)(obj))->vertices != NULL) {
+            auto pobj = (std::static_pointer_cast<PolygonalObject>)(obj);
             for (int i = 0; i < pobj->vertices_count; i++) {
                 auto v = b2Mul(pobj->body->GetTransform(), pobj->vertices[i]);
                 if (v.x < min_x) {
@@ -120,6 +120,7 @@ void Game::adjust_scale() {
 
     float scale_x = 0;
     float scale_y = 0;
+
     if (scale_min_x < scale_max_x) {
         scale_x = scale_min_x;
     } else {
