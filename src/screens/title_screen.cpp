@@ -24,7 +24,7 @@ void TitleScreen::update() const {
     graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320 * 0.75f),
                         {255,255,255,255}, "Press X or A to continue");
 
-    if (input::is_key_down(input::Buttons::BUTTON_CONFIRM)) {
+    if (input::is_key_held(input::Buttons::BUTTON_START)) {
         ScreenManager::get_instance().transition_to(ScreenName::SETTINGS);
     }
 }

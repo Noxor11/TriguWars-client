@@ -7,13 +7,13 @@
 
 class Object {
     public:
-        b2World* world;
-        b2Body* body;
+        b2World* const world;
+        b2Body* const body;
         graphics::Color color;
         bool filled;
 
     public:
-        Object(b2World* world, b2Body* body, const graphics::Color &color, bool filled = true):
+        Object(b2World* const world, b2Body* const body, const graphics::Color &color, bool filled = true):
             world(world), body(body), color(color), filled(filled) {};
         ~Object();
 

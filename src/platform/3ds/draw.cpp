@@ -188,7 +188,7 @@ void graphics::set_screen(Screen scr) {
 void graphics::end_frame() {
     C3D_FrameRate(60);
     C3D_FrameEnd(0);
-    gspWaitForVBlank();
+    // gspWaitForVBlank();
 }
 
 void graphics::draw_rectangle(int x, int y, int w, int h, const Color& color) {

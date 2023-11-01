@@ -12,7 +12,7 @@ void SettingsScreen::update() const {
     graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(140/2),
                         {255,255,255,255}, "Settings", 30);
 
-    if (input::is_key_down(input::Buttons::BUTTON_CANCEL)) {
+    if (input::is_key_held(input::Buttons::BUTTON_CANCEL)) {
         ScreenManager::get_instance().transition_to(ScreenName::TITLE);
     }
 

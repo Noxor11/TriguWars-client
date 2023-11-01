@@ -49,11 +49,11 @@ void input::scan(){
 }
 
 bool input::is_key_pressed(Buttons button) {
-    return hidKeysHeld() & translate_enum(button);
+    return hidKeysDown() & translate_enum(button);
 }
 
-bool input::is_key_down(Buttons button) {
-    return hidKeysDown() & translate_enum(button);
+bool input::is_key_held(Buttons button) {
+    return hidKeysHeld() & translate_enum(button);
 }
 
 bool input::is_key_up(Buttons button) {
