@@ -14,7 +14,7 @@
 
 Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3)
     : world(new b2World(gravity)), vscreen(0, 0, 0, 0, 0.0f), 
-      player{CreateTrigu(world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})},
+      player{CreateTrigu(world, 0.1, 0.15, 0.1, 0.3, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})},
       velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
 
     vscreen.width = 480;
@@ -65,11 +65,30 @@ T* Game::register_object(const T& object) {
 void Game::update(float dt) {
     world->Step(dt, velocity_iterations, position_iterations);
 
+    for (float fx = -1.5f * scale; fx < 1.5f * scale; fx+= 0.1f) {
+        for (float fy = -1.0f * scale; fy < 1.0f * scale; fy += 0.1f) {
+            graphics::draw_rectangle(vscreen.translate_x(fx * scale), vscreen.translate_y(fy * scale), 0.05f * scale * vscreen.scale, 0.05f * scale * vscreen.scale, graphics::Color {100, 100, 100});
+        }
+    }
+    //scale_t += dt;
+    //if (scale != target_scale) {
+    if (scale_grow_direction < 0.0f && scale <= target_scale) {
+        scale = target_scale;
+        scale_grow_direction = 0.0f;
+    } else if (scale_grow_direction > 0.0f && scale >= target_scale) {
+        scale = target_scale;
+        scale_grow_direction = 0.0f;
+    }
+
+    // v = (x - x0) / t
+    scale += dt * scale_grow_direction * ( abs(scale - target_scale) / (scale_grow_duration) );
+    //}
+
 
     graphics::text::draw_text(30, 30, {255, 255, 255, 255}, std::to_string(objects.size()).append("objs"), 30);
     graphics::text::draw_text(30, 60, {255, 255, 255, 255}, std::to_string(scale).append("scale"), 30);
 
-    screen_manager.get_current_screen()->update();
+    //screen_manager.get_current_screen()->update();
 
     graphics::draw_line(0, 35, 200, 35, {0, 0, 255, 255});
 
@@ -134,9 +153,16 @@ void Game::adjust_scale() {
     }
 
     if (scale_x < scale_y) {
-        scale = scale_x;
+        target_scale = scale_x;
     } else {
-        scale = scale_y;
+        target_scale = scale_y;
+    };
+    if (scale > target_scale) {
+        scale_grow_direction = -1.0;
+    } else if (scale < target_scale) {
+        scale_grow_direction = 1.0;
+    } else {
+        return;
     }
 
 }

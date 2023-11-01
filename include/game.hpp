@@ -28,7 +28,11 @@ class Game {
     int position_iterations;
 
     // adjusts automatically with Game::adjust_scale
-    float scale = 1.0;
+    float scale = 1.0f;
+    // In seconds
+    float scale_grow_duration = 4.0f;
+    float scale_grow_direction = 0.0f;
+    float target_scale = 1.0f;
 
     void update(float dt);
     Trigu* create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color);

@@ -92,13 +92,19 @@ int main() {
 
     Game game = Game(b2Vec2(0.0f, 0.0f), 4, 2);
 
-    b2Vec2 vertices[] = {{10 + 100, 20+ 100}, {0+ 100, 20+ 100}, {-10+ 100,0 + 100}, {0+ 100, -5 + 100}, {20+ 100, 0+ 100}};
+    b2Vec2 vertices[] = {{( 10 + 100 ) * (1.5 / 480), ( 20+ 100 ) * (1.0 / 320)},
+                            {( 100 ) * (1.5 / 480), ( 20 + 100 ) * (1.0 / 320)},
+                            {( -10+ 100 ) * (1.5 / 480), 100 * (1.0 / 320)},
+                            {(100) * (1.5 / 480), ( -5 + 100 ) * (1.0 / 320)},
+                            {(20 + 100) * (1.5 / 480), 100 * (1.0 / 320)}
+                        };
+    b2Vec2 vertices_old[] = {{10 + 100, 20+ 100}, {0+ 100, 20+ 100}, {-10+ 100,0 + 100}, {0+ 100, -5 + 100}, {20+ 100, 0+ 100}};
     auto obj = game.create_polygonal_object(vertices, 5, 1,2, Color{255,255,255,255}, false);
-    obj->body->SetTransform({150, 200}, 0);
+    obj->body->SetTransform({150 * (1.5 / 480), 200 * (1.0 / 320)}, 0);
 
 
     auto obj2 = game.create_polygonal_object(vertices, 5, 1,2, Color{255,255,255,255}, false);
-    obj2->body->SetTransform({40, 100}, 0);
+    obj2->body->SetTransform({40 * (1.5 / 480), 100 * (1.0 / 320)}, 0);
 
 #ifdef __3DS__
     while (aptMainLoop()) {
@@ -114,8 +120,11 @@ int main() {
         game.update(0.16);
         // float magnitude=2.5f;
         //if (input::joystick1.x != 0 || input::joystick1.y != 0){
-            b2Vec2 force = b2Vec2(sin(game.player.body->GetAngle()) * 100, -cos(game.player.body->GetAngle()) * 100);
+
+        if (input::joystick1.y != 0) {
+            b2Vec2 force = b2Vec2(sin(game.player.body->GetAngle()) * input::joystick1.y, -cos(game.player.body->GetAngle()) * input::joystick1.y);
             game.player.body->SetLinearVelocity(force);
+        }
         //} else {
         //    game.player.body->SetLinearVelocity({0,0});
         //}
