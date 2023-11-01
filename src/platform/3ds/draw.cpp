@@ -15,7 +15,7 @@ C2D_SpriteSheet spriteSheet;
 
 using namespace graphics;
 
-unsigned int Color::to_RGBA32() const {
+inline unsigned int Color::to_RGBA32() const {
     return C2D_Color32(this->r, this->g, this->b, this->a);
 }
 
