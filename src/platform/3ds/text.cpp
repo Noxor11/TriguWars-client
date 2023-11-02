@@ -60,7 +60,7 @@ bool graphics::text::set_font(const std::string& name){
     return font != NULL;
 }
 
-void graphics::text::draw_text(int x, int y, const graphics::Color &color, const std::string &text, unsigned int size){
+void graphics::text::draw_text(int x, int y, const std::string &text, unsigned int size, const graphics::Color &color){
     const int VITA_ADJUSTMENT = 30;
     //	For every char in the score, convert to int and display it
     int xPos = x;

@@ -99,11 +99,11 @@ int main() {
                             {(20 + 100) * (1.5 / 480), 100 * (1.0 / 320)}
                         };
     b2Vec2 vertices_old[] = {{10 + 100, 20+ 100}, {0+ 100, 20+ 100}, {-10+ 100,0 + 100}, {0+ 100, -5 + 100}, {20+ 100, 0+ 100}};
-    auto obj = game.create_polygonal_object(vertices, 5, 1,2, Color{255,255,255,255}, false);
+    auto obj = game.create_polygonal_object(vertices, 5, 1,2, Color::WHITE(), false);
     obj->body->SetTransform({150 * (1.5 / 480), 200 * (1.0 / 320)}, 0);
 
 
-    auto obj2 = game.create_polygonal_object(vertices, 5, 1,2, Color{255,255,255,255}, false);
+    auto obj2 = game.create_polygonal_object(vertices, 5, 1,2, Color::WHITE(), false);
     obj2->body->SetTransform({40 * (1.5 / 480), 100 * (1.0 / 320)}, 0);
     game.adjust_scale();
     game.scale = game.target_scale;
@@ -115,7 +115,6 @@ int main() {
 #endif
         
         graphics::start_frame();
-
         input::scan();
 
         game.adjust_scale();
@@ -129,7 +128,7 @@ int main() {
 
         obj->body->SetAngularVelocity(0.25);
 
-        graphics::draw_vertices((Vector2*)obj->vertices, 5, {255,255,255,255});
+        graphics::draw_vertices((Vector2*)obj->vertices, 5, Color::WHITE());
 
 
         graphics::end_frame();

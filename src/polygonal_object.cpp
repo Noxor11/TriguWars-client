@@ -46,13 +46,13 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate, float scal
     #ifdef __3DS__
     if (max_y < TOP_SCREEN_HEIGHT) { // if the polygon is in the top screen
       screen = TOP;
-      this->color = {255, 0, 0, 255};
+      this->color = graphics::Color::RED();
     } else if (max_y > TOP_SCREEN_HEIGHT && min_y > TOP_SCREEN_HEIGHT) { // si el polígono está entremedias
       screen = BOTTOM;
-      this->color = {255, 255, 0, 255};
+      this->color = graphics::Color::YELLOW();
     } else { // if the polygon is in the bottom screen
       screen = BOTH;
-      this->color = {0, 255, 0, 255};
+      this->color = graphics::Color::GREEN();
     }
 
     auto last_screen = graphics::selected_screen;
