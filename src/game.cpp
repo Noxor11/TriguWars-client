@@ -12,10 +12,10 @@
 #include <memory>
 
 
-Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3)
+Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3, GameConfig::GameConfig game_config)
     : world(new b2World(gravity)), vscreen(0, 0, 0, 0, 0.0f), 
       player{CreateTrigu(world, 0.1, 0.15, 0.1, 0.3, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})},
-      velocity_iterations(velocity_iterations), position_iterations(position_iterations) {
+      velocity_iterations(velocity_iterations), position_iterations(position_iterations), game_config(game_config) {
 
     vscreen.width = 480;
     vscreen.height = 320;
@@ -66,14 +66,31 @@ void Game::update(float dt) {
     //auto vel = player.body->GetLinearVelocity();
     //player.body->SetLinearVelocity();
 
-    if (input::joystick1.y != 0) {
-        float speed = input::joystick1.y * (0.05f / 128.0f);
-        b2Vec2 force = b2Vec2(sin(player.body->GetAngle()) * speed, -cos(player.body->GetAngle()) * speed);
-        player.body->SetLinearVelocity(force);
+    if (game_config.movement_mode == GameConfig::MovementMode::THRUST_AND_BRAKES) {
+            float speed;
+            if (game_config.input_compatibility > GameConfig::InputCompatibility::DS) {
+                speed = input::joystick1.y * (game_config.speed / 128.0f);
+                if (speed > game_config.top_speed) speed = game_config.top_speed;
+            } else {
+                if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
+                    speed = -game_config.speed;
+                } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
+                    speed = game_config.speed;
+                }
+            }
+            b2Vec2 force = b2Vec2(sin(player.body->GetAngle()) * speed, -cos(player.body->GetAngle()) * speed);
+            player.body->ApplyLinearImpulseToCenter(force, true);
+       // TODO
+    } else if (game_config.movement_mode == GameConfig::MovementMode::JOYSTICK2_STRAFE) {
+        if (game_config.input_compatibility <= GameConfig::InputCompatibility::PSP) {
+            graphics::text::draw_text(10, 30, {255, 0, 0, 255}, "(!) Joystick2 strafe is not possible in PSP compatibility mode or below");
+        } else {
+            // TODO
+        }
     }
 
     if (input::joystick1.x != 0) {
-        player.body->ApplyAngularImpulse(input::joystick1.x / 256.0f, true);
+        player.body->SetAngularVelocity(input::joystick1.x * (game_config.rotation_speed / 128.0f));
     }
 
     world->Step(dt, velocity_iterations, position_iterations);

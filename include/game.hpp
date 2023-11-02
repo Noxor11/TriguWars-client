@@ -12,14 +12,18 @@ template<class T, class U>
 concept Derived = std::is_base_of<U, T>::value;
 
 namespace GameConfig {
-    enum MovementMode {THRUST_AND_BRAKES, JOYSTICK2_STRAFE};
-    enum KillCondition {BULLET, CHASE, NONE};
+    enum class MovementMode {THRUST_AND_BRAKES, JOYSTICK2_STRAFE};
+    enum class KillCondition {BULLET, CHASE, NONE};
+    enum class InputCompatibility {PSP, DS, NO_TRIGGERS, FULL_GAMEPAD};
+
     struct GameConfig {
         float air_friction = 0.0f;
-        MovementMode movement_mode = THRUST_AND_BRAKES;
-        KillCondition kill_condition = BULLET;
-        float speed = 0.05f;
+        MovementMode movement_mode = MovementMode::THRUST_AND_BRAKES;
+        KillCondition kill_condition = KillCondition::BULLET;
+        float speed = 0.001f;
+        float top_speed = 0.007f;
         float rotation_speed = 0.05f;
+        InputCompatibility input_compatibility = InputCompatibility::NO_TRIGGERS;
     };
 
 }
@@ -45,9 +49,11 @@ class Game {
     // adjusts automatically with Game::adjust_scale
     float scale = 1.0f;
     // In seconds
-    float scale_grow_duration = 4.0f;
+    float scale_grow_duration = 1.0f;
     float scale_grow_direction = 0.0f;
     float target_scale = 1.0f;
+
+    GameConfig::GameConfig game_config;
 
     void update(float dt);
     Trigu* create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color);
@@ -56,6 +62,6 @@ class Game {
     template<Derived<Object> T>
     T* register_object(const T& object);
     void adjust_scale();
-    Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations);
+    Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations, GameConfig::GameConfig game_config = GameConfig::GameConfig());
     ~Game();
 };
