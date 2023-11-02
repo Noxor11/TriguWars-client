@@ -63,13 +63,21 @@ T* Game::register_object(const T& object) {
 }
 
 void Game::update(float dt) {
+    //auto vel = player.body->GetLinearVelocity();
+    //player.body->SetLinearVelocity();
+
+    if (input::joystick1.y != 0) {
+        float speed = input::joystick1.y * (0.05f / 128.0f);
+        b2Vec2 force = b2Vec2(sin(player.body->GetAngle()) * speed, -cos(player.body->GetAngle()) * speed);
+        player.body->SetLinearVelocity(force);
+    }
+
+    if (input::joystick1.x != 0) {
+        player.body->ApplyAngularImpulse(input::joystick1.x / 256.0f, true);
+    }
+
     world->Step(dt, velocity_iterations, position_iterations);
 
-    for (float fx = -1.5f * scale; fx < 1.5f * scale; fx+= 0.1f) {
-        for (float fy = -1.0f * scale; fy < 1.0f * scale; fy += 0.1f) {
-            graphics::draw_rectangle(vscreen.translate_x(fx * scale), vscreen.translate_y(fy * scale), 0.05f * scale * vscreen.scale, 0.05f * scale * vscreen.scale, graphics::Color {100, 100, 100});
-        }
-    }
     //scale_t += dt;
     //if (scale != target_scale) {
     if (scale_grow_direction < 0.0f && scale <= target_scale) {

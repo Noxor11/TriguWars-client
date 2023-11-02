@@ -105,6 +105,8 @@ int main() {
 
     auto obj2 = game.create_polygonal_object(vertices, 5, 1,2, Color{255,255,255,255}, false);
     obj2->body->SetTransform({40 * (1.5 / 480), 100 * (1.0 / 320)}, 0);
+    game.adjust_scale();
+    game.scale = game.target_scale;
 
 #ifdef __3DS__
     while (aptMainLoop()) {
@@ -121,17 +123,10 @@ int main() {
         // float magnitude=2.5f;
         //if (input::joystick1.x != 0 || input::joystick1.y != 0){
 
-        if (input::joystick1.y != 0) {
-            b2Vec2 force = b2Vec2(sin(game.player.body->GetAngle()) * input::joystick1.y, -cos(game.player.body->GetAngle()) * input::joystick1.y);
-            game.player.body->SetLinearVelocity(force);
-        }
         //} else {
         //    game.player.body->SetLinearVelocity({0,0});
         //}
 
-        if (input::joystick1.x != 0) {
-            game.player.body->ApplyAngularImpulse(input::joystick1.x * 4, true);
-        }
         obj->body->SetAngularVelocity(0.25);
 
         graphics::draw_vertices((Vector2*)obj->vertices, 5, {255,255,255,255});

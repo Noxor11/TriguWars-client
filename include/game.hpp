@@ -11,6 +11,19 @@
 template<class T, class U>
 concept Derived = std::is_base_of<U, T>::value;
 
+namespace GameConfig {
+    enum MovementMode {THRUST_AND_BRAKES, JOYSTICK2_STRAFE};
+    struct GameConfig {
+        bool air_friction = false;
+        MovementMode movement_mode = THRUST_AND_BRAKES;
+        float speed = 0.05f;
+        float rotation_speed = 0.05f;
+    };
+
+}
+
+
+
 class Game {
     public:
 

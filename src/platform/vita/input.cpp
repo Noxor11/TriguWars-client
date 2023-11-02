@@ -47,7 +47,7 @@ void input::scan() {
     sceCtrlPeekBufferPositiveExt2(0, &pad, 1);
     // NOTE: Tiene un bias de 1 hacia uno de los lados por imprecisión
     input::joystick1.x = pad.lx - 127;
-    input::joystick1.y = pad.ly - 127;
+    input::joystick1.y = 127 - pad.ly;
     input::joystick2.x = pad.rx - 127;
     input::joystick2.y = pad.ry - 127;
 }
