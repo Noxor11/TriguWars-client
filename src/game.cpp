@@ -95,6 +95,11 @@ void Game::update(float dt) {
 
     world->Step(dt, velocity_iterations, position_iterations);
 
+    // for (float fx = -1.5f * scale; fx < 1.5f * scale; fx+= 0.1f) {
+    //     for (float fy = -1.0f * scale; fy < 1.0f * scale; fy += 0.1f) {
+    //         graphics::draw_rectangle(vscreen.translate_x(fx * scale), vscreen.translate_y(fy * scale), 0.05f * scale * vscreen.scale, 0.05f * scale * vscreen.scale, graphics::Color {100, 100, 100});
+    //     }
+    // }
     //scale_t += dt;
     //if (scale != target_scale) {
     if (scale_grow_direction < 0.0f && scale <= target_scale) {
@@ -110,17 +115,17 @@ void Game::update(float dt) {
     //}
 
 
-    graphics::text::draw_text(30, 30, {255, 255, 255, 255}, std::to_string(objects.size()).append("objs"), 30);
-    graphics::text::draw_text(30, 60, {255, 255, 255, 255}, std::to_string(scale).append("scale"), 30);
+    graphics::text::draw_text(30, 30, std::to_string(objects.size()).append("objs"));
+    graphics::text::draw_text(30, 60, std::to_string(scale).append("scale"));
 
     //screen_manager.get_current_screen()->update();
 
-    graphics::draw_line(0, 35, 200, 35, {0, 0, 255, 255});
+    graphics::draw_line(0, 35, 200, 35, graphics::Color::BLUE());
 
 
     if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
-// CreateTrigu(world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})
-        auto obj = this->create_trigu(20, 20, 20, 40, 0.1f, 0.3f, graphics::Color {0, 0, 255, 255});
+// CreateTrigu(world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color graphics::Color::BLUE())
+        auto obj = this->create_trigu(20, 20, 20, 40, 0.1f, 0.3f, graphics::Color::BLUE());
         const auto pos = player.body->GetPosition();
         obj->body->SetTransform({pos.x, pos.y}, obj->body->GetAngle());
         

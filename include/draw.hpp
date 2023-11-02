@@ -19,11 +19,15 @@ namespace graphics {
         int b = 0;
         int a = 255;
 
-        static inline Color RED()      {return Color{255,0,0,255};};
-        static inline Color GREEN()    {return Color{0,255,0,255};};
-        static inline Color BLUE()     {return Color{0,0,255,255};};
-        static inline Color WHITE()    {return Color{255,255,255,255};};
-        static inline Color BLACK()    {return Color{0,0,0,255};};
+        static inline Color RED()       {return Color{255,0,0,255};};
+        static inline Color GREEN()     {return Color{0,255,0,255};};
+        static inline Color BLUE()      {return Color{0,0,255,255};};
+        static inline Color WHITE()     {return Color{255,255,255,255};};
+        static inline Color BLACK()     {return Color{0,0,0,255};};
+        static inline Color YELLOW()    {return Color{255,255,0,255};};
+        static inline Color CYAN()      {return Color{0,255,255,255};};
+        static inline Color PURPLE()       {return Color{255,0,255,255};};
+
         unsigned int to_RGBA32() const;
     };
 

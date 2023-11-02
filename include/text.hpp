@@ -14,7 +14,7 @@ namespace graphics{
         
         void init();
         bool set_font(const std::string& name);
-        void draw_text(int x, int y, const Color &color, const std::string& string, unsigned int size = 1);
+        void draw_text(int x, int y, const std::string& string, unsigned int size = 30, const Color &color = Color::WHITE());
         void close();
     }
 }

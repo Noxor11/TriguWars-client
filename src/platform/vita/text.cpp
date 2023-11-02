@@ -18,7 +18,7 @@ bool graphics::text::set_font(const std::string& name) {
     return font != NULL;
 }
 
-void graphics::text::draw_text(int x, int y, const Color &color, const std::string &string, unsigned int size) {
+void graphics::text::draw_text(int x, int y, const std::string &string, unsigned int size, const Color &color) {
     if (font == NULL) return;
     vita2d_font_draw_text(font, x, y, color.to_RGBA32(), size, string.c_str());
 }

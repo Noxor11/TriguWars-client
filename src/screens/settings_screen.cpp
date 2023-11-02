@@ -9,8 +9,7 @@
 void SettingsScreen::update() const {
     // Para saber cómo cada librería renderiza el texto
 
-    graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(140/2),
-                        {255,255,255,255}, "Settings", 30);
+    graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(140/2), "Settings");
 
     if (input::is_key_held(input::Buttons::BUTTON_CANCEL)) {
         ScreenManager::get_instance().transition_to(ScreenName::TITLE);

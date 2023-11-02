@@ -13,16 +13,14 @@ void TitleScreen::update() const {
     // Para saber cómo cada librería renderiza el texto
 
     // Start of text
-    graphics::draw_line(this->vscreen.translate_x(240/2), 0, this->vscreen.translate_x(240/2), this->vscreen.translate_y(320/2), {0, 255, 0, 255});
+    graphics::draw_line(this->vscreen.translate_x(240/2), 0, this->vscreen.translate_x(240/2), this->vscreen.translate_y(320/2), graphics::Color::GREEN());
 
     // Baseline
-    graphics::draw_line(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320/2), this->vscreen.translate_x(240/2)+30*9, this->vscreen.translate_y(320/2), {0, 0, 255, 255});
+    graphics::draw_line(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320/2), this->vscreen.translate_x(240/2)+30*9, this->vscreen.translate_y(320/2), graphics::Color::BLUE());
 
-    graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320/2),
-                        {255,255,255,255}, "TriguWars", 2);
+    graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320/2), "TriguWars", 20);
 
-    graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320 * 0.75f),
-                        {255,255,255,255}, "Press X or A to continue");
+    graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(320 * 0.75f),"Press X or A to continue");
 
     if (input::is_key_held(input::Buttons::BUTTON_START)) {
         ScreenManager::get_instance().transition_to(ScreenName::SETTINGS);
