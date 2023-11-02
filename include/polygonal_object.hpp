@@ -10,7 +10,7 @@ class PolygonalObject : public Object {
     b2Vec2* vertices;
     unsigned int vertices_count;
 
-    PolygonalObject(b2World* world, b2Body* body, b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color, bool filled = true);
+    PolygonalObject(b2World* const world, b2Body* const body, const b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color, bool filled = true);
     PolygonalObject(const PolygonalObject& other);
     PolygonalObject& operator=(const PolygonalObject& other);
 
@@ -18,4 +18,4 @@ class PolygonalObject : public Object {
     virtual void draw(const VirtualScreen &vscreen, bool rotate = false, float scale = 1.0) override;
 };
 
-PolygonalObject CreatePolygonalObject(b2World* world, b2Vec2* vertices, unsigned int vertices_count, float density, float friction, const graphics::Color &color, bool filled);
+PolygonalObject CreatePolygonalObject(b2World* world, const b2Vec2* vertices, unsigned int vertices_count, float density, float friction, const graphics::Color &color, bool filled);

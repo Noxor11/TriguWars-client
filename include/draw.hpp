@@ -14,11 +14,16 @@ namespace graphics {
     #endif
 
     struct Color {
-        int r;
-        int g;
-        int b;
-        int a;
+        int r = 0;
+        int g = 0;
+        int b = 0;
+        int a = 255;
 
+        static inline Color RED()      {return Color{255,0,0,255};};
+        static inline Color GREEN()    {return Color{0,255,0,255};};
+        static inline Color BLUE()     {return Color{0,0,255,255};};
+        static inline Color WHITE()    {return Color{255,255,255,255};};
+        static inline Color BLACK()    {return Color{0,0,0,255};};
         unsigned int to_RGBA32() const;
     };
 

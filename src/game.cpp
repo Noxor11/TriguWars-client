@@ -52,7 +52,7 @@ Trigu* Game::create_trigu(float x, float y, float w, float h, float density, flo
     return register_object(CreateTrigu(world, x, y, w, h, density, friction, color));
 }
 
-PolygonalObject* Game::create_polygonal_object(b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color, bool filled){
+PolygonalObject* Game::create_polygonal_object(const b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color, bool filled){
     return register_object(CreatePolygonalObject(world, vertices, vertices_count, density, friction, color, filled));
 }
 
@@ -100,6 +100,15 @@ void Game::update(float dt) {
 
     graphics::draw_line(0, 35, 200, 35, {0, 0, 255, 255});
 
+
+    if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
+// CreateTrigu(world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})
+        auto obj = this->create_trigu(20, 20, 20, 40, 0.1f, 0.3f, graphics::Color {0, 0, 255, 255});
+        const auto pos = player.body->GetPosition();
+        obj->body->SetTransform({pos.x, pos.y}, obj->body->GetAngle());
+        
+    }    
+
     for(auto& obj : objects) {
         obj->update();
 
@@ -123,7 +132,7 @@ void Game::adjust_scale() {
     for (auto& obj : objects) {
         if (((std::static_pointer_cast<PolygonalObject>)(obj))->vertices != NULL) {
             auto pobj = (std::static_pointer_cast<PolygonalObject>)(obj);
-            for (int i = 0; i < pobj->vertices_count; i++) {
+            for (unsigned int i = 0; i < pobj->vertices_count; i++) {
                 auto v = b2Mul(pobj->body->GetTransform(), pobj->vertices[i]);
                 if (v.x < min_x) {
                    min_x = v.x;

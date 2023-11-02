@@ -73,8 +73,8 @@ void graphics::text::draw_text(int x, int y, const graphics::Color &color, const
             xPos, 
             y, 
             0.0f,
-            size / VITA_ADJUSTMENT, 
-            size / VITA_ADJUSTMENT, 
+            (float)size / VITA_ADJUSTMENT, 
+            (float)size / VITA_ADJUSTMENT, 
             color.to_RGBA32());
 
         xPos += letterFont->width * size / 30;

@@ -57,7 +57,7 @@ bool input::is_key_pressed(input::Buttons button) {
     return !(pad_prev.buttons & tbutton) && (pad.buttons & tbutton);
 }
 
-bool input::is_key_down(input::Buttons button) {
+bool input::is_key_held(input::Buttons button) {
     SceCtrlButtons tbutton = translate_enum(button);
     return (pad.buttons & tbutton);
 }

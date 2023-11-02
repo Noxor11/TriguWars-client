@@ -42,7 +42,7 @@ namespace input {
     void scan();
 
     bool is_key_pressed(Buttons button);
-    bool is_key_down(Buttons button);
+    bool is_key_held(Buttons button);
     bool is_key_up(Buttons button);
 
     /**
