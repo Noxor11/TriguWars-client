@@ -67,30 +67,49 @@ void Game::update(float dt) {
     //player.body->SetLinearVelocity();
 
     if (game_config.movement_mode == GameConfig::MovementMode::THRUST_AND_BRAKES) {
-            float speed;
+            float speed = 0.0;
             if (game_config.input_compatibility > GameConfig::InputCompatibility::DS) {
-                speed = input::joystick1.y * (game_config.speed / 128.0f);
-                if (speed > game_config.top_speed) speed = game_config.top_speed;
+                player_speed += input::joystick1.y * (game_config.speed / 128.0f);
             } else {
                 if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
-                    speed = -game_config.speed;
+                    speed += -game_config.speed;
                 } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
-                    speed = game_config.speed;
+                    speed += game_config.speed;
                 }
             }
-            b2Vec2 force = b2Vec2(sin(player.body->GetAngle()) * speed, -cos(player.body->GetAngle()) * speed);
-            player.body->ApplyLinearImpulseToCenter(force, true);
+
+            if (player_speed > game_config.top_speed || player_speed < -game_config.top_speed) {
+                player_speed = (player_speed / abs(player_speed)) * game_config.top_speed;
+                // Don't
+            } else {
+                b2Vec2 force = b2Vec2(sin(player.body->GetAngle()) * player_speed, -cos(player.body->GetAngle()) * player_speed);
+                player.body->SetLinearVelocity(force);
+            }
+            //float new_speed = (force + player.body->GetLinearVelocity()).Length();
        // TODO
     } else if (game_config.movement_mode == GameConfig::MovementMode::JOYSTICK2_STRAFE) {
         if (game_config.input_compatibility <= GameConfig::InputCompatibility::PSP) {
-            graphics::text::draw_text(10, 30, {255, 0, 0, 255}, "(!) Joystick2 strafe is not possible in PSP compatibility mode or below");
+            graphics::text::draw_text(10, 30, "! Joystick2 strafe is not possible in PSP compatibility mode or below", 30, {255, 0, 0, 255});
         } else {
             // TODO
         }
     }
 
-    if (input::joystick1.x != 0) {
-        player.body->SetAngularVelocity(input::joystick1.x * (game_config.rotation_speed / 128.0f));
+    if (game_config.input_compatibility > GameConfig::InputCompatibility::DS) {
+        player_rotation_speed += input::joystick1.x * (game_config.rotation_speed / 128.0f);
+    } else {
+        if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
+            player_rotation_speed += -game_config.speed;
+        } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
+            player_rotation_speed += game_config.speed;
+        }
+    }
+
+
+    if (player_rotation_speed < game_config.rotation_top_speed && player_rotation_speed > -game_config.rotation_top_speed) {
+        player.body->SetAngularVelocity(player_rotation_speed);
+    } else {
+        player_rotation_speed = (player_rotation_speed / abs(player_rotation_speed)) * game_config.rotation_top_speed;
     }
 
     world->Step(dt, velocity_iterations, position_iterations);

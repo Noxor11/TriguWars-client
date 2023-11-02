@@ -20,9 +20,10 @@ namespace GameConfig {
         float air_friction = 0.0f;
         MovementMode movement_mode = MovementMode::THRUST_AND_BRAKES;
         KillCondition kill_condition = KillCondition::BULLET;
+        float top_speed = 0.014f;
         float speed = 0.001f;
-        float top_speed = 0.007f;
-        float rotation_speed = 0.05f;
+        float rotation_speed = 0.02f;
+        float rotation_top_speed = 0.08f;
         InputCompatibility input_compatibility = InputCompatibility::NO_TRIGGERS;
     };
 
@@ -52,6 +53,9 @@ class Game {
     float scale_grow_duration = 1.0f;
     float scale_grow_direction = 0.0f;
     float target_scale = 1.0f;
+
+    float player_speed = 0;
+    float player_rotation_speed = 0;
 
     GameConfig::GameConfig game_config;
 
