@@ -13,9 +13,11 @@ concept Derived = std::is_base_of<U, T>::value;
 
 namespace GameConfig {
     enum MovementMode {THRUST_AND_BRAKES, JOYSTICK2_STRAFE};
+    enum KillCondition {BULLET, CHASE, NONE};
     struct GameConfig {
-        bool air_friction = false;
+        float air_friction = 0.0f;
         MovementMode movement_mode = THRUST_AND_BRAKES;
+        KillCondition kill_condition = BULLET;
         float speed = 0.05f;
         float rotation_speed = 0.05f;
     };
