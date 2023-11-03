@@ -13,7 +13,18 @@
     #define BOTTOM_WIDTH_CENTER		BOTTOM_SCREEN_WIDTH  / 2
     #define BOTTOM_HEIGHT_CENTER	BOTTOM_SCREEN_HEIGHT / 2
 
+
+    #define TITLESCREEN_VSCREEN_SCALE 1.0f
+    #define TITLESCREEN_VSCREEN_OFFSET_X 0
+
 #elif defined __PSVITA__
     #define SCREEN_WIDTH            966
     #define SCREEN_HEIGHT           544
+
+    #define WIDTH_CENTER		SCREEN_WIDTH  / 2
+    #define HEIGHT_CENTER		SCREEN_HEIGHT / 2
+
+    #define TITLESCREEN_VSCREEN_SCALE 2.26f
+    #define TITLESCREEN_VSCREEN_OFFSET_X 960 / 2 - (320 * 2.26f) / 2
+
 #endif

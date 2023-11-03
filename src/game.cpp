@@ -33,19 +33,6 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     players.emplace_back(player);
     register_object(player);
 
-    TitleScreen* title_screen = new TitleScreen();
-    screen_manager.add_screen(ScreenName::TITLE, title_screen);
-    screen_manager.set_current_screen(ScreenName::TITLE);
-
-    SettingsScreen* settings_screen = new SettingsScreen();
-    screen_manager.add_screen(ScreenName::SETTINGS, settings_screen);
-    
-    ScreenTransition title_to_settings = ScreenTransition(title_screen, settings_screen, [](Screen* scr1, Screen* scr2){return true;});
-    ScreenTransition settings_to_title = ScreenTransition(settings_screen, title_screen, [](Screen* scr1, Screen* scr2){return true;});
-
-    screen_manager.add_transition(title_to_settings);
-    screen_manager.add_transition(settings_to_title);
-    
 }
 
 Trigu* Game::create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color){
@@ -63,8 +50,8 @@ T* Game::register_object(const T& object) {
 }
 
 void Game::update(float dt) {
-    //auto vel = player.body->GetLinearVelocity();
-    //player.body->SetLinearVelocity();
+    adjust_scale();
+    world->Step(dt, velocity_iterations, position_iterations);
 
     if (input::joystick1.y != 0) {
         float speed = input::joystick1.y * (0.05f / 128.0f);
@@ -76,15 +63,7 @@ void Game::update(float dt) {
         player.body->ApplyAngularImpulse(input::joystick1.x / 256.0f, true);
     }
 
-    world->Step(dt, velocity_iterations, position_iterations);
 
-    // for (float fx = -1.5f * scale; fx < 1.5f * scale; fx+= 0.1f) {
-    //     for (float fy = -1.0f * scale; fy < 1.0f * scale; fy += 0.1f) {
-    //         graphics::draw_rectangle(vscreen.translate_x(fx * scale), vscreen.translate_y(fy * scale), 0.05f * scale * vscreen.scale, 0.05f * scale * vscreen.scale, graphics::Color {100, 100, 100});
-    //     }
-    // }
-    //scale_t += dt;
-    //if (scale != target_scale) {
     if (scale_grow_direction < 0.0f && scale <= target_scale) {
         scale = target_scale;
         scale_grow_direction = 0.0f;
@@ -95,23 +74,11 @@ void Game::update(float dt) {
 
     // v = (x - x0) / t
     scale += dt * scale_grow_direction * ( abs(scale - target_scale) / (scale_grow_duration) );
-    //}
-
-
-    graphics::text::draw_text(30, 30, std::to_string(objects.size()).append("objs"));
-    graphics::text::draw_text(30, 60, std::to_string(scale).append("scale"));
-
-    //screen_manager.get_current_screen()->update();
-
-    graphics::draw_line(0, 35, 200, 35, graphics::Color::BLUE());
-
 
     if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
-// CreateTrigu(world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color graphics::Color::BLUE())
         auto obj = this->create_trigu(20, 20, 20, 40, 0.1f, 0.3f, graphics::Color::BLUE());
         const auto pos = player.body->GetPosition();
         obj->body->SetTransform({pos.x, pos.y}, obj->body->GetAngle());
-        
     }    
 
     for(auto& obj : objects) {
@@ -122,10 +89,7 @@ void Game::update(float dt) {
         #else
         obj->draw(vscreen, false, scale);
         #endif
-
     }
-
-
 }
 
 void Game::adjust_scale() {
