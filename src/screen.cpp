@@ -28,7 +28,7 @@ ScreenWithMenu::~ScreenWithMenu() {
 
 void ScreenWithMenu::handle_menu() {
     Color color;
-    for (int y = 90, x = 20, i = 0; i < options.size(); y += 30, ++i){
+    for (unsigned int y = 90, x = 20, i = 0; i < options.size(); y += 30, ++i){
 
         if (options[i]->name == options[selected_option_index]->name)
             color = Color::RED();
@@ -54,7 +54,6 @@ void ScreenWithMenu::handle_menu() {
         selected_option_index %= options.size();
     }
     
-    draw_text(100,240, std::to_string(selected_option_index));
 
     if (options[selected_option_index]->type.ITERABLE) {
         IterableMenuOption* iterable_option = ((IterableMenuOption*)(options[selected_option_index]));
