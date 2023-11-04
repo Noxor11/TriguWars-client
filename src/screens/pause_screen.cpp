@@ -14,10 +14,10 @@ PauseScreen::PauseScreen()
     : ScreenWithMenu(
         {
             new ActionableMenuOption("Continue", [](){
-                // ScreenManager::get_instance().transition_to(ScreenName::OFFLINE_GAME);
+                ScreenManager::get_instance().transition_to(ScreenName::OFFLINE_GAME);
             }), 
             new ActionableMenuOption("Settings", [](){
-                // ScreenManager::get_instance().transition_to(ScreenName::SETTINGS);
+                ScreenManager::get_instance().transition_to(ScreenName::SETTINGS);
             }),
         }) {
 }

@@ -62,5 +62,6 @@ public:
 
     ScreenWithMenu(std::vector<MenuOption*> options);
     ScreenWithMenu(const VirtualScreen &vscreen, std::vector<MenuOption*> options);
+    ~ScreenWithMenu();
     void handle_menu();
 };

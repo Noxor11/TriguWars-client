@@ -20,6 +20,12 @@ ScreenWithMenu::ScreenWithMenu(const VirtualScreen &vscreen, std::vector<MenuOpt
 
     };
 
+ScreenWithMenu::~ScreenWithMenu() {
+    for (auto option: options){
+        delete option;
+    }
+}
+
 void ScreenWithMenu::handle_menu() {
     Color color;
     for (int y = 90, x = 20, i = 0; i < options.size(); y += 30, ++i){
@@ -33,7 +39,7 @@ void ScreenWithMenu::handle_menu() {
         
 
         if (options[i]->type.ITERABLE) {
-            IterableMenuOption* iterable_option = (IterableMenuOption*)(&options[i]);
+            IterableMenuOption* iterable_option = (IterableMenuOption*)(options[i]);
             const std::string& value = iterable_option->values[iterable_option->selected_value_index];
             draw_text(x + 200, y, std::string("(").append(value).append(")"), 30, color);
         }
@@ -51,7 +57,7 @@ void ScreenWithMenu::handle_menu() {
     draw_text(100,240, std::to_string(selected_option_index));
 
     if (options[selected_option_index]->type.ITERABLE) {
-        IterableMenuOption* iterable_option = ((IterableMenuOption*)(&options[selected_option_index]));
+        IterableMenuOption* iterable_option = ((IterableMenuOption*)(options[selected_option_index]));
     
         if (input::is_key_pressed(input::Buttons::BUTTON_DPAD_RIGHT)) {
             iterable_option->selected_value_index++;
@@ -64,10 +70,10 @@ void ScreenWithMenu::handle_menu() {
     } 
     
     if (options[selected_option_index]->type.ACTIONABLE){
-        // ActionableMenuOption* actionable_option = ((ActionableMenuOption*)(options[selected_option_index].get()));
+        ActionableMenuOption* actionable_option = ((ActionableMenuOption*)(options[selected_option_index]));
     
-        // if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
-        //     // actionable_option->on_action();
-        // } 
+        if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
+            actionable_option->on_action();
+        } 
     }
 }
