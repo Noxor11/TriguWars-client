@@ -1,9 +1,10 @@
 #pragma once
+
 #include "screen.hpp"
 
-class TitleScreen : public Screen {
+class PauseScreen : public ScreenWithMenu {
     public:
+        PauseScreen();
         void update() override;
-        TitleScreen() = default;
 };
 

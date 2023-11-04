@@ -7,6 +7,11 @@
 #include "title_screen.hpp"
 #include "object.hpp"
 #include "text.hpp"
+#include "settings_screen.hpp"
+#include "pause_screen.hpp"
+#include "game_screen.hpp"
+#include "screen.hpp"
+#include "pause_screen.hpp"
 #ifdef __3DS__
 #include <3ds.h>
 #include <citro2d.h>
@@ -22,73 +27,7 @@ int main() {
     graphics::init();
     graphics::text::set_font("CubicCoreMono");
     input::init();
-
-    /*
-    VirtualScreen screen = VirtualScreen(0, 0, 100, 100, 1.0);
-    TitleScreen title_screen;
-    // Trigu trigito = Trigu(80, 80, 30, 30, 1/8 * 3.14, Color{0, 255, 255, 255});
-
-    float i = 0;
-    float x = 0.0;
-
-
-    b2Vec2 gravity(0.0f, -10.0f);
-    b2World* world = new b2World(gravity);
-    b2BodyDef groundBodyDef;
-    groundBodyDef.position.Set(0.0f, -10.0f);
-    b2Body* groundBody = world->CreateBody(&groundBodyDef);
-    b2PolygonShape groundObject;
-
-    b2Vec2 vertices[4];
-    vertices[0] = b2Vec2{30,10};
-    vertices[1] = b2Vec2{200, 10};
-    vertices[2] = b2Vec2{30,40};
-    vertices[3] = b2Vec2{200,40};
-
-    groundObject.Set(vertices, 4);
-    groundBody->CreateFixture(&groundObject, 0.0f);
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(0.0f, 100.0f);
-    b2Body* body = world->CreateBody(&bodyDef);
-
-    b2PolygonShape dynamicBox;
-    vertices[0] = b2Vec2{30,10};
-    vertices[1] = b2Vec2{90, 10};
-    vertices[2] = b2Vec2{100,70};
-    dynamicBox.Set(vertices, 3);
-
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &dynamicBox;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.3f;
-    body->CreateFixture(&fixtureDef);
-    float timeStep = 1.0f;
-    int32 velocityIterations = 6;
-    int32 positionIterations = 2;
-
-
-    //auto ground = Object(groundBody, [](const b2Vec2* vec) {
-    //    graphics::draw_line(vec[0].x, vec[0].y,
-    //                        vec[1].x, vec[1].y, {120, 24, 20, 255});
-    //
-    //    graphics::draw_line(vec[1].x, vec[1].y,
-    //                        vec[2].x, vec[2].y, {120, 24, 20, 255});
-    //
-    //    graphics::draw_line(vec[2].x, vec[2].y,
-    //                        vec[3].x, vec[3].y, {120, 24, 20, 255});
-    //
-    //    graphics::draw_line(vec[3].x, vec[3].y,
-    //                        vec[0].x, vec[0].y, {120, 24, 20, 255});
-
-    //});
-
-    //auto box = Object(body, [](const b2Vec2* vec){
-    //    graphics::draw_triangle(vec[0].x, vec[0].y, vec[1].x, vec[1].y, vec[2].x, vec[2].y, Color{255,0, 0, 255});
-    //});
-    */
-
-
+    
 
     Game game = Game(b2Vec2(0.0f, 0.0f), 4, 2);
 
@@ -98,16 +37,41 @@ int main() {
                             {(100) * (1.5 / 480), ( -5 + 100 ) * (1.0 / 320)},
                             {(20 + 100) * (1.5 / 480), 100 * (1.0 / 320)}
                         };
-    b2Vec2 vertices_old[] = {{10 + 100, 20+ 100}, {0+ 100, 20+ 100}, {-10+ 100,0 + 100}, {0+ 100, -5 + 100}, {20+ 100, 0+ 100}};
+
     auto obj = game.create_polygonal_object(vertices, 5, 1,2, Color::WHITE(), false);
     obj->body->SetTransform({150 * (1.5 / 480), 200 * (1.0 / 320)}, 0);
-
 
     auto obj2 = game.create_polygonal_object(vertices, 5, 1,2, Color::WHITE(), false);
     obj2->body->SetTransform({40 * (1.5 / 480), 100 * (1.0 / 320)}, 0);
     game.adjust_scale();
     game.scale = game.target_scale;
 
+
+    TitleScreen* title_screen = new TitleScreen();
+    PauseScreen* pause_screen = new PauseScreen();
+    SettingsScreen* settings_screen = new SettingsScreen();
+    GameScreen* game_screen = new GameScreen(&game);
+
+    ScreenManager& screen_manager = ScreenManager::get_instance();
+
+    screen_manager.add_screen(ScreenName::TITLE, title_screen);
+    screen_manager.add_screen(ScreenName::SETTINGS, settings_screen);
+    screen_manager.add_screen(ScreenName::PAUSE, pause_screen);
+    screen_manager.add_screen(ScreenName::OFFLINE_GAME, game_screen);
+    screen_manager.set_current_screen(ScreenName::TITLE);
+    
+    ScreenTransition title_to_settings  = ScreenTransition(title_screen, settings_screen, [](::Screen* scr1, ::Screen* scr2){return true;});
+    ScreenTransition title_to_game      = ScreenTransition(title_screen, game_screen,     [](::Screen* scr1, ::Screen* scr2){return true;});
+    ScreenTransition settings_to_title  = ScreenTransition(settings_screen, title_screen, [](::Screen* scr1, ::Screen* scr2){return true;});
+    ScreenTransition game_to_pause      = ScreenTransition(game_screen, pause_screen,     [](::Screen* scr1, ::Screen* scr2){return true;});
+    ScreenTransition pause_to_game      = ScreenTransition(pause_screen, game_screen,     [](::Screen* scr1, ::Screen* scr2){return true;});
+
+    screen_manager.add_transition(title_to_settings);
+    screen_manager.add_transition(title_to_game);
+    screen_manager.add_transition(settings_to_title);
+    screen_manager.add_transition(game_to_pause);
+    screen_manager.add_transition(pause_to_game);
+    
 #ifdef __3DS__
     while (aptMainLoop()) {
 #else
@@ -117,63 +81,9 @@ int main() {
         graphics::start_frame();
         input::scan();
 
-        game.adjust_scale();
-        game.update(0.16);
-        // float magnitude=2.5f;
-        //if (input::joystick1.x != 0 || input::joystick1.y != 0){
-
-        //} else {
-        //    game.player.body->SetLinearVelocity({0,0});
-        //}
-
-        obj->body->SetAngularVelocity(0.25);
-
+        screen_manager.get_current_screen()->update();
         graphics::draw_vertices((Vector2*)obj->vertices, 5, Color::WHITE());
-
-
         graphics::end_frame();
-        /*
-        i += 3.14 / 60;
-        if (input::is_key_down(input::BUTTON_DPAD_RIGHT)) {
-            x += 2;
-        }
-
-        title_screen.update();
-
-        // graphics::draw_triangle(vertices[0].x, vertices[0].y, vertices[1].x, vertices[1].y, vertices[2].x, vertices[3].y, Color{255,0, 0, 255});
-
-        // trigito.move_x_by(input::joystick1.x / 32);
-        // trigito.move_y_by(input::joystick1.y / 32);
-
-
-        // trigito.rotate_by(0.1);
-
-        // trigito.render(screen);
-
-        if (input::get_touch()) {
-            // graphics::draw_rectangle(input::touch.x, input::touch.y, 40, 40, {225, 192, 203, 255});
-            body->SetTransform({(float)input::touch.x, (float)input::touch.y}, body->GetAngle());
-            body->SetAwake(true);
-            // box.calculate_vertices();
-        }
-*/
-
-
-/*
-
-        // update world
-        world->Step(timeStep, velocityIterations, positionIterations);
-        b2Vec2 position = body->GetPosition();
-        //ground.draw();
-        //box.draw();
-
-
-        std::cout << position.y << "\n";
-        //  ("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
-        
-
-        graphics::end_frame();
-        */
     }
 
     graphics::close();

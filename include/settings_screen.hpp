@@ -2,9 +2,9 @@
 
 #include "screen.hpp"
 
-class SettingsScreen : public Screen {
-    public:
-        void update() const override;
-        SettingsScreen();
-};
+class SettingsScreen : public ScreenWithMenu {
 
+public:
+    SettingsScreen();
+    void update() override;
+};
