@@ -31,6 +31,7 @@ private:
     std::vector<ScreenTransition> transitions;
 
     Screen* current_screen;
+    Screen* last_screen;
     ScreenManager();
 
 public:
@@ -41,6 +42,7 @@ public:
     
     Screen* get_current_screen();
     void set_current_screen(ScreenName name);
+    Screen* get_last_screen();
     Screen* get_screen_by_name(ScreenName name);
     void add_screen(ScreenName name, Screen* screen);
     void add_transition(const ScreenTransition& transition);
@@ -50,4 +52,6 @@ public:
      * @returns true when transition finishes, false otherwise.
     */
     bool transition_to(ScreenName screen_name);
+    bool transition_to_last_screen();
+
 };

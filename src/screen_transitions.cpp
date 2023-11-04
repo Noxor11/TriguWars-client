@@ -22,7 +22,12 @@ Screen* ScreenManager::get_current_screen(){
     return current_screen;
 }
 
+Screen* ScreenManager::get_last_screen(){
+    return last_screen;
+}
+
 void ScreenManager::set_current_screen(ScreenName name){
+    last_screen = current_screen;
     current_screen = get_screen_by_name(name);
 }
 
@@ -42,15 +47,36 @@ void ScreenManager::add_transition(const ScreenTransition& transition){
 
 bool ScreenManager::transition_to(ScreenName name){
     bool finished;
-
+    
     for (auto& trans : transitions) {
         if (trans.scr1 == current_screen){
             finished = trans.fun(trans.scr1, trans.scr2);
         }
     }
 
-    if (finished)
+    if (finished){
+        last_screen = current_screen;   
         current_screen = get_screen_by_name(name);
+    }
+    
+    return finished;
+}
+
+
+bool ScreenManager::transition_to_last_screen(){
+    bool finished;
+    
+    for (auto& trans : transitions) {
+        if (trans.scr1 == last_screen){
+            finished = trans.fun(trans.scr1, trans.scr2);
+        }
+    }
+
+    if (finished){
+        auto tmp = last_screen;
+        last_screen = current_screen;
+        current_screen = tmp;
+    }
     
     return finished;
 }

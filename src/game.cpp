@@ -5,9 +5,7 @@
 #include "trigu.hpp"
 #include "polygonal_object.hpp"
 #include "dimensions.hpp"
-#include "title_screen.hpp"
 #include "input.hpp"
-#include "settings_screen.hpp"
 
 #include <memory>
 #include <chrono>
@@ -34,19 +32,6 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
     players.emplace_back(player);
     register_object(player);
 
-    TitleScreen* title_screen = new TitleScreen();
-    screen_manager.add_screen(ScreenName::TITLE, title_screen);
-    screen_manager.set_current_screen(ScreenName::TITLE);
-
-    SettingsScreen* settings_screen = new SettingsScreen();
-    screen_manager.add_screen(ScreenName::SETTINGS, settings_screen);
-    
-    ScreenTransition title_to_settings = ScreenTransition(title_screen, settings_screen, [](Screen* scr1, Screen* scr2){return true;});
-    ScreenTransition settings_to_title = ScreenTransition(settings_screen, title_screen, [](Screen* scr1, Screen* scr2){return true;});
-
-    screen_manager.add_transition(title_to_settings);
-    screen_manager.add_transition(settings_to_title);
-    
 }
 
 Trigu* Game::create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color){
@@ -148,23 +133,11 @@ void Game::update(float dt) {
 
     // v = (x - x0) / t
     scale += dt * scale_grow_direction * ( abs(scale - target_scale) / (scale_grow_duration) );
-    //}
-
-
-    graphics::text::draw_text(30, 30, std::to_string(objects.size()).append("objs"));
-    graphics::text::draw_text(30, 60, std::to_string(scale).append("scale"));
-
-    //screen_manager.get_current_screen()->update();
-
-    graphics::draw_line(0, 35, 200, 35, graphics::Color::BLUE());
-
 
     if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
-// CreateTrigu(world, 20, 20, 20, 40, 1.0f, 0.3f, graphics::Color graphics::Color::BLUE())
         auto obj = this->create_trigu(20, 20, 20, 40, 0.1f, 0.3f, graphics::Color::BLUE());
         const auto pos = player.body->GetPosition();
         obj->body->SetTransform({pos.x, pos.y}, obj->body->GetAngle());
-        
     }    
 
     for(auto& obj : objects) {
@@ -175,7 +148,6 @@ void Game::update(float dt) {
         #else
         obj->draw(vscreen, false, scale);
         #endif
-
     }
 
     float time_draw = (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now() - profdraw).count() / 10E5;
