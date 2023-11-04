@@ -1,9 +1,8 @@
 #include "polygonal_object.hpp"
-#include "dimensions.hpp"
 #include "draw.hpp"
-#include "text.hpp"
 #include <iostream>
 #include <string>
+#include "dimensions.hpp"
 
 using graphics::draw_triangle;
 

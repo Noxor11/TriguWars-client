@@ -3,7 +3,6 @@
 #include <psp2/touch.h>
 #include <vita2d.h>
 #include <string>
-#include "draw.hpp"
 #include <ostream>
 #include <numeric>
 

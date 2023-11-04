@@ -10,6 +10,7 @@
 #include "settings_screen.hpp"
 
 #include <memory>
+#include <chrono>
 
 
 Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3, GameConfig::GameConfig game_config)
@@ -62,9 +63,14 @@ T* Game::register_object(const T& object) {
     return (T*)(objects[objects.size()-1].get());
 }
 
+auto proflogic = std::chrono::steady_clock::now();
+auto profphys = std::chrono::steady_clock::now();
+auto profdraw = std::chrono::steady_clock::now();
+
 void Game::update(float dt) {
     //auto vel = player.body->GetLinearVelocity();
     //player.body->SetLinearVelocity();
+    proflogic = std::chrono::steady_clock::now();
 
     if (game_config.movement_mode == GameConfig::MovementMode::THRUST_AND_BRAKES) {
             float speed = 0.0;
@@ -83,7 +89,7 @@ void Game::update(float dt) {
                 // Don't
             } else {
                 b2Vec2 force = b2Vec2(sin(player.body->GetAngle()) * player_speed, -cos(player.body->GetAngle()) * player_speed);
-                player.body->SetLinearVelocity(force);
+                //player.body->SetLinearVelocity(force);
             }
             //float new_speed = (force + player.body->GetLinearVelocity()).Length();
        // TODO
@@ -94,6 +100,8 @@ void Game::update(float dt) {
             // TODO
         }
     }
+
+
 
     if (game_config.input_compatibility > GameConfig::InputCompatibility::DS) {
         player_rotation_speed += input::joystick1.x * (game_config.rotation_speed / 128.0f);
@@ -112,7 +120,12 @@ void Game::update(float dt) {
         player_rotation_speed = (player_rotation_speed / abs(player_rotation_speed)) * game_config.rotation_top_speed;
     }
 
+    float time_logic = (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now() - proflogic).count() / 10E5;
+
+    profphys = std::chrono::steady_clock::now();
     world->Step(dt, velocity_iterations, position_iterations);
+
+    float time_physics = (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now() - profphys).count() / 10E5;
 
     // for (float fx = -1.5f * scale; fx < 1.5f * scale; fx+= 0.1f) {
     //     for (float fy = -1.0f * scale; fy < 1.0f * scale; fy += 0.1f) {
@@ -121,6 +134,10 @@ void Game::update(float dt) {
     // }
     //scale_t += dt;
     //if (scale != target_scale) {
+    //
+
+    profdraw = std::chrono::steady_clock::now();
+
     if (scale_grow_direction < 0.0f && scale <= target_scale) {
         scale = target_scale;
         scale_grow_direction = 0.0f;
@@ -161,6 +178,11 @@ void Game::update(float dt) {
 
     }
 
+    float time_draw = (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now() - profdraw).count() / 10E5;
+
+    graphics::text::draw_text(10, SCREEN_HEIGHT-120, std::string("logic ").append(std::to_string(time_logic)), 30, graphics::Color::BLUE());
+    graphics::text::draw_text(10, SCREEN_HEIGHT-90,  std::string("phys  ").append(std::to_string(time_physics)), 30, graphics::Color::GREEN());
+    graphics::text::draw_text(10, SCREEN_HEIGHT-60,  std::string("draw  ").append(std::to_string(time_draw)), 30, graphics::Color::YELLOW());
 
 }
 
