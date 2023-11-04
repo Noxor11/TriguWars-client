@@ -57,6 +57,8 @@ class Game {
 
     GameConfig::GameConfig game_config;
 
+    void handle_player_move();
+
     void update(float dt);
     Trigu* create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color);
     PolygonalObject* create_polygonal_object(const b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color, bool fill);

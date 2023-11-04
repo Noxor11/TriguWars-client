@@ -49,29 +49,21 @@ T* Game::register_object(const T& object) {
     return (T*)(objects[objects.size()-1].get());
 }
 
-void Game::update(float dt) {
-    adjust_scale();
-    world->Step(dt, velocity_iterations, position_iterations);
-
+void Game::handle_player_move(){
     if (game_config.movement_mode == GameConfig::MovementMode::THRUST_AND_BRAKES) {
-            float speed = 0.0;
-            if (game_config.input_compatibility > GameConfig::InputCompatibility::DS) {
-                player_speed += input::joystick1.y * (game_config.speed / 128.0f);
-            } else {
-                if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
-                    speed += -game_config.speed;
-                } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
-                    speed += game_config.speed;
-                }
+        float speed = 0.0;
+        if (game_config.input_compatibility > GameConfig::InputCompatibility::DS) {
+            player_speed += input::joystick1.y * (game_config.speed / 128.0f);
+        } else {
+            if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
+                speed += -game_config.speed;
+            } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
+                speed += game_config.speed;
             }
+        }
 
-            if (player_speed > game_config.top_speed || player_speed < -game_config.top_speed) {
-                player_speed = (player_speed / abs(player_speed)) * game_config.top_speed;
-                // Don't
-            } else {
-                b2Vec2 force = b2Vec2(sin(player.body->GetAngle()) * player_speed, -cos(player.body->GetAngle()) * player_speed);
-                player.body->SetLinearVelocity(force);
-            }
+            b2Vec2 force = b2Vec2(sin(player.body->GetAngle()) * player_speed, -cos(player.body->GetAngle()) * player_speed);
+            player.body->SetLinearVelocity(force);
             //float new_speed = (force + player.body->GetLinearVelocity()).Length();
        // TODO
     } else if (game_config.movement_mode == GameConfig::MovementMode::JOYSTICK2_STRAFE) {
@@ -98,6 +90,13 @@ void Game::update(float dt) {
     } else {
         player_rotation_speed = (player_rotation_speed / abs(player_rotation_speed)) * game_config.rotation_top_speed;
     }
+}
+
+void Game::update(float dt) {
+    adjust_scale();
+    world->Step(dt, velocity_iterations, position_iterations);
+
+    handle_player_move();
 
 
     if (scale_grow_direction < 0.0f && scale <= target_scale) {

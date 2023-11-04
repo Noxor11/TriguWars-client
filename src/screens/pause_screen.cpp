@@ -34,7 +34,7 @@ void PauseScreen::update() {
     #endif
     this->handle_menu();
 
-    if (input::is_key_pressed(input::Buttons::BUTTON_CANCEL)) {
+    if (input::is_key_pressed(input::Buttons::BUTTON_CANCEL) || input::is_key_pressed(input::Buttons::BUTTON_START)) {
         ScreenManager::get_instance().transition_to_last_screen();
     }
 

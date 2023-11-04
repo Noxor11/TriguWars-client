@@ -57,12 +57,13 @@ void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate, float scal
 
     auto last_screen = graphics::selected_screen;
 
-    if (RENDER_TOP) {
+    const bool should_render_top = screen % 2 != 0;
+    if (should_render_top) {
       graphics::set_screen(graphics::TOP1);
       graphics::draw_vertices(vertices, this->vertices_count, this->color, this->filled);
     }
-
-    if (RENDER_BOTTOM) {
+    const bool should_render_bottom = screen > 1;
+    if (should_render_bottom) {
       graphics::set_screen(graphics::BOTTOM);
       for (unsigned int i = 0; i < this->vertices_count; i++) {
         vertices[i].y -= BOTTOM_SCREEN_HEIGHT;
