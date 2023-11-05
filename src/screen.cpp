@@ -10,21 +10,20 @@
 using namespace graphics;
 using namespace text;
 
-ScreenWithMenu::ScreenWithMenu(std::vector<MenuOption*> options)
+MenuOption::MenuOption(const std::string& name, OptionType type) 
+    : name(name), type(type) {}
+
+ScreenWithMenu::ScreenWithMenu(const std::vector<std::shared_ptr<MenuOption>>& options)
     : options(options), selected_option_index(0) {
        
     };
 
-ScreenWithMenu::ScreenWithMenu(const VirtualScreen &vscreen, std::vector<MenuOption*> options) 
+ScreenWithMenu::ScreenWithMenu(const VirtualScreen &vscreen, const std::vector<std::shared_ptr<MenuOption>>& options) 
     : Screen(vscreen), options(options), selected_option_index(0) {
 
     };
 
-ScreenWithMenu::~ScreenWithMenu() {
-    for (auto option: options){
-        delete option;
-    }
-}
+ScreenWithMenu::~ScreenWithMenu() {}
 
 void ScreenWithMenu::handle_menu() {
     Color color;
@@ -39,7 +38,7 @@ void ScreenWithMenu::handle_menu() {
         
 
         if (options[i]->type.ITERABLE) {
-            IterableMenuOption* iterable_option = (IterableMenuOption*)(options[i]);
+            IterableMenuOption* iterable_option = (IterableMenuOption*)(options[i].get());
             const std::string& value = iterable_option->values[iterable_option->selected_value_index];
             draw_text(vscreen.translate_x(x + 200), vscreen.translate_y(y), std::string("( ").append(value).append(" )"), 30, false, color);
         }
@@ -56,7 +55,7 @@ void ScreenWithMenu::handle_menu() {
     
 
     if (options[selected_option_index]->type.ITERABLE) {
-        IterableMenuOption* iterable_option = ((IterableMenuOption*)(options[selected_option_index]));
+        IterableMenuOption* iterable_option = ((IterableMenuOption*)(options[selected_option_index].get()));
     
         if (input::is_key_pressed(input::Buttons::BUTTON_DPAD_RIGHT)) {
             iterable_option->selected_value_index++;
@@ -69,7 +68,7 @@ void ScreenWithMenu::handle_menu() {
     } 
     
     if (options[selected_option_index]->type.ACTIONABLE){
-        ActionableMenuOption* actionable_option = ((ActionableMenuOption*)(options[selected_option_index]));
+        ActionableMenuOption* actionable_option = ((ActionableMenuOption*)(options[selected_option_index].get()));
     
         if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
             actionable_option->on_action();

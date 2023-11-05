@@ -13,8 +13,8 @@ static const std::vector<std::string> values ({"On", "Off"});
 SettingsScreen::SettingsScreen() 
     : ScreenWithMenu(
         {
-            new IterableMenuOption("Invert X axis", values), 
-            new IterableMenuOption("Invert Y axis", values)
+            IterableMenuOption::create("Invert X axis", values), 
+            IterableMenuOption::create("Invert Y axis", values)
         }) {
 }
 

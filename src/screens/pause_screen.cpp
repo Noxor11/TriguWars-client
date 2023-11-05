@@ -13,10 +13,10 @@ using namespace text;
 PauseScreen::PauseScreen() 
     : ScreenWithMenu(
         {
-            new ActionableMenuOption("Continue", [](){
+            ActionableMenuOption::create("Continue", [](){
                 ScreenManager::get_instance().transition_to(ScreenName::OFFLINE_GAME);
             }), 
-            new ActionableMenuOption("Settings", [](){
+            ActionableMenuOption::create("Settings", [](){
                 ScreenManager::get_instance().transition_to(ScreenName::SETTINGS);
             }),
         }) {
