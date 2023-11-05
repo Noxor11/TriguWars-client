@@ -18,9 +18,15 @@ bool graphics::text::set_font(const std::string& name) {
     return font != NULL;
 }
 
-void graphics::text::draw_text(int x, int y, const std::string &string, unsigned int size, const Color &color) {
+void graphics::text::draw_text(int x, int y, const std::string &string, unsigned int size, bool centered, const Color &color) {
+    
+    float text_width_offset = 0; // offset to center x in text  
+    if (centered){
+        text_width_offset += vita2d_font_text_width(font, size, string.c_str()) / 2;
+    }
+
     if (font == NULL) return;
-    vita2d_font_draw_text(font, x, y, color.to_RGBA32(), size, string.c_str());
+    vita2d_font_draw_text(font, x - text_width_offset, y, color.to_RGBA32(), size, string.c_str());
 }
 
 void graphics::text::close(){

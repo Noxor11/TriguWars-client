@@ -3,7 +3,7 @@
 
 class TitleScreen : public Screen {
     public:
-        void update() override;
+        void update(float dt) override;
         TitleScreen() = default;
 };
 

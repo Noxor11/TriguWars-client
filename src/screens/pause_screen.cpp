@@ -22,7 +22,7 @@ PauseScreen::PauseScreen()
         }) {
 }
 
-void PauseScreen::update() {
+void PauseScreen::update(float dt) {
     // Para saber cómo cada librería renderiza el texto
 
     #ifdef __3DS__

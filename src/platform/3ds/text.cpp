@@ -60,21 +60,30 @@ bool graphics::text::set_font(const std::string& name){
     return font != NULL;
 }
 
-void graphics::text::draw_text(int x, int y, const std::string &text, unsigned int size, const graphics::Color &color){
-    const int VITA_ADJUSTMENT = 30;
-    //	For every char in the score, convert to int and display it
-    int xPos = x;
+void graphics::text::draw_text(int x, int y, const std::string &text, unsigned int size, bool centered, const graphics::Color &color){
+    const float VITA_TEXT_SIZE_ADJUSTMENT = 30; // make size in vita and 3DS the same
+
+    
+    float text_width_offset = 0; // offset to center x in text  
+    if (centered){
+        for (auto ch : text) {
+            text_width_offset += characters[ch].width * (size / VITA_TEXT_SIZE_ADJUSTMENT) / 2;
+        }
+    }
+
+    float xPos = x - text_width_offset;
+
 
     for(int i = 0; i < (int) text.length(); i++){
         const auto& letterFont = &characters[text.at(i)];
         C2D_DrawText(
             letterFont, 
-            C2D_AtBaseline | C2D_WithColor, 
+            C2D_AtBaseline | C2D_WithColor,
             xPos, 
             y, 
             0.0f,
-            (float)size / VITA_ADJUSTMENT, 
-            (float)size / VITA_ADJUSTMENT, 
+            size / VITA_TEXT_SIZE_ADJUSTMENT, 
+            size / VITA_TEXT_SIZE_ADJUSTMENT, 
             color.to_RGBA32());
 
         xPos += letterFont->width * size / 30;

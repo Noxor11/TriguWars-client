@@ -5,9 +5,10 @@
 #include "text.hpp"
 #include "input.hpp"
 
-void GameScreen::update() {
+void GameScreen::update(float dt) {
 
-    game->update(0.16);
+    game->update(dt / 1000);
+    game->adjust_scale();
 
     graphics::text::draw_text(30, 30, std::to_string(this->game->objects.size()).append("objs"));
     graphics::text::draw_text(30, 60, std::to_string(this->game->scale).append("scale"));

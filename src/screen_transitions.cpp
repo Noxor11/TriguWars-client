@@ -46,7 +46,7 @@ void ScreenManager::add_transition(const ScreenTransition& transition){
 #include <iostream>
 
 bool ScreenManager::transition_to(ScreenName name){
-    bool finished;
+    bool finished = true;
     
     for (auto& trans : transitions) {
         if (trans.scr1 == current_screen){
@@ -64,7 +64,7 @@ bool ScreenManager::transition_to(ScreenName name){
 
 
 bool ScreenManager::transition_to_last_screen(){
-    bool finished;
+    bool finished = true;
     
     for (auto& trans : transitions) {
         if (trans.scr1 == last_screen){

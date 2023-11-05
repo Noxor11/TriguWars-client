@@ -2,16 +2,14 @@
 #include "game.hpp"
 #include "text.hpp"
 #include "input.hpp"
-#include "virtual_screen.hpp"
-#include "trigu.hpp"
-#include "title_screen.hpp"
 #include "object.hpp"
 #include "text.hpp"
 #include "settings_screen.hpp"
 #include "pause_screen.hpp"
 #include "game_screen.hpp"
+#include "title_screen.hpp"
 #include "screen.hpp"
-#include "pause_screen.hpp"
+
 #ifdef __3DS__
 #include <3ds.h>
 #include <citro2d.h>
@@ -20,6 +18,9 @@
 #include <box2d/box2d.h>
 #include <cmath>
 #include <string>
+#include <chrono>
+#include "dimensions.hpp"
+
 
 using namespace graphics;
 
@@ -27,7 +28,6 @@ int main() {
     graphics::init();
     graphics::text::set_font("CubicCoreMono");
     input::init();
-    
 
     Game game = Game(b2Vec2(0.0f, 0.0f), 4, 2);
 
@@ -46,6 +46,13 @@ int main() {
     game.adjust_scale();
     game.scale = game.target_scale;
 
+    float frametime_graph[120];
+    int frame = -1;
+    int frametime_start = 0;
+
+
+    auto frametime_clock = std::chrono::steady_clock::now();
+    float frametime = 16.0f;
 
     TitleScreen* title_screen = new TitleScreen();
     PauseScreen* pause_screen = new PauseScreen();
@@ -71,18 +78,31 @@ int main() {
     screen_manager.add_transition(settings_to_title);
     screen_manager.add_transition(game_to_pause);
     screen_manager.add_transition(pause_to_game);
-    
+
 #ifdef __3DS__
     while (aptMainLoop()) {
 #else
     while (true) {
 #endif
-        
+        frametime = (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now() - frametime_clock).count() / 10E5;
+        frametime_graph[frame % 120] = frametime;
+        if (frame > 120) frametime_start = (frame % 120);
+        frame++;
+
+        frametime_clock = std::chrono::steady_clock::now();
+
         graphics::start_frame();
+
         input::scan();
 
-        screen_manager.get_current_screen()->update();
-        graphics::draw_vertices((Vector2*)obj->vertices, 5, Color::WHITE());
+        screen_manager.get_current_screen()->update(frametime);
+
+        graphics::text::draw_text(10, 90, std::to_string(frametime), 30, false, Color::GREEN());
+
+        for (int i = frametime_start; i < 120 + frametime_start; i++) {
+            graphics::draw_line(i - frametime_start, SCREEN_HEIGHT, i - frametime_start, SCREEN_HEIGHT - frametime_graph[i % 120] * 10, {0, 255, 0, 90});
+        }
+
         graphics::end_frame();
     }
 

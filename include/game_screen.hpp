@@ -6,7 +6,7 @@ class GameScreen : public Screen {
     private:
         Game* game;
     public:
-        void update() override;
+        void update(float dt) override;
         GameScreen(Game* game) : game(game) {};
 };
 

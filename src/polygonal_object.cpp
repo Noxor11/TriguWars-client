@@ -1,9 +1,8 @@
 #include "polygonal_object.hpp"
-#include "dimensions.hpp"
 #include "draw.hpp"
-#include "text.hpp"
 #include <iostream>
 #include <string>
+#include "dimensions.hpp"
 
 using graphics::draw_triangle;
 
@@ -18,8 +17,8 @@ enum SCREENS {
 
 void PolygonalObject::draw(const VirtualScreen &vscreen, bool rotate, float scale) {
     graphics::Vector2 vertices[this->vertices_count];
-    int screen = 0; // 0 = upper, 1 = lower, 2 = both
     #ifdef __3DS__
+    int screen = 0; // 0 = upper, 1 = lower, 2 = both
     float max_y = 0;
     float min_y = 0;
     #endif

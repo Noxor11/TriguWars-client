@@ -5,6 +5,6 @@
 class PauseScreen : public ScreenWithMenu {
     public:
         PauseScreen();
-        void update() override;
+        void update(float dt) override;
 };
 

@@ -18,9 +18,18 @@ SettingsScreen::SettingsScreen()
         }) {
 }
 
-void SettingsScreen::update(){
+void SettingsScreen::update(float dt){
 
-    graphics::text::draw_text(this->vscreen.translate_x(240/2), this->vscreen.translate_y(140/2), "Settings");
+    #ifdef __3DS__
+    const float title_x = TOP_WIDTH_CENTER;
+    const float title_y = 70;
+    #elif defined __PSVITA__
+    const float title_x = WIDTH_CENTER;
+    const float title_y = 70;
+    #endif
+
+
+    graphics::text::draw_text(this->vscreen.translate_x(title_x), this->vscreen.translate_y(title_y), "Settings");
 
     if (input::is_key_pressed(input::Buttons::BUTTON_CANCEL)) {
         ScreenManager::get_instance().transition_to_last_screen();

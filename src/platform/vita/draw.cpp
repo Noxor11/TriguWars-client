@@ -9,7 +9,7 @@
 using namespace graphics;
 
 
-inline unsigned int Color::to_RGBA32() const {
+unsigned int Color::to_RGBA32() const {
     return RGBA8(this->r, this->g, this->b, this->a);
 }
 

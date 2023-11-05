@@ -35,13 +35,13 @@ void ScreenWithMenu::handle_menu() {
         else
             color = Color::WHITE();
 
-        draw_text(x, y, options[i]->name, 30, color);
+        draw_text(vscreen.translate_x(x), vscreen.translate_y(y), options[i]->name, 30, false, color);
         
 
         if (options[i]->type.ITERABLE) {
             IterableMenuOption* iterable_option = (IterableMenuOption*)(options[i]);
             const std::string& value = iterable_option->values[iterable_option->selected_value_index];
-            draw_text(x + 200, y, std::string("(").append(value).append(")"), 30, color);
+            draw_text(vscreen.translate_x(x + 200), vscreen.translate_y(y), std::string("( ").append(value).append(" )"), 30, false, color);
         }
 
     }

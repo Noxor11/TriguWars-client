@@ -6,5 +6,5 @@ class SettingsScreen : public ScreenWithMenu {
 
 public:
     SettingsScreen();
-    void update() override;
+    void update(float dt) override;
 };

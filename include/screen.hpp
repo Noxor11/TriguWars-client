@@ -20,7 +20,7 @@ class Screen {
     protected: VirtualScreen vscreen;
 
     public:
-        virtual void update() = 0;
+        virtual void update(float dt = 0.0f) = 0;
         Screen() : vscreen(TITLESCREEN_VSCREEN_OFFSET_X, 0, 320, 240, TITLESCREEN_VSCREEN_SCALE) {};
         Screen(const VirtualScreen &vscreen): vscreen{vscreen} {};
         virtual ~Screen() = default;
