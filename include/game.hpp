@@ -16,13 +16,13 @@ namespace GameConfig {
     enum class KillCondition {BULLET, CHASE, NONE};
     enum class InputCompatibility {PSP, DS, NO_TRIGGERS, FULL_GAMEPAD};
     /*
-      RespawnMethod: Method to use to determine the respawn position for an object
+      RespawnPosition: Method to use to determine the respawn position for an object
 
       Center: Respawn on the absolute center
       Random: Respawn on a random position, on a radius defined by the current scale
       Equidistant: Calculate an equidistant position in relation to other objects
     */
-    enum class RespawnMethod {CENTER, RANDOM, EQUDISTANT};
+    enum class RespawnPosition {CENTER, RANDOM, EQUDISTANT};
 
     struct GameConfig {
         // TODO: Air friction not implemented
@@ -53,7 +53,7 @@ namespace GameConfig {
         // Respawn time in seconds
         float respawn_time = 1.0f;
         // The method which the games uses to determine the respawn position
-        RespawnMethod respawn_method = RespawnMethod::CENTER;
+        RespawnPosition respawn_method = RespawnPosition::CENTER;
     };
 
 }
@@ -97,6 +97,6 @@ class Game {
     template<Derived<Object> T>
     T* register_object(const T& object);
     void adjust_scale();
-    Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations, GameConfig::GameConfig game_config = GameConfig::GameConfig());
+    Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations, const GameConfig::GameConfig& game_config = GameConfig::GameConfig());
     ~Game();
 };

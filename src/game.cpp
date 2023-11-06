@@ -11,7 +11,7 @@
 #include <chrono>
 
 
-Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3, GameConfig::GameConfig game_config)
+Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3, const GameConfig::GameConfig& game_config)
     : world(new b2World(gravity)), vscreen(0, 0, 0, 0, 0.0f), 
       player{CreateTrigu(world, 0.1, 0.15, 0.1, 0.3, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})},
       velocity_iterations(velocity_iterations), position_iterations(position_iterations), game_config(game_config) {
