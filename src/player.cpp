@@ -93,7 +93,6 @@ void Player::draw(const VirtualScreen &vscreen, bool rotate, float scale) {
         // NOTE: Es posible que falle por cosas de cpp
         PolygonalObject::draw(vscreen, rotate, scale);
     }
-    graphics::text::draw_text(140, 120, std::string("Player says").append(std::to_string(is_dead)));
 }
 
 Player CreateTriguPlayer(b2World* world, float x, float y, float w, float h, float density, float friction, const graphics::Color& color, GameConfig::GameConfig* game_config) {

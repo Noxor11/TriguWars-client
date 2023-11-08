@@ -15,7 +15,8 @@
 
 Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3, const GameConfig::GameConfig& game_config)
     : world(new b2World(gravity)), vscreen(0, 0, 0, 0, 0.0f), 
-      player(CreateTriguPlayer(world, 0.1, 0.15, 0.1, 0.3, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255}, &this->game_config)), velocity_iterations(velocity_iterations), position_iterations(position_iterations),
+      player(register_object(CreateTriguPlayer(world, 0.1, 0.15, 0.1, 0.3, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255}, &this->game_config))),
+      velocity_iterations(velocity_iterations), position_iterations(position_iterations),
       game_config(game_config) {
 
     vscreen.width = 480;
@@ -32,7 +33,6 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iter
 
 
     players.emplace_back(player);
-    register_object(player);
 
 }
 
@@ -78,8 +78,8 @@ void Game::handle_player_move(){
             //    player_speed = (player_speed / abs(player_speed)) * game_config.top_speed;
             //    // Don't
             //} else {
-                b2Vec2 force = b2Vec2(sin(player.body->GetAngle()) * player_speed, -cos(player.body->GetAngle()) * player_speed);
-                player.body->SetLinearVelocity(force);
+                b2Vec2 force = b2Vec2(sin(player->body->GetAngle()) * player_speed, -cos(player->body->GetAngle()) * player_speed);
+                player->body->SetLinearVelocity(force);
             //}
             //float new_speed = (force + player.body->GetLinearVelocity()).Length();
        // TODO
@@ -103,7 +103,7 @@ void Game::handle_player_move(){
 
 
     //if (player_rotation_speed < game_config.rotation_top_speed && player_rotation_speed > -game_config.rotation_top_speed) {
-        player.body->SetAngularVelocity(player_rotation_speed);
+        player->body->SetAngularVelocity(player_rotation_speed);
     //} else {
     //    player_rotation_speed = (player_rotation_speed / abs(player_rotation_speed)) * game_config.rotation_top_speed;
     //}
@@ -133,8 +133,8 @@ void Game::update(float dt) {
     //    }
     //}
 
-    if (!player.is_dead && game_config.enable_barrier) {
-        auto pos = player.body->GetPosition();
+    if (!player->is_dead && game_config.enable_barrier) {
+        auto pos = player->body->GetPosition();
         if (pos.x < -game_config.barrier_distance || pos.x > game_config.barrier_distance
             || pos.y < -game_config.barrier_distance || pos.y > game_config.barrier_distance) {
 
@@ -147,12 +147,10 @@ void Game::update(float dt) {
             //player_respawning = true;
             //respawn_timer_acum = 0.0f;
             //player.hidden = true;
-            player.kill();
+            player->kill();
         }
     }
-
-    graphics::text::draw_text(150, 100, std::string("Game says").append(std::to_string(player.is_dead)));
-
+    
     adjust_scale();
 
     //if (!player_respawning) {
@@ -190,7 +188,7 @@ void Game::update(float dt) {
 
     if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
         auto obj = this->create_trigu(20, 20, 20, 40, 0.1f, 0.3f, graphics::Color::BLUE());
-        const auto pos = player.body->GetPosition();
+        const auto pos = player->body->GetPosition();
         obj->body->SetTransform({pos.x, pos.y}, obj->body->GetAngle());
     }    
 

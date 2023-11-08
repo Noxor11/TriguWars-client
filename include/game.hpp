@@ -18,8 +18,8 @@ class Game {
     b2World* world;
     VirtualScreen vscreen;
     std::vector<std::shared_ptr<Object>> objects;
-    std::vector<Player> players;
-    Player player;
+    std::vector<Player*> players;
+    Player* player;
 
     bool player_respawning = false;
 

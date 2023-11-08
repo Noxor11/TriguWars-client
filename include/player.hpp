@@ -14,8 +14,9 @@ class Player : public PolygonalObject {
         GameConfig::GameConfig* game_config;
 
         Player(b2World* const world, b2Body* const body, const b2Vec2* vertices, unsigned int vertices_count, const graphics::Color &color, GameConfig::GameConfig* game_config, bool filled = true):
-            PolygonalObject(world, body, vertices, vertices_count, color, filled), game_config(game_config), is_dead(false),
-            respawn_accumulator(false), speed(0.0f), rot_speed(0.0f) {};
+            PolygonalObject(world, body, vertices, vertices_count, color, filled), 
+            is_dead(false), respawn_accumulator(false), speed(0.0f), rot_speed(0.0f),
+            game_config(game_config)  {};
 
         Player(const Trigu &trigu, GameConfig::GameConfig* game_config):
             PolygonalObject(trigu), is_dead(false), respawn_accumulator(false),
