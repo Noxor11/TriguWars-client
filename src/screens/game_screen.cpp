@@ -1,4 +1,5 @@
 #include "game_screen.hpp"
+#include "screen_transitions.hpp"
 #include "title_screen.hpp"
 #include "settings_screen.hpp"
 #include "draw.hpp"

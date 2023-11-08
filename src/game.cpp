@@ -6,6 +6,8 @@
 #include "polygonal_object.hpp"
 #include "dimensions.hpp"
 #include "input.hpp"
+#include "player.hpp"
+#include "screen_transitions.hpp"
 
 #include <memory>
 #include <chrono>
@@ -13,8 +15,8 @@
 
 Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3, GameConfig::GameConfig game_config)
     : world(new b2World(gravity)), vscreen(0, 0, 0, 0, 0.0f), 
-      player{CreateTrigu(world, 0.1, 0.15, 0.1, 0.3, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255})},
-      velocity_iterations(velocity_iterations), position_iterations(position_iterations), game_config(game_config) {
+      player(CreateTriguPlayer(world, 0.1, 0.15, 0.1, 0.3, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255}, &this->game_config)), velocity_iterations(velocity_iterations), position_iterations(position_iterations),
+      game_config(game_config) {
 
     vscreen.width = 480;
     vscreen.height = 320;
@@ -38,6 +40,10 @@ Trigu* Game::create_trigu(float x, float y, float w, float h, float density, flo
     return register_object(CreateTrigu(world, x, y, w, h, density, friction, color));
 }
 
+Player* Game::create_triguplayer(float x, float y, float w, float h, float density, float friction, const graphics::Color& color){
+    return register_object(CreateTriguPlayer(world, x, y, w, h, density, friction, color, &game_config));
+}
+
 PolygonalObject* Game::create_polygonal_object(const b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color, bool filled){
     return register_object(CreatePolygonalObject(world, vertices, vertices_count, density, friction, color, filled));
 }
@@ -56,17 +62,15 @@ void Game::handle_player_move(){
 
     //auto vel = player.body->GetLinearVelocity();
     //player.body->SetLinearVelocity();
-    proflogic = std::chrono::steady_clock::now();
 
     if (game_config.movement_mode == GameConfig::MovementMode::THRUST_AND_BRAKES) {
-        float speed = 0.0;
         if (game_config.input_compatibility > GameConfig::InputCompatibility::DS) {
             player_speed += input::joystick1.y * (game_config.speed / 128.0f);
         } else {
             if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
-                speed += -game_config.speed;
+                player_speed += -game_config.speed;
             } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
-                speed += game_config.speed;
+                player_speed += game_config.speed;
             }
         }
 
@@ -108,10 +112,52 @@ void Game::handle_player_move(){
 void Game::update(float dt) {
     time_accumulator += dt;
 
-    adjust_scale();
-    world->Step(dt, velocity_iterations, position_iterations);
+    proflogic = std::chrono::steady_clock::now();
 
-    handle_player_move();
+    for(auto& obj : objects) {
+        obj->update(dt);
+    }
+    //if (player_respawning) {
+    //    respawn_timer_acum += dt;
+    //    if (respawn_timer_acum > game_config.respawn_time) {
+    //        switch (game_config.respawn_method) {
+    //            case GameConfig::RespawnMethod::CENTER:
+    //                player.body->SetTransform({0, 0}, 0);
+    //                break;
+    //        }
+
+    //        player.body->SetEnabled(true);
+    //        respawn_timer_acum = 0;
+    //        player_respawning = false;
+    //        player.hidden = false;
+    //    }
+    //}
+
+    if (!player.is_dead && game_config.enable_barrier) {
+        auto pos = player.body->GetPosition();
+        if (pos.x < -game_config.barrier_distance || pos.x > game_config.barrier_distance
+            || pos.y < -game_config.barrier_distance || pos.y > game_config.barrier_distance) {
+
+            //player.body->SetEnabled(false);
+            //player.body->SetTransform({0, 0}, 0);
+            //player.body->SetLinearVelocity({0,0});
+            //player.body->SetAngularVelocity(0);
+            //player_speed = 0;
+            //player_rotation_speed = 0;
+            //player_respawning = true;
+            //respawn_timer_acum = 0.0f;
+            //player.hidden = true;
+            player.kill();
+        }
+    }
+
+    graphics::text::draw_text(150, 100, std::string("Game says").append(std::to_string(player.is_dead)));
+
+    adjust_scale();
+
+    //if (!player_respawning) {
+    //    handle_player_move();
+    //}
 
     float time_logic = (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now() - proflogic).count() / 10E5;
 
@@ -149,8 +195,6 @@ void Game::update(float dt) {
     }    
 
     for(auto& obj : objects) {
-        obj->update();
-
         #ifdef __3DS__
         obj->draw(vscreen, true, scale);
         #else

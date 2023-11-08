@@ -4,6 +4,7 @@
 #include "input.hpp"
 #include "object.hpp"
 #include "text.hpp"
+#include "screen_transitions.hpp"
 #include "settings_screen.hpp"
 #include "pause_screen.hpp"
 #include "game_screen.hpp"
