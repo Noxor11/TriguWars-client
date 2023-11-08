@@ -54,6 +54,6 @@ class Game {
     template<Derived<Object> T>
     T* register_object(const T& object);
     void adjust_scale();
-    Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations, GameConfig::GameConfig game_config = GameConfig::GameConfig());
+    Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations, const GameConfig::GameConfig& game_config = GameConfig::GameConfig());
     ~Game();
 };
