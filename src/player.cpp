@@ -10,7 +10,6 @@ void Player::update(float dt) {
     //auto vel = player.body->GetLinearVelocity();
     //player.body->SetLinearVelocity();
 
-    graphics::text::draw_text(160, 60, std::string("move! ").append(std::to_string(speed)));
     if (is_dead) {
         graphics::text::draw_text(160, 80, "Player is dead");
         //respawn_accumulator += dt;
@@ -18,6 +17,8 @@ void Player::update(float dt) {
             body->SetEnabled(true);
             respawn_accumulator = 0.0f;
             is_dead = false;
+
+            
 
             switch (game_config->respawn_method) {
                 case GameConfig::RespawnMethod::CENTER:
@@ -30,23 +31,27 @@ void Player::update(float dt) {
             }
 
         }
-        // No procesar el input si está muerto
         return;
     }
 
+
     if (game_config->movement_mode == GameConfig::MovementMode::THRUST_AND_BRAKES) {
         if (game_config->input_compatibility > GameConfig::InputCompatibility::DS) {
-            speed += input::joystick1.y * (game_config->speed / 128.0f);
+            if (input::joystick1.y != 0){
+                b2Vec2 force = b2Vec2(sin(body->GetAngle()) * input::joystick1.y / 1'000'000, -cos(body->GetAngle()) * input::joystick1.y / 1'000'000);
+                body->ApplyLinearImpulseToCenter(force, true);
+            }
         } else {
             if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
-                speed += -game_config->speed;
+                b2Vec2 force = b2Vec2(sin(body->GetAngle()) * speed, -cos(body->GetAngle()) * speed);
+                body->ApplyLinearImpulseToCenter(force, true);
+
             } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
-                speed += game_config->speed;
+                b2Vec2 force = b2Vec2(sin(body->GetAngle()) * speed, -cos(body->GetAngle()) * speed);
+                body->ApplyLinearImpulseToCenter(force, true);
             }
         }
 
-        b2Vec2 force = b2Vec2(sin(body->GetAngle()) * speed, -cos(body->GetAngle()) * speed);
-        body->SetLinearVelocity(force);
 
     } else if (game_config->movement_mode == GameConfig::MovementMode::JOYSTICK2_STRAFE) {
         // TODO
@@ -60,18 +65,22 @@ void Player::update(float dt) {
 
 
     if (game_config->input_compatibility > GameConfig::InputCompatibility::DS) {
-        rot_speed += input::joystick1.x * (game_config->rotation_speed / 128.0f);
+        if (input::joystick1.x != 0){
+            rot_speed = input::joystick1.x * (game_config->rotation_speed / 128.0f);
+            body->ApplyAngularImpulse(rot_speed, true);
+        }
+
     } else {
         if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
-            rot_speed += -game_config->rotation_speed;
+            body->ApplyAngularImpulse(rot_speed, true);
+
         } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
-            rot_speed += game_config->rotation_speed;
+            body->ApplyAngularImpulse(rot_speed, true);
         }
     }
 
 
     //if (player_rotation_speed < game_config.rotation_top_speed && player_rotation_speed > -game_config.rotation_top_speed) {
-    body->SetAngularVelocity(rot_speed);
     //} else {
     //    player_rotation_speed = (player_rotation_speed / abs(player_rotation_speed)) * game_config.rotation_top_speed;
     //}
