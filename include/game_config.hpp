@@ -21,8 +21,8 @@ namespace GameConfig {
         // TODO: Not implemented
         KillCondition kill_condition = KillCondition::BULLET;
         float top_speed = 0.070f;
-        float speed = 0.005f;
-        float rotation_speed = 0.02f;
+        float speed = 0.0001f;
+        float rotation_speed = 0.000002f;
         float rotation_top_speed = 0.08f;
         InputCompatibility input_compatibility = InputCompatibility::NO_TRIGGERS;
         bool enable_barrier = true;
