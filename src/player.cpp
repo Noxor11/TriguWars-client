@@ -12,8 +12,7 @@ void Player::update(float dt) {
 
     graphics::text::draw_text(160, 60, std::string("move! ").append(std::to_string(speed)));
     if (is_dead) {
-        graphics::text::draw_text(160, 80, "Player is dead");
-        //respawn_accumulator += dt;
+        respawn_accumulator += dt;
         if (respawn_accumulator > game_config->respawn_time) {
             body->SetEnabled(true);
             respawn_accumulator = 0.0f;
@@ -85,7 +84,7 @@ void Player::kill() {
     rot_speed = 0.0f;
     is_dead = true;
     respawn_accumulator = 0.0f;
-    //body->SetEnabled(false);
+    body->SetEnabled(false);
 }
 
 void Player::draw(const VirtualScreen &vscreen, bool rotate, float scale) {
