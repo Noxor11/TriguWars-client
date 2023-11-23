@@ -1,3 +1,4 @@
+#include "dimensions.hpp"
 #include "text.hpp"
 #include "draw.hpp"
 
@@ -62,6 +63,7 @@ bool graphics::text::set_font(const std::string& name){
 
 void graphics::text::draw_text(int x, int y, const std::string &text, unsigned int size, bool centered, const graphics::Color &color){
     const float VITA_TEXT_SIZE_ADJUSTMENT = 30; // make size in vita and 3DS the same
+    float scale_y = size / (30 * 72 / PPI);
 
     
     float text_width_offset = 0; // offset to center x in text  
@@ -82,8 +84,8 @@ void graphics::text::draw_text(int x, int y, const std::string &text, unsigned i
             xPos, 
             y, 
             0.0f,
-            size / VITA_TEXT_SIZE_ADJUSTMENT, 
-            size / VITA_TEXT_SIZE_ADJUSTMENT, 
+            scale_y,
+            scale_y,
             color.to_RGBA32());
 
         xPos += letterFont->width * size / 30;
