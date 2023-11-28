@@ -17,8 +17,6 @@ void Player::update(float dt) {
             respawn_accumulator = 0.0f;
             is_dead = false;
 
-            
-
             switch (game_config->respawn_method) {
                 case GameConfig::RespawnMethod::CENTER:
                     body->SetTransform({10, 10}, 0);
@@ -37,7 +35,7 @@ void Player::update(float dt) {
     if (game_config->movement_mode == GameConfig::MovementMode::THRUST_AND_BRAKES) {
         if (game_config->input_compatibility > GameConfig::InputCompatibility::DS) {
             if (input::joystick1.y != 0){
-                b2Vec2 force = b2Vec2(sin(body->GetAngle()) * input::joystick1.y / 1'000'000, -cos(body->GetAngle()) * input::joystick1.y / 1'000'000);
+                b2Vec2 force = b2Vec2(sin(body->GetAngle()) * input::joystick1.y / 1E6, -cos(body->GetAngle()) * input::joystick1.y / 1E6);
                 body->ApplyLinearImpulseToCenter(force, true);
             }
         } else {

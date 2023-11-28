@@ -22,7 +22,11 @@ class Screen {
 
     public:
         virtual void update(float dt = 0.0f) = 0;
-        Screen() : vscreen(TITLESCREEN_VSCREEN_OFFSET_X, 0, 320, 240, TITLESCREEN_VSCREEN_SCALE) {};
+        #ifdef __3DS__
+        Screen() : vscreen(0, 0, TOP_SCREEN_WIDTH, SCREEN_HEIGHT, 1.0) {};
+        #else
+        Screen() : vscreen(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 1.0) {};
+        #endif
         Screen(const VirtualScreen &vscreen): vscreen{vscreen} {};
         virtual ~Screen() = default;
 };
@@ -79,4 +83,34 @@ public:
     ScreenWithMenu(const VirtualScreen &vscreen, const std::vector<std::shared_ptr<MenuOption>>& options);
     ~ScreenWithMenu();
     void handle_menu();
+};
+
+#define SETTINGSLIKESCREEN_MARGIN_LEFT 0.05
+#define SETTINGSLIKESCREEN_MARGIN_RIGHT 0.05
+#define SETTINGSLIKESCREEN_HEADER_HEIGHT 0.15
+#define SETTINGSLIKESCREEN_FOOTER_HEIGHT 0.15
+#define SLS SETTINGS_LIKE_SCREEN
+//                         These are pixels vv
+#define SETTINGSLIKESCREEN_OPTION_HEIGHT 60
+#define SETTINGSLIKESCREEN_OPTION_FONTSIZE 60
+#define SETTINGSLIKESCREEN_OPTION_MARGIN_TOP 0.005
+#define SETTINGSLIKESCREEN_OPTION_MARGIN_BOTTOM 0.005
+
+
+class SettingsLikeScreen : public Screen {
+    public:
+        std::string header;
+        std::vector<std::shared_ptr<MenuOption>> options;
+        std::function<void(void)> confirm_callback;
+        int selected_option_index;
+        float offset_y;
+        float option_margin_top;
+        float option_margin_bottom;
+        float margin_left;
+        float margin_right;
+        float option_total_height;
+
+        SettingsLikeScreen(const std::vector<std::shared_ptr<MenuOption>>& options, std::string header, std::function<void(void)> confirm_callback);
+        ~SettingsLikeScreen();
+        void update(float dt);
 };

@@ -85,7 +85,7 @@ void Game::handle_player_move(){
        // TODO
     } else if (game_config.movement_mode == GameConfig::MovementMode::JOYSTICK2_STRAFE) {
         if (game_config.input_compatibility <= GameConfig::InputCompatibility::PSP) {
-            graphics::text::draw_text(10, 30, "! Joystick2 strafe is not possible in PSP compatibility mode or below", 30, false, graphics::Color::RED());
+            graphics::text::draw_text(10, 30, "! Joystick2 strafe is not possible in PSP compatibility mode or below", graphics::text::pt_to_size(30), false, graphics::Color::RED());
         } else {
             // TODO
         }

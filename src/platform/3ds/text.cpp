@@ -14,6 +14,7 @@ C2D_TextBuf g_staticBuf;
 std::array<C2D_Text, 21> g_staticText;
 std::unordered_map<char, C2D_Text> characters;
 C2D_Font font = nullptr;
+float font_px_size_ratio = 1.0f;
 
 #define FIRST_ASCII_CHARACTER 32
 #define LAST_ASCII_CHARACTER  126
@@ -58,18 +59,34 @@ bool graphics::text::set_font(const std::string& name){
 
 	font = C2D_FontLoad(s.str().c_str());
     create_glyphs_with_selected_font();
+
+    float testheight = 1.0;
+
+    C2D_TextGetDimensions(&characters['A'], 1.0, 1.0, NULL, &testheight);
+
+    font_px_size_ratio = 1.0 / testheight;
+
     return font != NULL;
 }
 
-void graphics::text::draw_text(int x, int y, const std::string &text, unsigned int size, bool centered, const graphics::Color &color){
+float graphics::text::px_to_size(int px) {
+    return px * font_px_size_ratio;
+}
+
+float graphics::text::pt_to_size(int pt) {
+    return (pt * PPI) / 79.0 * font_px_size_ratio;
+}
+
+void graphics::text::draw_text(int x, int y, const std::string &text, float size, bool centered, const graphics::Color &color){
     const float VITA_TEXT_SIZE_ADJUSTMENT = 30; // make size in vita and 3DS the same
-    float scale_y = size / (30 * 72 / PPI);
+    //float scale_y = size / (30 * 72 / PPI);
+    float scale_y = size;
 
     
     float text_width_offset = 0; // offset to center x in text  
     if (centered){
         for (auto ch : text) {
-            text_width_offset += characters[ch].width * (size / VITA_TEXT_SIZE_ADJUSTMENT) / 2;
+            text_width_offset += characters[ch].width * (scale_y) / 2;
         }
     }
 

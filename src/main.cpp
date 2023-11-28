@@ -98,7 +98,7 @@ int main() {
 
         screen_manager.get_current_screen()->update(frametime);
 
-        graphics::text::draw_text(10, 90, std::to_string(frametime), 30, false, Color::GREEN());
+        graphics::text::draw_text(10, 90, std::to_string(frametime), graphics::text::px_to_size(11), false, Color::GREEN());
 
         for (int i = frametime_start; i < 120 + frametime_start; i++) {
             graphics::draw_line(i - frametime_start, SCREEN_HEIGHT, i - frametime_start, SCREEN_HEIGHT - frametime_graph[i % 120] * 10, {0, 255, 0, 90});
