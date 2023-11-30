@@ -35,6 +35,10 @@ float graphics::text::pt_to_size(int pt) {
     return (pt * PPI) / 72.0 * font_px_size_ratio;
 }
 
+int graphics::text::pt_to_px(int pt) {
+    return (pt * PPI) / 72.0;
+}
+
 void graphics::text::draw_text(int x, int y, const std::string &string, float size, bool centered, const Color &color) {
     if (font == NULL) return;
 

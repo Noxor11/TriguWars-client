@@ -77,6 +77,10 @@ float graphics::text::pt_to_size(int pt) {
     return (pt * PPI) / 72.0 * font_px_size_ratio;
 }
 
+int graphics::text::pt_to_px(int pt) {
+    return (pt * PPI) / 72.0;
+}
+
 void graphics::text::draw_text(int x, int y, const std::string &text, float size, bool centered, const graphics::Color &color){
     const float VITA_TEXT_SIZE_ADJUSTMENT = 30; // make size in vita and 3DS the same
     //float scale_y = size / (30 * 72 / PPI);
@@ -105,7 +109,7 @@ void graphics::text::draw_text(int x, int y, const std::string &text, float size
             scale_y,
             color.to_RGBA32());
 
-        xPos += letterFont->width * size / 30;
+        xPos += letterFont->width * size;
     }
 
 }
