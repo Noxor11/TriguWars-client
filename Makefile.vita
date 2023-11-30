@@ -24,9 +24,15 @@ SRC_CPP :=$(call rwildcard, src/, *.cpp)
 FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
 SRC_CPP := $(call FILTER_OUT,3ds, $(SRC_CPP))
 
+SRC = $(SRC_CPP) $(SRC_C)
+
+OBJ_CPP=$(patsubst %.cpp,build.vita/%.o,$(SRC_CPP))
+OBJ=$(patsubst %.c,build.vita/%.o,$(SRC_C))
+
+OBJS = $(OBJ_CPP) $(OBJ)
+
 #OBJ_DIRS := $(addprefix out/, $(dir $(SRC_C:src/%.c=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/%.cpp=%.o))) $(addprefix out/, $(dir $(SRC_CPP:src/platform/vita/%.cpp=%.o)))
 #OBJS := $(addprefix out/, $(SRC_C:src/%.c=%.o)) $(addprefix out/, $(SRC_CPP:src/%.cpp=%.o))
-OBJS = ${SRC_CPP} ${SRC_C}
 OBJ_NAME = triguwars
 
 
@@ -53,20 +59,28 @@ $(PROJECT).velf: $(PROJECT).elf
 	$(STRIP) -g $<
 	vita-elf-create $< $@
 
-#$(PROJECT).elf: $(OBJS):
-#	$(CXX) $(CXXFLAGS) $(OBJS) $(LIBS) -o build/$(OBJ_NAME).elf
+#$(PROJECT).elf: $(OBJS)
+#	$(CXX) $(CXXFLAGS) -Wl,-q $(OBJS) $(LIBS) -o $@
 
 $(PROJECT).elf: $(OBJS)
-	$(CXX) $(CXXFLAGS) -Wl,-q $(OBJS) $(LIBS) -o $@
+# -Wl,-q is necessary because vita-elf-create says so
+	$(CXX) $(CXXFLAGS) $(OBJS) -Wl,-q -o $(OBJ_NAME).elf $(LIBS)
 
-$(OBJ_DIRS):
+build.vita/%.o : %.cpp #| $(OBJ_DIRS)
+	mkdir -p ${dir $@}
+	$(CXX) $(CXXFLAGS) $(LIBS) $(CFLAGS) $< -c -o $@
+
+$(OBJ_DIRS): build.vita
 	mkdir -p $@
 
-out/%.o : src/%.cpp #| $(OBJ_DIRS)
-	arm-vita-eabi-g++ -c $(CXXFLAGS) -o $@ $< $(LIBS)
+
+
+
+#arm-vita-eabi-g++ -c $(CXXFLAGS) -o $@ $< $(LIBS)
 
 # build/%.o : src/%.c #| $(OBJ_DIRS)
 # 	arm-vita-eabi-g++ -c -o $@ $< $(LIBS)
 
 clean:
 	rm -f *.velf *.elf *.vpk *.sfo *.bin
+	rm -rf build.vita
