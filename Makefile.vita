@@ -73,14 +73,6 @@ build.vita/%.o : %.cpp #| $(OBJ_DIRS)
 $(OBJ_DIRS): build.vita
 	mkdir -p $@
 
-
-
-
-#arm-vita-eabi-g++ -c $(CXXFLAGS) -o $@ $< $(LIBS)
-
-# build/%.o : src/%.c #| $(OBJ_DIRS)
-# 	arm-vita-eabi-g++ -c -o $@ $< $(LIBS)
-
 clean:
 	rm -f *.velf *.elf *.vpk *.sfo *.bin
 	rm -rf build.vita
