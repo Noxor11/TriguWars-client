@@ -108,6 +108,7 @@ void Game::handle_player_move(){
         } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
             player_rotation_speed += game_config.speed;
         }
+
     }
 
 

@@ -32,47 +32,48 @@ void Player::update(float dt) {
         return;
     }
 
+    if (!is_external) {
+        auto angle = b2Vec2(-sin(body->GetAngle()), cos(body->GetAngle()));
+        if (game_config->movement_mode == GameConfig::MovementMode::THRUST_AND_BRAKES) {
+            if (game_config->input_compatibility > GameConfig::InputCompatibility::DS) {
+                if (input::joystick1.y != 0){
+                    b2Vec2 force = b2Vec2(angle.x * input::joystick1.y / 1E6, angle.y * input::joystick1.y / 1E6);
+                    body->ApplyLinearImpulseToCenter(force, true);
+                }
+            } else {
+                if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
+                    b2Vec2 force = b2Vec2(angle.x * speed, angle.y * speed);
+                    body->ApplyLinearImpulseToCenter(force, true);
 
-    auto angle = b2Vec2(-sin(body->GetAngle()), cos(body->GetAngle()));
-    if (game_config->movement_mode == GameConfig::MovementMode::THRUST_AND_BRAKES) {
-        if (game_config->input_compatibility > GameConfig::InputCompatibility::DS) {
-            if (input::joystick1.y != 0){
-                b2Vec2 force = b2Vec2(angle.x * input::joystick1.y / 1E6, angle.y * input::joystick1.y / 1E6);
-                body->ApplyLinearImpulseToCenter(force, true);
+                } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
+                    b2Vec2 force = b2Vec2(angle.x * speed, angle.y * speed);
+                    body->ApplyLinearImpulseToCenter(force, true);
+                }
             }
+
+
+        } else if (game_config->movement_mode == GameConfig::MovementMode::JOYSTICK2_STRAFE) {
+            // TODO
+            if (game_config->input_compatibility <= GameConfig::InputCompatibility::PSP) {
+                graphics::text::draw_text(10, 30, "! Joystick2 strafe is not possible in PSP compatibility mode or below", 30, false, graphics::Color::RED());
+            }} else {graphics::text::draw_text(10, 30, "!!!");
+            // TODO
+        }
+
+
+        if (game_config->input_compatibility > GameConfig::InputCompatibility::DS) {
+            if (input::joystick1.x != 0){
+                rot_speed = input::joystick1.x * (game_config->rotation_speed / 128.0f);
+                body->ApplyAngularImpulse(rot_speed, true);
+            }
+
         } else {
             if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
-                b2Vec2 force = b2Vec2(angle.x * speed, angle.y * speed);
-                body->ApplyLinearImpulseToCenter(force, true);
+                body->ApplyAngularImpulse(rot_speed, true);
 
             } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
-                b2Vec2 force = b2Vec2(angle.x * speed, angle.y * speed);
-                body->ApplyLinearImpulseToCenter(force, true);
+                body->ApplyAngularImpulse(rot_speed, true);
             }
-        }
-
-
-    } else if (game_config->movement_mode == GameConfig::MovementMode::JOYSTICK2_STRAFE) {
-        // TODO
-        if (game_config->input_compatibility <= GameConfig::InputCompatibility::PSP) {
-            graphics::text::draw_text(10, 30, "! Joystick2 strafe is not possible in PSP compatibility mode or below", 30, false, graphics::Color::RED());
-        }} else {graphics::text::draw_text(10, 30, "!!!");
-        // TODO
-    }
-
-
-    if (game_config->input_compatibility > GameConfig::InputCompatibility::DS) {
-        if (input::joystick1.x != 0){
-            rot_speed = input::joystick1.x * (game_config->rotation_speed / 128.0f);
-            body->ApplyAngularImpulse(rot_speed, true);
-        }
-
-    } else {
-        if (input::is_key_pressed(input::BUTTON_DPAD_DOWN)) {
-            body->ApplyAngularImpulse(rot_speed, true);
-
-        } else if (input::is_key_pressed(input::BUTTON_DPAD_UP)) {
-            body->ApplyAngularImpulse(rot_speed, true);
         }
     }
 
@@ -127,4 +128,12 @@ Player CreateTriguPlayer(b2World* world, float x, float y, float w, float h, flo
     return Player(
         CreateTrigu(world, x, y, w, h, density, friction, color),
         game_config);
+}
+
+void Player::set_external() {
+    is_external = true;
+}
+
+void Player::set_internal() {
+    is_external = false;
 }

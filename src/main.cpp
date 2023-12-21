@@ -47,6 +47,10 @@ int main() {
     game.adjust_scale();
     game.scale = game.target_scale;
 
+    auto player2 = game.create_triguplayer(0.2f, -0.15, 0.1, 0.3, 1.0f, 0.3f, Color::RED());
+    player2->set_external();
+    game.players.emplace_back(player2);
+
     float frametime_graph[120];
     int frame = -1;
     int frametime_start = 0;

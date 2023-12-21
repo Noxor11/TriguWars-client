@@ -49,6 +49,7 @@ void Bullet::handle_game_logic(float dt, Game *game) {
             for (int i = 0; i < game->players.size(); i++) {
                 if (object.get() == game->players[i]) {
                     // Object is player
+                        object->color = graphics::Color::GREEN();
 
                     if (object.get() == game->player) {
                        // Object is controlling player!!

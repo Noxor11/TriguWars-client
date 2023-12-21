@@ -10,6 +10,7 @@ class Game;
 class Player : public PolygonalObject {
     public:
         bool is_dead;
+        bool is_external;
         float respawn_accumulator;
         float speed;
         float rot_speed;
@@ -29,6 +30,12 @@ class Player : public PolygonalObject {
             speed(0.0f), rot_speed(0.0f), game_config(game_config) {};
 
         void kill();
+
+        // Ignore inputs
+        void set_external();
+        // Process inputs
+        void set_internal();
+
         void update(float dt) override;
         // Handle logic that interfaces with Game
         void handle_game_logic(float dt, Game* game);
