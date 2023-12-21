@@ -81,6 +81,14 @@ int graphics::text::pt_to_px(int pt) {
     return ((pt * 0.55) * PPI) / 72.0;
 }
 
+float graphics::text::get_text_width(const std::string &text, float size) {
+    float width = 0.0f;
+    for (auto ch : text) {
+        width += characters[ch].width * size;
+    }
+    return width;
+}
+
 void graphics::text::draw_text(int x, int y, const std::string &text, float size, bool centered, const graphics::Color &color){
     const float VITA_TEXT_SIZE_ADJUSTMENT = 30; // make size in vita and 3DS the same
     //float scale_y = size / (30 * 72 / PPI);

@@ -13,8 +13,9 @@ static const std::vector<std::string> values ({"On", "Off"});
 SettingsScreen::SettingsScreen() 
     : SettingsLikeScreen (
         {
-            IterableMenuOption::create("Coso1", {"A", "B"}),
-            IterableMenuOption::create("Invert Y axis", {"C", "D"})
+            IterableMenuOption::create("Coso1", {"A", "B", "C", "D"}),
+            IterableMenuOption::create("Invert Y axis", {"1", "2", "3", "4"}),
+            IterableMenuOption::create("Compatibility mode", {"FULL", "PSVITA/3DS", "PSP", "GBA", "GB"})
         }, "Settings",
         []() {
             // Callback al confirmar

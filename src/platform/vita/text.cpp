@@ -39,6 +39,15 @@ int graphics::text::pt_to_px(int pt) {
     return ((pt*0.55) * PPI) / 72.0;
 }
 
+float graphics::text::get_text_width(const std::string &text, float size) {
+    return vita2d_font_text_width(font, size, text.c_str());
+}
+
+void graphics::text::reload_font() {
+    vita2d_free_font(font);
+    font = vita2d_load_font_file(fontpath.c_str());
+}
+
 void graphics::text::draw_text(int x, int y, const std::string &string, float size, bool centered, const Color &color) {
     if (font == NULL) return;
     //WARN: EXPERIMENTAL: Reload font when a size is bigger to avoid upscaling due to cache

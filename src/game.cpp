@@ -1,3 +1,4 @@
+#include "bullet.hpp"
 #include "game.hpp"
 #include "draw.hpp"
 #include "text.hpp"
@@ -12,28 +13,31 @@
 #include <memory>
 #include <chrono>
 
+using std::to_string;
 
-Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8, int position_iterations = 3, const GameConfig::GameConfig& game_config)
-    : world(new b2World(gravity)), vscreen(0, 0, 0, 0, 0.0f), 
-      player(register_object(CreateTriguPlayer(world, 0.1, 0.15, 0.1, 0.3, 1.0f, 0.3f, graphics::Color {0, 0, 255, 255}, &this->game_config))),
-      velocity_iterations(velocity_iterations), position_iterations(position_iterations),
-      game_config(game_config) {
+Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8,
+           int position_iterations = 3,
+           const GameConfig::GameConfig &game_config)
+    : world(new b2World(gravity)), vscreen(0, 0, 0, 0, 0.0f),
+      player(register_object(CreateTriguPlayer(
+          world, 0.1, 0.15, 0.1, 0.3, 1.0f, 0.3f,
+          graphics::Color{0, 0, 255, 255}, &this->game_config))),
+      velocity_iterations(velocity_iterations),
+      position_iterations(position_iterations), game_config(game_config) {
 
-    vscreen.width = 480;
-    vscreen.height = 320;
-    vscreen.offset_y = 0;
-    #ifdef __PSVITA__
-    vscreen.scale = SCREEN_HEIGHT / vscreen.height;
-    vscreen.offset_x = (SCREEN_WIDTH - vscreen.width * vscreen.scale) / 2;
-    #else
-    // NOTE: 3DS has to handle offset in between screens
-    vscreen.scale = 1.0f;
-    vscreen.offset_x = 40;
-    #endif
+  vscreen.width = 480;
+  vscreen.height = 320;
+  vscreen.offset_y = 0;
+#ifdef __PSVITA__
+  vscreen.scale = SCREEN_HEIGHT / vscreen.height;
+  vscreen.offset_x = (SCREEN_WIDTH - vscreen.width * vscreen.scale) / 2;
+#else
+  // NOTE: 3DS has to handle offset in between screens
+  vscreen.scale = 1.0f;
+  vscreen.offset_x = 40;
+#endif
 
-
-    players.emplace_back(player);
-
+  players.emplace_back(player);
 }
 
 Trigu* Game::create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color){
@@ -46,6 +50,11 @@ Player* Game::create_triguplayer(float x, float y, float w, float h, float densi
 
 PolygonalObject* Game::create_polygonal_object(const b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color, bool filled){
     return register_object(CreatePolygonalObject(world, vertices, vertices_count, density, friction, color, filled));
+}
+
+Bullet* Game::create_bullet(float x, float y, float radius, int resolution, b2Vec2 direction, float speed, float density, float friction, const graphics::Color& color, bool fill) {
+    bullets.push_back(register_object(CreateBullet(world, x, y, radius, resolution, direction, speed, density, friction, color)));
+    return bullets[bullets.size()-1];
 }
 
 template<Derived<Object> T>
@@ -153,6 +162,12 @@ void Game::update(float dt) {
     
     adjust_scale();
 
+    player->handle_game_logic(dt, this);
+
+    for (auto b : bullets) {
+        b->handle_game_logic(dt, this);
+    }
+
     //if (!player_respawning) {
     //    handle_player_move();
     //}
@@ -186,11 +201,11 @@ void Game::update(float dt) {
     // v = (x - x0) / t
     scale += dt * scale_grow_direction * ( abs(scale - target_scale) / (scale_grow_duration) );
 
-    if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
-        auto obj = this->create_trigu(20, 20, 20, 40, 0.1f, 0.3f, graphics::Color::BLUE());
-        const auto pos = player->body->GetPosition();
-        obj->body->SetTransform({pos.x, pos.y}, obj->body->GetAngle());
-    }    
+    // if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
+    //     auto obj = this->create_trigu(20, 20, 20, 40, 0.1f, 0.3f, graphics::Color::BLUE());
+    //     const auto pos = player->body->GetPosition();
+    //     obj->body->SetTransform({pos.x, pos.y}, obj->body->GetAngle());
+    // }
 
     for(auto& obj : objects) {
         #ifdef __3DS__
@@ -295,6 +310,12 @@ void Game::update(float dt) {
             #endif
         }
     }
+
+    if (player->is_dead) {
+        graphics::draw_rectangle(vscreen.offset_x, (vscreen.height - 20) * vscreen.scale,
+                                 (player->respawn_accumulator / game_config.respawn_time) * vscreen.width * vscreen.scale, vscreen.height * vscreen.scale, graphics::Color(100, 100, 255, 255 * 0.7f));
+    }
+    graphics::text::draw_text(170, 170, to_string(game_config.respawn_time));
 
     float time_draw = (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now() - profdraw).count() / 10E5;
 

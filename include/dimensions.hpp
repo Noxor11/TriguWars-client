@@ -19,7 +19,7 @@
     #define TITLESCREEN_VSCREEN_OFFSET_X 0
 
     // https://www.neogaf.com/threads/ppi-of-handhelds.987761/
-    #define PPI 132
+    #define PPI 120
 
 #elif defined __PSVITA__
     #define SCREEN_WIDTH            966

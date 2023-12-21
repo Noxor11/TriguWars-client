@@ -5,6 +5,8 @@
 #include "trigu.hpp"
 #include "game_config.hpp"
 
+class Game;
+
 class Player : public PolygonalObject {
     public:
         bool is_dead;
@@ -28,6 +30,8 @@ class Player : public PolygonalObject {
 
         void kill();
         void update(float dt) override;
+        // Handle logic that interfaces with Game
+        void handle_game_logic(float dt, Game* game);
         virtual void draw(const VirtualScreen &vscreen, bool rotate = false, float scale = 1.0) override;
 };
 

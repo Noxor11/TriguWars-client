@@ -90,9 +90,7 @@ public:
 #define SETTINGSLIKESCREEN_HEADER_HEIGHT 0.15
 #define SETTINGSLIKESCREEN_FOOTER_HEIGHT 0.15
 #define SLS SETTINGS_LIKE_SCREEN
-//                         These are pixels vv
-#define SETTINGSLIKESCREEN_OPTION_HEIGHT 60
-#define SETTINGSLIKESCREEN_OPTION_FONTSIZE 60
+#define SETTINGSLIKESCREEN_OPTION_FONTSIZE 19
 #define SETTINGSLIKESCREEN_OPTION_MARGIN_TOP 0.005
 #define SETTINGSLIKESCREEN_OPTION_MARGIN_BOTTOM 0.005
 
@@ -109,6 +107,7 @@ class SettingsLikeScreen : public Screen {
         float margin_left;
         float margin_right;
         float option_total_height;
+        float dt_counter = 0;
 
         SettingsLikeScreen(const std::vector<std::shared_ptr<MenuOption>>& options, std::string header, std::function<void(void)> confirm_callback);
         ~SettingsLikeScreen();

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "bullet.hpp"
 #include "game_config.hpp"
 #include "player.hpp"
 #include "trigu.hpp"
@@ -19,6 +20,7 @@ class Game {
     VirtualScreen vscreen;
     std::vector<std::shared_ptr<Object>> objects;
     std::vector<Player*> players;
+    std::vector<Bullet*> bullets;
     Player* player;
 
     bool player_respawning = false;
@@ -50,6 +52,7 @@ class Game {
     Trigu* create_trigu(float x, float y, float w, float h, float density, float friction, const graphics::Color& color);
     Player* create_triguplayer(float x, float y, float w, float h, float density, float friction, const graphics::Color& color);
     PolygonalObject* create_polygonal_object(const b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color, bool fill);
+    Bullet* create_bullet(float x, float y, float radius, int resolution, b2Vec2 direction, float speed, float density, float friction, const graphics::Color& color, bool fill);
 
     template<Derived<Object> T>
     T* register_object(const T& object);
