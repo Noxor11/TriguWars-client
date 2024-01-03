@@ -45,8 +45,7 @@ Trigu* Game::create_trigu(float x, float y, float w, float h, float density, flo
 }
 
 Player* Game::create_triguplayer(float x, float y, float w, float h, float density, float friction, const graphics::Color& color){
-    return register_object(CreateTriguPlayer(world, x, y, w, h, density, friction, color, &game_config));
-}
+    return register_object(CreateTriguPlayer(world, x, y, w, h, density, friction, color, &game_config));}
 
 PolygonalObject* Game::create_polygonal_object(const b2Vec2* vertices, int vertices_count, float density, float friction, const graphics::Color& color, bool filled){
     return register_object(CreatePolygonalObject(world, vertices, vertices_count, density, friction, color, filled));

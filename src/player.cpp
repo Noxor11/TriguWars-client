@@ -100,7 +100,7 @@ void Player::kill() {
     rot_speed = 0.0f;
     is_dead = true;
     respawn_accumulator = 0.0f;
-    body->SetEnabled(false);
+    //body->SetEnabled(false);
 }
 
 void Player::draw(const VirtualScreen &vscreen, bool rotate, float scale) {
