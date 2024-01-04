@@ -28,7 +28,7 @@ Game::Game(const b2Vec2 &gravity, int velocity_iterations = 8,
   vscreen.width = 480;
   vscreen.height = 320;
   vscreen.offset_y = 0;
-#ifdef __PSVITA__
+#if defined(__PSVITA__) || defined(__PC__)
   vscreen.scale = SCREEN_HEIGHT / vscreen.height;
   vscreen.offset_x = (SCREEN_WIDTH - vscreen.width * vscreen.scale) / 2;
 #else

@@ -3,12 +3,6 @@
 #include <cstdint>
 #include <string>
 
-#ifdef __PC__
-
-#include <SDL2/SDL.h>
-
-#endif
-
 namespace graphics {
 
     #ifdef __3DS__
@@ -53,10 +47,6 @@ namespace graphics {
 
     #ifdef __3DS__
     void set_screen(Screen scr);
-    #endif
-
-    #ifdef __PC__
-    SDL_Renderer* get_renderer();
     #endif
 
     // Run when frame is finished drawing to flip screen

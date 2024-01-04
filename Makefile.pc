@@ -1,11 +1,15 @@
 
-LIBS = -lSDL2
-CXXFLAGS += -Wall -D__PC__ -O2 -std=gnu++20
+LIBS = -lSDL2 -lSDL2_ttf -lbox2d -I./include
+CXXFLAGS += -Wall -D__PC__ -g -std=gnu++20
+
+rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 
 SRC_C :=$(call rwildcard, src/, *.c)
 SRC_CPP :=$(call rwildcard, src/, *.cpp)
 FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
-SRC_CPP := $(call FILTER_OUT,vita 3ds, $(SRC_CPP))
+SRC_CPP := $(call FILTER_OUT,3ds, $(SRC_CPP))
+SRC_CPP := $(call FILTER_OUT,vita, $(SRC_CPP))
+
 
 SRC = $(SRC_CPP) $(SRC_C)
 
@@ -14,6 +18,11 @@ OBJ=$(patsubst %.c,build.pc/%.o,$(SRC_C))
 
 OBJS = $(OBJ_CPP) $(OBJ)
 
+OBJ_NAME = triguwars
+PROJECT := triguwars
+
+all: $(PROJECT)
+
 build.pc/%.o : %.cpp #| $(OBJ_DIRS)
 	mkdir -p ${dir $@}
 	$(CXX) $(CXXFLAGS) $(LIBS) $(CFLAGS) $< -c -o $@
@@ -21,6 +30,6 @@ build.pc/%.o : %.cpp #| $(OBJ_DIRS)
 $(OBJ_DIRS): build.pc
 	mkdir -p $@
 
-$(PROJECT).elf: $(OBJS)
+$(PROJECT): $(OBJS)
 # -Wl,-q is necessary because vita-elf-create says so
 	$(CXX) $(CXXFLAGS) $(OBJS) -Wl,-q -o $(OBJ_NAME).elf $(LIBS)

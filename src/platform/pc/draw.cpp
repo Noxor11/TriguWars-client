@@ -2,9 +2,10 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include "dimensions.hpp"
+#include "text.hpp"
 
+SDL_Renderer* renderer;
 SDL_Window* window = NULL;
-SDL_Renderer* renderer = NULL;
 
 void graphics::init() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -27,6 +28,8 @@ void graphics::init() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
     SDL_RenderClear(renderer);
 
+    graphics::text::init();
+
 }
 
 void graphics::close() {
@@ -48,6 +51,7 @@ void graphics::draw_rectangle(int x, int y, int w, int h, const Color& color) {
    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
    SDL_Rect r {x, y, w, h};
    SDL_RenderDrawRect(renderer, &r);
+   SDL_RenderFillRect(renderer, &r);
 }
 
 void graphics::draw_line(int x1, int y1, int x2, int y2, const Color &color) {
@@ -61,16 +65,16 @@ void graphics::draw_triangle(int x1, int y1, int x2, int y2, int x3, int y3, con
     SDL_Vertex* vertices = (SDL_Vertex*)malloc(sizeof(SDL_Vertex) * 3);
 
     vertices[0] = {
-        {(float)x1, (float)y1}, {(char)color.r, (char)color.g, (char)color.b, (char)color.a}, {0, 0}
+        {(float)x1, (float)y1}, {(Uint8)color.r, (Uint8)color.g, (Uint8)color.b, (Uint8)color.a}, {1, 1}
     };
     vertices[1] = {
-        {(float)x2, (float)y2}, {(char)color.r, (char)color.g, (char)color.b, (char)color.a}, {0, 0}
+        {(float)x2, (float)y2}, {(Uint8)color.r, (Uint8)color.g, (Uint8)color.b, (Uint8)color.a}, {1, 1}
     };
     vertices[2] = {
-        {(float)x2, (float)y2}, {(char)color.r, (char)color.g, (char)color.b, (char)color.a}, {0, 0}
+        {(float)x3, (float)y3}, {(Uint8)color.r, (Uint8)color.g, (Uint8)color.b, (Uint8)color.a}, {1, 1}
     };
 
-    SDL_RenderGeometry(renderer, NULL, vertices, 3, NULL, NULL);
+    SDL_RenderGeometry(renderer, NULL, vertices, 3, NULL, 0);
     free(vertices);
 }
 
@@ -93,3 +97,7 @@ void graphics::draw_vertices(const Vector2 *vertices, int n_vertices, const Colo
         graphics::draw_line(vertices[i].x, vertices[i].y, vertices[0].x, vertices[0].y, color);
     }
 };
+
+SDL_Renderer* graphics::get_renderer() {
+    return renderer;
+}

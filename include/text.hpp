@@ -7,7 +7,6 @@
 
 struct Settings;
 
-
 namespace graphics{
 
     namespace text {

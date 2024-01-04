@@ -7,13 +7,13 @@
 #include <iostream>
 #include <sstream>
 
-SDL_Renderer* renderer = nullptr;
 TTF_Font* font = nullptr;
 float font_px_size_ratio = 1.0;
 
 void graphics::text::init() {
     if (TTF_Init() < 0) {
         std::cout << "[CRITICAL] TTF_Init error: " << TTF_GetError() << std::endl;
+        exit(1);
     }
 }
 
@@ -21,11 +21,16 @@ bool graphics::text::set_font(const std::string& name) {
     std::stringstream str;
     str << name << ".ttf";
     font = TTF_OpenFont(str.str().c_str(), 50.0);
+    if (font == NULL) {
+        std::cout << "[CRITICAL] TTF_OpenFont error: " << TTF_GetError() << std::endl;
+        exit(1);
+    }
 
     TTF_SetFontSize(font, 50.0);
     int testsize = TTF_FontHeight(font);
 
     font_px_size_ratio = testsize / 50.0;
+    return true;
 }
 
 float graphics::text::px_to_size(int px) {
@@ -46,9 +51,6 @@ float graphics::text::get_text_width(const std::string &text, float size) {
     return width;
 }
 
-void graphics::text::reload_font() {
-
-}
 
 void graphics::text::draw_text(int x, int y, const std::string &string, float size, bool centered, const Color &color) {
     if (font == NULL) return;
@@ -69,9 +71,9 @@ void graphics::text::draw_text(int x, int y, const std::string &string, float si
 
     // NOTE: Esto SEGURO que se puede hacer de una forma más limpia y OPTIMIZADA
     auto surface = TTF_RenderText_Solid(font, string.c_str(), {(char)color.r, (char)color.g, (char)color.b, (char)color.a});
-    auto texture = SDL_CreateTextureFromSurface(renderer, surface);
+    auto texture = SDL_CreateTextureFromSurface(graphics::get_renderer(), surface);
     SDL_Rect rect = {(int)(x + text_width_offset), (int)(y + text_width_offset), (int)text_width, TTF_FontHeight(font)};
-    SDL_RenderCopy(renderer, texture, NULL, &rect);
+    SDL_RenderCopy(graphics::get_renderer(), texture, NULL, &rect);
 
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);

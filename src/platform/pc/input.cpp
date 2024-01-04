@@ -10,75 +10,71 @@ namespace input {
 
 int KEYS[322];
 
+const Uint8* prevstate = SDL_GetKeyboardState(nullptr);
+const Uint8* state = SDL_GetKeyboardState(nullptr);
+
 void input::init() {
-    for(int i = 0; i < 322; i++) { // init them all to false
-        KEYS[i] = false;
-    }
+    prevstate = state;
+    state = SDL_GetKeyboardState(nullptr);
 }
 
 int translate_enum(input::Buttons button) {
     switch (button) {
-        case input::BUTTON_START: return SDLK_RETURN;
-        case input::BUTTON_SELECT: return SDLK_TAB;
+        case input::BUTTON_START: return SDL_SCANCODE_RETURN;
+        case input::BUTTON_SELECT: return SDL_SCANCODE_TAB;
 
-        case input::BUTTON_CONFIRM: return SDLK_z;
-        case input::BUTTON_CANCEL: return SDLK_x;
-        case input::BUTTON_AUX_UP: return SDLK_s;
-        case input::BUTTON_AUX_LEFT: return SDLK_a;
+        case input::BUTTON_CONFIRM: return SDL_SCANCODE_Z;
+        case input::BUTTON_CANCEL: return SDL_SCANCODE_X;
+        case input::BUTTON_AUX_UP: return SDL_SCANCODE_S;
+        case input::BUTTON_AUX_LEFT: return SDL_SCANCODE_A;
 
-        case input::BUTTON_DPAD_UP: return SDLK_UP;
-        case input::BUTTON_DPAD_DOWN: return SDLK_DOWN;
-        case input::BUTTON_DPAD_RIGHT: return SDLK_RIGHT;
-        case input::BUTTON_DPAD_LEFT: return SDLK_LEFT;
+        case input::BUTTON_DPAD_UP: return SDL_SCANCODE_UP;
+        case input::BUTTON_DPAD_DOWN: return SDL_SCANCODE_DOWN;
+        case input::BUTTON_DPAD_RIGHT: return SDL_SCANCODE_RIGHT;
+        case input::BUTTON_DPAD_LEFT: return SDL_SCANCODE_LEFT;
 
         default: return NULL;
     }
 };
 
-// KEYS
-// 0 = unpressed
-// 1 = just pressed
-// 2 = held
-// 3 = just released
+
+bool pad[input::BUTTON_COUNT];
+bool prevpad[input::BUTTON_COUNT];
 
 void input::scan() {
-    SDL_Event event;
-    for(int i = 0; i < 322; i++) { // init them all to false
-        if (KEYS[i] == 1) {
-            KEYS[i] = 2;
-        };
+    SDL_PumpEvents();
+    state = SDL_GetKeyboardState(nullptr);
+
+    for (int i = 0; i < input::BUTTON_COUNT; i++) {
+        prevpad[i] = pad[i];
+        pad[i] = 0;
+        if (state[translate_enum((input::Buttons)i)]) pad[i] = true;
     }
-    while (SDL_PollEvent(&event)) {
-        // check for messages
-        switch (event.type) {
-            // exit if the window is closed
-        case SDL_QUIT:
-            break;
-            // check for keypresses
-        case SDL_KEYDOWN:
-            KEYS[event.key.keysym.sym] = 1;
-            break;
-        case SDL_KEYUP:
-            if (KEYS[event.key.keysym.sym] == 3) {
-                KEYS[event.key.keysym.sym] = 0;
-            } else {
-                KEYS[event.key.keysym.sym] = 3;
-            }
-            break;
-        default:
-            break;
-        }
+
+    joystick1.x = 0;
+    joystick1.y = 0;
+    if (state[SDL_SCANCODE_H]) {
+        joystick1.x -= 127;
+    }
+    if (state[SDL_SCANCODE_L]) {
+        joystick1.x += 127;
+    }
+    if (state[SDL_SCANCODE_J]) {
+        joystick1.y -= 127;
+    }
+    if (state[SDL_SCANCODE_K]) {
+        joystick1.y += 127;
     }
 }
 
 bool input::is_key_pressed(Buttons button) {
-    return KEYS[translate_enum(button)] == 1;
+    return pad[button] && !prevstate[button];
 }
 
 bool input::is_key_held(Buttons button) {
-    return KEYS[translate_enum(button)] == 1 || KEYS[translate_enum(button)] == 2;
+    return state[button];
 }
 
 bool input::is_key_up(Buttons button) {
-    return KEYS[translate_enum(button)] == 3;
+    return !state[button] && prevstate[button];
 }

@@ -52,6 +52,9 @@ int main() {
     game.players.emplace_back(player2);
 
     float frametime_graph[120];
+    for (int i = 0; i < 120; i++) {
+        frametime_graph[i] = 0;
+    }
     int frame = -1;
     int frametime_start = 0;
 

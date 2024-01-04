@@ -68,6 +68,7 @@ void Bullet::handle_game_logic(float dt, Game *game) {
             //auto iter = std::find_if(game->objects.begin(), game->objects.end(),
             //    [&](auto &o){ return (o.get() == this); }
             //);
+            this->color = graphics::Color::GREEN();
 
             for (auto it = game->objects.begin(); it != game->objects.end();)
             {
@@ -85,7 +86,6 @@ void Bullet::handle_game_logic(float dt, Game *game) {
                     ++it;
             }
 
-            this->color = graphics::Color::GREEN();
             world->DestroyBody(this->body);
 
             // FIXME: No se elimina por completo, memory leak

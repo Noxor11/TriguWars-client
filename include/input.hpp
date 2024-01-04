@@ -31,6 +31,7 @@ namespace input {
         RIGHT_JOYSTICK_RIGHT,
         RIGHT_JOYSTICK_LEFT,
 
+        BUTTON_COUNT
     };
 
     extern TouchPosition touch;

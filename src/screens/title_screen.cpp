@@ -15,7 +15,7 @@ void TitleScreen::update(float dt) {
 
     const float message_x = title_x;
     const float message_y = TOP_HEIGHT_CENTER + 30;
-    #elif defined __PSVITA__
+    #elif defined(__PSVITA__) || defined(__PC__)
     const float title_x = WIDTH_CENTER;
     const float title_y = HEIGHT_CENTER;
 

@@ -23,6 +23,7 @@ SRC_C :=$(call rwildcard, src/, *.c)
 SRC_CPP :=$(call rwildcard, src/, *.cpp)
 FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
 SRC_CPP := $(call FILTER_OUT,3ds, $(SRC_CPP))
+SRC_CPP := $(call FILTER_OUT,pc, $(SRC_CPP))
 
 SRC = $(SRC_CPP) $(SRC_C)
 

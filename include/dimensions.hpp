@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef __3DS__
+#if defined __3DS__
     #define BOTTOM_SCREEN_WIDTH		320
     #define BOTTOM_SCREEN_HEIGHT	240
 
@@ -20,8 +20,9 @@
 
     // https://www.neogaf.com/threads/ppi-of-handhelds.987761/
     #define PPI 120
+#endif
 
-#elif defined __PSVITA__
+#if defined(__PSVITA__) || defined(__PC__)
     #define SCREEN_WIDTH            966
     #define SCREEN_HEIGHT           544
 
@@ -31,6 +32,11 @@
     #define TITLESCREEN_VSCREEN_SCALE 2.26f
     #define TITLESCREEN_VSCREEN_OFFSET_X 960 / 2 - (320 * 2.26f) / 2
 
-    #define PPI 220
+    #if defined __VITA__
+        #define PPI 220
+    #else
+        #define PPI 220
+    #endif
 
 #endif
+
