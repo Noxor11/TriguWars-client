@@ -70,7 +70,7 @@ void graphics::text::draw_text(int x, int y, const std::string &string, float si
     }
 
     // NOTE: Esto SEGURO que se puede hacer de una forma más limpia y OPTIMIZADA
-    auto surface = TTF_RenderText_Solid(font, string.c_str(), {(char)color.r, (char)color.g, (char)color.b, (char)color.a});
+    auto surface = TTF_RenderText_Solid(font, string.c_str(), {(u_char)color.r, (u_char)color.g, (u_char)color.b, (u_char)color.a});
     auto texture = SDL_CreateTextureFromSurface(graphics::get_renderer(), surface);
     SDL_Rect rect = {(int)(x + text_width_offset), (int)(y + text_width_offset), (int)text_width, TTF_FontHeight(font)};
     SDL_RenderCopy(graphics::get_renderer(), texture, NULL, &rect);

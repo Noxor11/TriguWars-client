@@ -49,7 +49,7 @@ void SettingsLikeScreen::update(float dt) {
 
     graphics::draw_line(0, vscreen.height - vscreen.height * SETTINGSLIKESCREEN_FOOTER_HEIGHT, vscreen.width, vscreen.height - vscreen.height * SETTINGSLIKESCREEN_FOOTER_HEIGHT, graphics::Color::GREEN());
 
-    for (int i = 0; i < this->options.size(); i++) {
+    for (int i = 0; i < (int)this->options.size(); i++) {
         float y0 = vscreen.height * SETTINGSLIKESCREEN_HEADER_HEIGHT + ((option_total_height + option_margin_top) * i) + option_margin_top;
         float y1 = y0 + pt_to_px(SETTINGSLIKESCREEN_OPTION_FONTSIZE);
         auto label = this->options[i]->name;
@@ -74,7 +74,7 @@ void SettingsLikeScreen::update(float dt) {
             }
 
             str << option->values[option->selected_value_index];
-            if (option->selected_value_index < option->values.size() - 1) {
+            if (option->selected_value_index < (int)option->values.size() - 1) {
                 //str << " )";
                 float origin_x = (vscreen.width - margin_right - margin_left) * 0.90 + margin_left;
                 graphics::draw_triangle(origin_x, y0, origin_x+vscreen.width * 0.05, y0 + (y1-y0)/2, origin_x, y1, graphics::Color::WHITE());
@@ -89,7 +89,7 @@ void SettingsLikeScreen::update(float dt) {
             if (selected_option_index == i) {
                 if (input::is_key_pressed(input::BUTTON_DPAD_LEFT) && option->selected_value_index > 0) {
                     option->selected_value_index--;
-                } else if (input::is_key_pressed(input::BUTTON_DPAD_RIGHT) && option->selected_value_index < option->values.size() - 1) {
+                } else if (input::is_key_pressed(input::BUTTON_DPAD_RIGHT) && option->selected_value_index < (int)option->values.size() - 1) {
                     option->selected_value_index++;
                 }
             }
@@ -97,7 +97,7 @@ void SettingsLikeScreen::update(float dt) {
         graphics::draw_line(margin_left, y0, margin_left, y0 + SETTINGSLIKESCREEN_OPTION_FONTSIZE, {255, i * 50, i * 50, 255});
     }
 
-    if (input::is_key_pressed(input::BUTTON_DPAD_DOWN) && selected_option_index < options.size() - 1) {
+    if (input::is_key_pressed(input::BUTTON_DPAD_DOWN) && selected_option_index < (int)options.size() - 1) {
         selected_option_index ++;
     } else if (input::is_key_pressed(input::BUTTON_DPAD_UP) && selected_option_index > 0 ) {
         selected_option_index --;

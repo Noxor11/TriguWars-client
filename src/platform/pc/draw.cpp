@@ -13,13 +13,13 @@ void graphics::init() {
         exit(1);
     }
 
-    window = SDL_CreateWindow("TriguWars [PC]", NULL, NULL, SCREEN_WIDTH, SCREEN_HEIGHT, NULL);
+    window = SDL_CreateWindow("TriguWars [PC]", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     if (window == NULL) {
         std::cout << "[CRITICAL] SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         exit(1);
     }
 
-    renderer = SDL_CreateRenderer(window, -1, NULL);
+    renderer = SDL_CreateRenderer(window, -1, 0);
     if (renderer == NULL) {
         std::cout << "[CRITICAL] SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
         exit(1);
