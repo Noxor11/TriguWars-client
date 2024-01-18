@@ -64,15 +64,15 @@ void graphics::text::draw_text(int x, int y, const std::string &string, float si
     TTF_SetFontSize(font, size);
 
     float text_width_offset = 0; // offset to center x in text
-    float text_width = graphics::text::get_text_width(string, size);
+    auto surface = TTF_RenderText_Solid(font, string.c_str(), {(char)color.r, (char)color.g, (char)color.b, (char)color.a});
+
     if (centered){
-        text_width_offset += text_width / 2;
+        text_width_offset += surface->w / 2;
     }
 
     // NOTE: Esto SEGURO que se puede hacer de una forma más limpia y OPTIMIZADA
-    auto surface = TTF_RenderText_Solid(font, string.c_str(), {(char)color.r, (char)color.g, (char)color.b, (char)color.a});
     auto texture = SDL_CreateTextureFromSurface(graphics::get_renderer(), surface);
-    SDL_Rect rect = {(int)(x + text_width_offset), (int)(y + text_width_offset), (int)text_width, TTF_FontHeight(font)};
+    SDL_Rect rect = {(int)(x - text_width_offset), (int)(y - surface->h), (int)surface->w, surface->h};
     SDL_RenderCopy(graphics::get_renderer(), texture, NULL, &rect);
 
     SDL_FreeSurface(surface);
