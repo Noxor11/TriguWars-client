@@ -38,9 +38,10 @@ Bullet CreateBullet(b2World* world, float x, float y, float radius, int resoluti
 
 void Bullet::handle_game_logic(float dt, Game *game) {
     dt_acum += dt;
-    // if (dt > 1000.0) {
-    //     //kill(game);
-    // }
+    if (dt_acum > 5.0) {
+        game->queue_bullet_deletion(this);
+        return;
+    }
 
     int deadly_contacts = 0;
     for (auto object : game->objects) {
