@@ -15,7 +15,7 @@ namespace graphics{
         bool set_font(const std::string& name);
         float pt_to_size(int pt);
         float px_to_size(int px);
-        void draw_text(int x, int y, const std::string& string, float size = px_to_size(30), bool centered = false, const Color &color = Color::WHITE());
+        void draw_text(int x, int y, const std::string& string, float size = pt_to_size(30), bool centered = false, const Color &color = Color::WHITE());
         int pt_to_px(int pt);
         float get_text_width(const std::string &text, float size);
         void close();
