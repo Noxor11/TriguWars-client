@@ -62,6 +62,14 @@ T* Game::register_object(const T& object) {
     return (T*)(objects[objects.size()-1].get());
 }
 
+void Game::queue_bullet_deletion(Bullet* bullet) {
+    for (auto b : queued_bullets_for_deletion) {
+        if (b == bullet) return;
+    }
+
+    queued_bullets_for_deletion.push_back(bullet);
+}
+
 auto proflogic = std::chrono::steady_clock::now();
 auto profphys = std::chrono::steady_clock::now();
 auto profdraw = std::chrono::steady_clock::now();
@@ -323,6 +331,28 @@ void Game::update(float dt) {
     graphics::text::draw_text(10, SCREEN_HEIGHT-90,  std::string("phys  ").append(std::to_string(time_physics)), 30, false, graphics::Color::GREEN());
     graphics::text::draw_text(10, SCREEN_HEIGHT-60,  std::string("draw  ").append(std::to_string(time_draw)), 30, false, graphics::Color::YELLOW());
 
+    for (auto it = queued_bullets_for_deletion.begin(); it != queued_bullets_for_deletion.end();) {
+        for (auto itb = bullets.begin(); itb != bullets.end();) {
+            if (*itb.base() == *it.base())
+                itb = bullets.erase(itb);
+            else
+                ++itb;
+        }
+
+        for (auto ito = objects.begin(); ito != objects.end();) {
+            if (ito->get() == *it.base()) {
+                if (ito->unique()) {
+                    (*it.base())->body->GetWorld()->DestroyBody( (*it.base())->body );
+                }
+                ito->reset();
+                ito = objects.erase(ito);
+            } else {
+                ++ito;
+            }
+        }
+
+        queued_bullets_for_deletion.erase(it);
+    }
 }
 
 void Game::adjust_scale() {

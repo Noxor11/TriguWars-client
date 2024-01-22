@@ -23,8 +23,6 @@ PauseScreen::PauseScreen()
 }
 
 void PauseScreen::update(float dt) {
-    // Para saber cómo cada librería renderiza el texto
-
     #ifdef __3DS__
     set_screen(graphics::Screen::TOP1);
     draw_text(TOP_WIDTH_CENTER, TOP_HEIGHT_CENTER, "Pause");

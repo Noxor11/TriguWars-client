@@ -18,9 +18,12 @@ class Game {
 
     b2World* world;
     VirtualScreen vscreen;
+
     std::vector<std::shared_ptr<Object>> objects;
     std::vector<Player*> players;
     std::vector<Bullet*> bullets;
+    std::vector<Bullet*> queued_bullets_for_deletion;
+
     Player* player;
 
     bool player_respawning = false;
@@ -57,6 +60,9 @@ class Game {
     template<Derived<Object> T>
     T* register_object(const T& object);
     void adjust_scale();
+
+    void queue_bullet_deletion(Bullet* bullet);
+
     Game(const b2Vec2 &gravity, int velocity_iterations, int position_iterations, const GameConfig::GameConfig& game_config = GameConfig::GameConfig());
     ~Game();
 };

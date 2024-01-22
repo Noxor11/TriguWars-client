@@ -33,19 +33,22 @@ Bullet CreateBullet(b2World* world, float x, float y, float radius, int resoluti
 
     body->CreateFixture(&fixtureDef);
 
-    return Bullet(world, vertices, resolution, body, direction, speed, color);
+    return *new Bullet(world, vertices, resolution, body, direction, speed, color);
 }
 
 void Bullet::handle_game_logic(float dt, Game *game) {
-    for (auto player : game->players) {
-        if ( b2TestOverlap(this->body->GetFixtureList()->GetAABB(0), player->body->GetFixtureList()->GetAABB(0)) ) {
-           // Player hit
-        }
+    dt_acum += dt;
+    if (dt_acum > 5.0) {
+        game->queue_bullet_deletion(this);
+        return;
     }
 
+    int deadly_contacts = 0;
     for (auto object : game->objects) {
         if (object.get() == this) continue;
+        if (object.get() == game->player) continue;
         if ( b2TestOverlap(this->body->GetFixtureList()->GetAABB(0), object->body->GetFixtureList()->GetAABB(0)) ) {
+            deadly_contacts++;
             for (int i = 0; i < game->players.size(); i++) {
                 if (object.get() == game->players[i]) {
                     // Object is player
@@ -53,9 +56,17 @@ void Bullet::handle_game_logic(float dt, Game *game) {
 
                     if (object.get() == game->player) {
                        // Object is controlling player!!
+                       deadly_contacts--;
                     } else {
-                        // Object is other player. Can kill :)
+                        // Object is other player
 
+                        // Player is dead, ignore
+                        if (((Player*)object.get())->is_dead) {
+                            deadly_contacts--;
+                            continue;
+                        }
+
+                        // Player is alive, can kill :)
                         game->players[i]->kill();
                     }
 
@@ -68,29 +79,38 @@ void Bullet::handle_game_logic(float dt, Game *game) {
             //auto iter = std::find_if(game->objects.begin(), game->objects.end(),
             //    [&](auto &o){ return (o.get() == this); }
             //);
-            this->color = graphics::Color::GREEN();
 
-            for (auto it = game->objects.begin(); it != game->objects.end();)
-            {
-                if (it->get() == this)
-                    it = game->objects.erase(it);
-                else
-                    ++it;
+
+            if (deadly_contacts > 0) {
+                game->queue_bullet_deletion(this);
             }
-
-            for (auto it = game->bullets.begin(); it != game->bullets.end();)
-            {
-                if (*it.base() == this)
-                    it = game->bullets.erase(it);
-                else
-                    ++it;
-            }
-
-            world->DestroyBody(this->body);
-
             // FIXME: No se elimina por completo, memory leak
             //delete this;
             break;
         }
     }
 }
+
+void Bullet::kill(Game *game) {
+    for (auto it = game->objects.begin(); it != game->objects.end();)
+    {
+        if (it->get() == this)
+            it = game->objects.erase(it);
+        else
+            ++it;
+    }
+
+    for (auto it = game->bullets.begin(); it != game->bullets.end();)
+    {
+        if (*it.base() == this)
+            it = game->bullets.erase(it);
+        else
+            ++it;
+    }
+
+    world->DestroyBody(this->body);
+}
+
+//Bullet::~Bullet() {
+//    body->GetWorld()->DestroyBody(body);
+//}
