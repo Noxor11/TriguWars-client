@@ -1,5 +1,6 @@
 #include "settings_screen.hpp"
 #include "draw.hpp"
+#include "ppi_manager.hpp"
 #include "text.hpp"
 #include "dimensions.hpp"
 #include "input.hpp"
@@ -15,7 +16,8 @@ SettingsScreen::SettingsScreen()
         {
             IterableMenuOption::create("Coso1", {"A", "B", "C", "D"}),
             IterableMenuOption::create("Invert Y axis", {"1", "2", "3", "4"}),
-            IterableMenuOption::create("Compatibility mode", {"FULL", "PSVITA/3DS", "PSP", "GBA", "GB"})
+            IterableMenuOption::create("Compatibility mode", {"FULL", "PSVITA/3DS", "PSP", "GBA", "GB"}),
+            RangeMenuOption::create("text scale", 0.5, 2.0, 0.25, float(get_ppi()) / DEFAULT_PPI),
         }, "Settings",
         []() {
             // Callback al confirmar

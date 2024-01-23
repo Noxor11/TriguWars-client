@@ -36,6 +36,7 @@ struct MenuOption {
     struct OptionType {
         bool ACTIONABLE: 1; 
         bool ITERABLE: 1;
+        bool RANGE: 1;
     };
 protected:
     MenuOption(const std::string& name, OptionType type);
@@ -69,6 +70,23 @@ public:
 
     // method that makes sure the object is always dynamically allocated
     static std::shared_ptr<IterableMenuOption> create(const std::string& name, const std::vector<std::string>& values) { return std::make_shared<IterableMenuOption>(IterableMenuOption(name, values)); };
+};
+
+struct RangeMenuOption : public MenuOption {
+private:
+    RangeMenuOption(const std::string name, const float min_value, const float max_value, const float step, const float default_value)
+        : MenuOption{name, OptionType{0, 0, 1}}, min_value(min_value), max_value(max_value), step(step), current_value(default_value) {}
+
+public:
+    float min_value;
+    float max_value;
+    float step;
+    float current_value;
+
+    // method that makes sure the object is always dynamically allocated
+    static std::shared_ptr<RangeMenuOption>
+        create(const std::string name, const float min_value, const float max_value, const float step, const float default_value)
+            { return std::make_shared<RangeMenuOption>(RangeMenuOption(name, min_value, max_value, step, default_value)); };
 };
 
 class ScreenWithMenu : public Screen {
