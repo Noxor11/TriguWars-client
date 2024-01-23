@@ -19,7 +19,9 @@ SettingsScreen::SettingsScreen()
             IterableMenuOption::create("Compatibility mode", {"FULL", "PSVITA/3DS", "PSP", "GBA", "GB"}),
             RangeMenuOption::create("text scale", 0.5, 2.0, 0.25, float(get_ppi()) / DEFAULT_PPI),
         }, "Settings",
-        []() {
+        [this]() {
+            auto option = std::static_pointer_cast<RangeMenuOption>(options[3]);
+            set_ppi(option->current_value * DEFAULT_PPI);
             // Callback al confirmar
         }
         ) {}
