@@ -19,7 +19,7 @@
     #define TITLESCREEN_VSCREEN_OFFSET_X 0
 
     // https://www.neogaf.com/threads/ppi-of-handhelds.987761/
-    #define PPI 120
+    #define DEFAULT_PPI 120
 #endif
 
 #if defined(__PSVITA__) || defined(__PC__)
@@ -33,9 +33,9 @@
     #define TITLESCREEN_VSCREEN_OFFSET_X 960.0f / 2 - (320 * 2.26f) / 2
 
     #if defined __VITA__
-        #define PPI 220
+        #define DEFAULT_PPI 220
     #else
-        #define PPI 220
+        #define DEFAULT_PPI 220
     #endif
 
 #endif

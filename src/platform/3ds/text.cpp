@@ -1,4 +1,5 @@
 #include "dimensions.hpp"
+#include "ppi_manager.hpp"
 #include "text.hpp"
 #include "draw.hpp"
 
@@ -74,11 +75,11 @@ float graphics::text::px_to_size(int px) {
 }
 
 float graphics::text::pt_to_size(int pt) {
-    return (pt * PPI) / 72.0 * font_px_size_ratio;
+    return (pt * get_ppi()) / 72.0 * font_px_size_ratio;
 }
 
 int graphics::text::pt_to_px(int pt) {
-    return ((pt * 0.55) * PPI) / 72.0;
+    return ((pt * 0.55) * get_ppi()) / 72.0;
 }
 
 float graphics::text::get_text_width(const std::string &text, float size) {
