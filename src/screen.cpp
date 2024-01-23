@@ -27,20 +27,19 @@ ScreenWithMenu::~ScreenWithMenu() {}
 
 void ScreenWithMenu::handle_menu() {
     Color color;
-    for (unsigned int y = 90, x = 20, i = 0; i < options.size(); y += 30, ++i){
+    for (unsigned int y = 90 * vscreen.scale, x = 20 * vscreen.scale, i = 0; i < options.size(); y += pt_to_px(30), ++i){
 
         if (options[i]->name == options[selected_option_index]->name)
             color = Color::RED();
         else
             color = Color::WHITE();
 
-        draw_text(vscreen.translate_x(x), vscreen.translate_y(y), options[i]->name, 30, false, color);
-        
+        draw_text(vscreen.translate_x(x), vscreen.translate_y(y), options[i]->name, pt_to_size(30), false, color);
 
         if (options[i]->type.ITERABLE) {
             IterableMenuOption* iterable_option = (IterableMenuOption*)(options[i].get());
             const std::string& value = iterable_option->values[iterable_option->selected_value_index];
-            draw_text(vscreen.translate_x(x + 200), vscreen.translate_y(y), std::string("( ").append(value).append(" )"), 30, false, color);
+            draw_text(vscreen.translate_x(x + 200 * vscreen.scale), vscreen.translate_y(y), std::string("( ").append(value).append(" )"), 30, false, color);
         }
 
     }
