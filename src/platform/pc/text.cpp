@@ -65,7 +65,7 @@ void graphics::text::draw_text(int x, int y, const std::string &string, float si
     TTF_SetFontSize(font, size);
 
     float text_width_offset = 0; // offset to center x in text
-    auto surface = TTF_RenderText_Solid(font, string.c_str(), {(char)color.r, (char)color.g, (char)color.b, (char)color.a});
+    auto surface = TTF_RenderText_Solid(font, string.c_str(), {(unsigned char)color.r, (unsigned char)color.g, (unsigned char)color.b, (unsigned char)color.a});
 
     if (centered){
         text_width_offset += surface->w / 2;

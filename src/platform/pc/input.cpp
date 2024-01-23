@@ -33,7 +33,7 @@ int translate_enum(input::Buttons button) {
         case input::BUTTON_DPAD_RIGHT: return SDL_SCANCODE_RIGHT;
         case input::BUTTON_DPAD_LEFT: return SDL_SCANCODE_LEFT;
 
-        default: return NULL;
+        default: return (int)NULL;
     }
 };
 

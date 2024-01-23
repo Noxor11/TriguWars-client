@@ -89,6 +89,9 @@ int main() {
 
 #ifdef __3DS__
     while (aptMainLoop()) {
+#elif defined __PC__
+    SDL_PumpEvents();
+    while(!SDL_QuitRequested()) {
 #else
     while (true) {
 #endif
