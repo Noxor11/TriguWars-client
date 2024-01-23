@@ -22,6 +22,7 @@ SettingsScreen::SettingsScreen()
         [this]() {
             auto option = std::static_pointer_cast<RangeMenuOption>(options[3]);
             set_ppi(option->current_value * DEFAULT_PPI);
+            ScreenManager::get_instance().transition_to_last_screen();
             // Callback al confirmar
         }
         ) {}
