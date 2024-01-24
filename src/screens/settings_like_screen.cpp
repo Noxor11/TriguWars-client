@@ -1,3 +1,4 @@
+#include "menu_draw.hpp"
 #include "ppi_manager.hpp"
 #include "screen.hpp"
 #include "draw.hpp"
@@ -20,7 +21,6 @@ SettingsLikeScreen::SettingsLikeScreen(
       vscreen.height * SETTINGSLIKESCREEN_OPTION_MARGIN_BOTTOM;
 
   this->option_total_height =
-      graphics::text::pt_to_px(SETTINGSLIKESCREEN_OPTION_FONTSIZE) +
       option_margin_top + option_margin_bottom;
     #if __PSVITA__
     graphics::text::reload_font();
@@ -51,7 +51,7 @@ void SettingsLikeScreen::update(float dt) {
     graphics::draw_line(0, vscreen.height - vscreen.height * SETTINGSLIKESCREEN_FOOTER_HEIGHT, vscreen.width, vscreen.height - vscreen.height * SETTINGSLIKESCREEN_FOOTER_HEIGHT, graphics::Color::GREEN());
 
     for (int i = 0; i < (int)this->options.size(); i++) {
-        float y0 = vscreen.height * SETTINGSLIKESCREEN_HEADER_HEIGHT + ((option_total_height + option_margin_top) * i) + option_margin_top;
+        float y0 = vscreen.height * SETTINGSLIKESCREEN_HEADER_HEIGHT + ((option_total_height + graphics::text::pt_to_px(SETTINGSLIKESCREEN_OPTION_FONTSIZE) + option_margin_top) * i) + option_margin_top;
         float y1 = y0 + pt_to_px(SETTINGSLIKESCREEN_OPTION_FONTSIZE);
         auto label = this->options[i]->name;
 
@@ -69,27 +69,7 @@ void SettingsLikeScreen::update(float dt) {
 
         if (options[i]->type.ITERABLE) {
             auto option = std::static_pointer_cast<IterableMenuOption>(options[i]);
-            std::stringstream str;
-            if (option->selected_value_index > 0) {
-                //graphics::text::draw_text((vscreen.width - margin_right - margin_left) * 0.75 - margin_left - vscreen.width * 0.05, y1,
-                //                          "(", graphics::text::pt_to_size(SETTINGSLIKESCREEN_OPTION_FONTSIZE), false, graphics::Color::WHITE());
-                float origin_x = (vscreen.width - margin_right - margin_left) * 0.60 + margin_left;
-                graphics::draw_triangle(origin_x, y0, origin_x-vscreen.width * 0.05, y0 + (y1-y0)/2, origin_x, y1, graphics::Color::WHITE());
-            }
-
-            str << option->values[option->selected_value_index];
-            if (option->selected_value_index < (int)option->values.size() - 1) {
-                //str << " )";
-                float origin_x = (vscreen.width - margin_right - margin_left) * 0.90 + margin_left;
-                graphics::draw_triangle(origin_x, y0, origin_x+vscreen.width * 0.05, y0 + (y1-y0)/2, origin_x, y1, graphics::Color::WHITE());
-            }
-            float center_offset = graphics::text::get_text_width(str.str(), graphics::text::pt_to_size(SETTINGSLIKESCREEN_OPTION_FONTSIZE)) / 2;
-            graphics::text::draw_text((vscreen.width - margin_right - margin_left) * 0.75 - center_offset + margin_left, y1,
-                                      str.str(), graphics::text::pt_to_size(SETTINGSLIKESCREEN_OPTION_FONTSIZE), false, graphics::Color::WHITE());
-
-            graphics::text::draw_text(margin_left, vscreen.height + SETTINGSLIKESCREEN_OPTION_FONTSIZE * 0.20, "Left: Change value  Right: Change Value",
-                                      graphics::text::px_to_size(vscreen.height * SETTINGSLIKESCREEN_FOOTER_HEIGHT * 0.40));
-
+            draw_iterable_option(option.get(), option_component_start, y0, option_component_end, y1, SETTINGSLIKESCREEN_OPTION_FONTSIZE);
             if (selected_option_index == i) {
                 if (input::is_key_pressed(input::BUTTON_DPAD_LEFT) && option->selected_value_index > 0) {
                     option->selected_value_index--;
@@ -99,34 +79,7 @@ void SettingsLikeScreen::update(float dt) {
             }
         } else if (options[i]->type.RANGE) {
             auto option = std::static_pointer_cast<RangeMenuOption>(options[i]);
-            std::stringstream str;
-            str << option->current_value;
-
-            //if (option->current_value > option->max_value) {
-            //    //graphics::text::draw_text((vscreen.width - margin_right - margin_left) * 0.75 - margin_left - vscreen.width * 0.05, y1,
-            //    //                          "(", graphics::text::pt_to_size(SETTINGSLIKESCREEN_OPTION_FONTSIZE), false, graphics::Color::WHITE());
-            //    float origin_x = (vscreen.width - margin_right - margin_left) * 0.60 + margin_left;
-            //    graphics::draw_triangle(origin_x, y0, origin_x-vscreen.width * 0.05, y0 + (y1-y0)/2, origin_x, y1, graphics::Color::WHITE());
-            //}
-            graphics::draw_line(option_component_start, y0 + (y1 - y0)/2, option_component_end, y0 + (y1-y0)/2, graphics::Color::WHITE());
-
-            float progress = (option->current_value - option->min_value) / (option->max_value - option->min_value);
-            float progress_start = option_component_start + (option_component_end - option_component_start) * progress;
-
-            graphics::draw_line(progress_start, y0, progress_start, y1, graphics::Color::WHITE());
-            //if (option->current_value < option->min_value) {
-            //    //str << " )";
-            //    float origin_x = (vscreen.width - margin_right - margin_left) * 0.90 + margin_left;
-            //    graphics::draw_triangle(origin_x, y0, origin_x+vscreen.width * 0.05, y0 + (y1-y0)/2, origin_x, y1, graphics::Color::WHITE());
-            //}
-
-            float center_offset = graphics::text::get_text_width(str.str(), graphics::text::pt_to_size(SETTINGSLIKESCREEN_OPTION_FONTSIZE)) / 2;
-            graphics::text::draw_text((vscreen.width - margin_right - margin_left) * 0.75 - center_offset + margin_left, y1,
-                                      str.str(), graphics::text::pt_to_size(SETTINGSLIKESCREEN_OPTION_FONTSIZE), false, graphics::Color::WHITE());
-
-            graphics::text::draw_text(margin_left, vscreen.height + SETTINGSLIKESCREEN_OPTION_FONTSIZE * 0.20, "Left: Change value  Right: Change Value",
-                                      graphics::text::px_to_size(vscreen.height * SETTINGSLIKESCREEN_FOOTER_HEIGHT * 0.40));
-
+            draw_range_option(option.get(), option_component_start, y0, option_component_end, y1, SETTINGSLIKESCREEN_OPTION_FONTSIZE);
             if (selected_option_index == i) {
                 if (input::is_key_pressed(input::BUTTON_DPAD_LEFT) && option->current_value > option->min_value) {
                     option->current_value -= option->step;
@@ -135,6 +88,7 @@ void SettingsLikeScreen::update(float dt) {
                 }
             }
         }
+
         // FIXME Not PPI aware
         graphics::draw_line(margin_left, y0, margin_left, y0 + SETTINGSLIKESCREEN_OPTION_FONTSIZE, {255, i * 50, i * 50, 255});
     }
