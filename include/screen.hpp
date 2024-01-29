@@ -33,10 +33,11 @@ class Screen {
 
 
 struct MenuOption {
-    struct OptionType {
-        bool ACTIONABLE: 1; 
-        bool ITERABLE: 1;
-        bool RANGE: 1;
+    enum class OptionType {
+        UNDEFINED,
+        ACTIONABLE,
+        ITERABLE,
+        RANGE
     };
 protected:
     MenuOption(const std::string& name, OptionType type);
@@ -44,13 +45,13 @@ public:
 
     
     const std::string name;
-    OptionType type = {0,0};
+    OptionType type = OptionType::UNDEFINED;
 };
 
 struct ActionableMenuOption : public MenuOption {
 private:
     ActionableMenuOption(const std::string name, std::function<void(void)> callback) 
-        : MenuOption{name, OptionType{1, 0}}, on_action(callback) {}
+        : MenuOption{name, OptionType::ACTIONABLE}, on_action(callback) {}
 
 public:
     std::function<void()> on_action;
@@ -62,7 +63,7 @@ public:
 struct IterableMenuOption : public MenuOption {
 private:
     IterableMenuOption(const std::string name, const std::vector<std::string> values) 
-        : MenuOption{name, OptionType{0, 1}}, values(values), selected_value_index{0} {}
+        : MenuOption{name, OptionType::ITERABLE}, values(values), selected_value_index{0} {}
 
 public:
     const std::vector<std::string> values;
@@ -75,7 +76,7 @@ public:
 struct RangeMenuOption : public MenuOption {
 private:
     RangeMenuOption(const std::string name, const float min_value, const float max_value, const float step, const float default_value)
-        : MenuOption{name, OptionType{0, 0, 1}}, min_value(min_value), max_value(max_value), step(step), current_value(default_value) {}
+        : MenuOption{name, OptionType::RANGE}, min_value(min_value), max_value(max_value), step(step), current_value(default_value) {}
 
 public:
     float min_value;

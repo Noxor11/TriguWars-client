@@ -36,7 +36,7 @@ void ScreenWithMenu::handle_menu() {
 
         draw_text(vscreen.translate_x(x), vscreen.translate_y(y), options[i]->name, pt_to_size(30), false, color);
 
-        if (options[i]->type.ITERABLE) {
+        if (options[i]->type == MenuOption::OptionType::ITERABLE) {
             IterableMenuOption* iterable_option = (IterableMenuOption*)(options[i].get());
             const std::string& value = iterable_option->values[iterable_option->selected_value_index];
             draw_text(vscreen.translate_x(x + 200 * vscreen.scale), vscreen.translate_y(y), std::string("( ").append(value).append(" )"), 30, false, color);
@@ -53,7 +53,7 @@ void ScreenWithMenu::handle_menu() {
     }
     
 
-    if (options[selected_option_index]->type.ITERABLE) {
+    if (options[selected_option_index]->type == MenuOption::OptionType::ITERABLE) {
         IterableMenuOption* iterable_option = ((IterableMenuOption*)(options[selected_option_index].get()));
     
         if (input::is_key_pressed(input::Buttons::BUTTON_DPAD_RIGHT)) {
@@ -66,7 +66,7 @@ void ScreenWithMenu::handle_menu() {
     
     } 
     
-    if (options[selected_option_index]->type.ACTIONABLE){
+    if (options[selected_option_index]->type == MenuOption::OptionType::ACTIONABLE) {
         ActionableMenuOption* actionable_option = ((ActionableMenuOption*)(options[selected_option_index].get()));
     
         if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {

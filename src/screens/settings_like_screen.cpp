@@ -67,7 +67,7 @@ void SettingsLikeScreen::update(float dt) {
         float option_component_start = (vscreen.width - margin_right - margin_left) * 0.60 + margin_left;
         float option_component_end = (vscreen.width - margin_right - margin_left) * 0.90 + margin_left + vscreen.width * 0.05;
 
-        if (options[i]->type.ITERABLE) {
+        if (options[i]->type == MenuOption::OptionType::ITERABLE) {
             auto option = std::static_pointer_cast<IterableMenuOption>(options[i]);
             draw_iterable_option(option.get(), option_component_start, y0, option_component_end, y1, SETTINGSLIKESCREEN_OPTION_FONTSIZE);
             if (selected_option_index == i) {
@@ -77,7 +77,7 @@ void SettingsLikeScreen::update(float dt) {
                     option->selected_value_index++;
                 }
             }
-        } else if (options[i]->type.RANGE) {
+        } else if (options[i]->type == MenuOption::OptionType::RANGE) {
             auto option = std::static_pointer_cast<RangeMenuOption>(options[i]);
             draw_range_option(option.get(), option_component_start, y0, option_component_end, y1, SETTINGSLIKESCREEN_OPTION_FONTSIZE);
             if (selected_option_index == i) {
