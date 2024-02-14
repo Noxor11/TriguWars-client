@@ -6,6 +6,8 @@ class VirtualScreen {
         float offset_y;
         float width;
         float height;
+        float scale_w;
+        float scale_h;
         float scale;
 
         float translate_x(float x) const;

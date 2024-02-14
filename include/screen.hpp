@@ -37,6 +37,7 @@ struct MenuOption {
         UNDEFINED,
         ACTIONABLE,
         ITERABLE,
+        RICH_ITERABLE,
         RANGE
     };
 protected:
@@ -70,7 +71,8 @@ public:
     int selected_value_index;
 
     // method that makes sure the object is always dynamically allocated
-    static std::shared_ptr<IterableMenuOption> create(const std::string& name, const std::vector<std::string>& values) { return std::make_shared<IterableMenuOption>(IterableMenuOption(name, values)); };
+    static std::shared_ptr<IterableMenuOption> create(const std::string& name, const std::vector<std::string>& values)
+        { return std::make_shared<IterableMenuOption>(IterableMenuOption(name, values)); };
 };
 
 struct RangeMenuOption : public MenuOption {
@@ -88,6 +90,31 @@ public:
     static std::shared_ptr<RangeMenuOption>
         create(const std::string name, const float min_value, const float max_value, const float step, const float default_value)
             { return std::make_shared<RangeMenuOption>(RangeMenuOption(name, min_value, max_value, step, default_value)); };
+};
+
+struct VectorImage {
+    int w;
+    int h;
+    void(*image_render)(VirtualScreen);
+};
+
+struct RichItem {
+    std::string label;
+    VectorImage image;
+};
+
+struct RichIterableOption : public MenuOption {
+    private:
+        RichIterableOption(const std::string name, const std::vector<RichItem> items)
+            : MenuOption{name, OptionType::RICH_ITERABLE}, items(items), selected_value_index{0} {}
+    public:
+        const std::vector<RichItem> items;
+        int selected_value_index;
+
+        // method that makes sure the object is always dynamically allocated
+        static std::shared_ptr<RichIterableOption> create(const std::string& name, const std::vector<RichItem>& items) {
+            return std::make_shared<RichIterableOption>(RichIterableOption(name, items));
+        };
 };
 
 class ScreenWithMenu : public Screen {
@@ -118,6 +145,9 @@ class SettingsLikeScreen : public Screen {
     public:
         std::string header;
         std::vector<std::shared_ptr<MenuOption>> options;
+        std::vector<int> options_size;
+        // Para un índice i, devuelve el sumatorio del tamaño de todas las opciones anteriores
+        std::vector<int> options_acum_size;
         std::function<void(void)> confirm_callback;
         int selected_option_index;
         float offset_y;
@@ -125,10 +155,11 @@ class SettingsLikeScreen : public Screen {
         float option_margin_bottom;
         float margin_left;
         float margin_right;
-        float option_total_height;
+        float option_total_margin;
         float dt_counter = 0;
 
         SettingsLikeScreen(const std::vector<std::shared_ptr<MenuOption>>& options, std::string header, std::function<void(void)> confirm_callback);
         ~SettingsLikeScreen();
         void update(float dt);
+        void calculate_sizes();
 };

@@ -20,11 +20,31 @@ SettingsLikeScreen::SettingsLikeScreen(
   this->option_margin_bottom =
       vscreen.height * SETTINGSLIKESCREEN_OPTION_MARGIN_BOTTOM;
 
-  this->option_total_height =
+  this->option_total_margin =
       option_margin_top + option_margin_bottom;
+    calculate_sizes();
     #if __PSVITA__
     graphics::text::reload_font();
     #endif
+}
+
+void SettingsLikeScreen::calculate_sizes() {
+    this->options_size.clear();
+    this->options_acum_size.clear();
+
+    for (int i = 0; i < (int)this->options.size(); i++) {
+        if (i < 1) {
+            options_acum_size.push_back(0);
+        }
+        if (options[i]->type == MenuOption::OptionType::RICH_ITERABLE) {
+            options_size.push_back(pt_to_px(SETTINGSLIKESCREEN_OPTION_FONTSIZE) * 2);
+        } else {
+            options_size.push_back(pt_to_px(SETTINGSLIKESCREEN_OPTION_FONTSIZE));
+        }
+        options_acum_size.push_back(
+            options_acum_size[i] + options_size[i]
+        );
+    }
 }
 
 void SettingsLikeScreen::update(float dt) {
@@ -51,8 +71,13 @@ void SettingsLikeScreen::update(float dt) {
     graphics::draw_line(0, vscreen.height - vscreen.height * SETTINGSLIKESCREEN_FOOTER_HEIGHT, vscreen.width, vscreen.height - vscreen.height * SETTINGSLIKESCREEN_FOOTER_HEIGHT, graphics::Color::GREEN());
 
     for (int i = 0; i < (int)this->options.size(); i++) {
-        float y0 = vscreen.height * SETTINGSLIKESCREEN_HEADER_HEIGHT + ((option_total_height + graphics::text::pt_to_px(SETTINGSLIKESCREEN_OPTION_FONTSIZE) + option_margin_top) * i) + option_margin_top;
-        float y1 = y0 + pt_to_px(SETTINGSLIKESCREEN_OPTION_FONTSIZE);
+
+        float y0 = vscreen.height * SETTINGSLIKESCREEN_HEADER_HEIGHT +
+            (option_total_margin * i) + options_acum_size[i]
+            + option_margin_top;
+
+        float y1 = y0 + options_size[i] + option_margin_bottom;
+
         auto label = this->options[i]->name;
 
         if (selected_option_index == i) {
@@ -85,6 +110,17 @@ void SettingsLikeScreen::update(float dt) {
                     option->current_value -= option->step;
                 } else if (input::is_key_pressed(input::BUTTON_DPAD_RIGHT) && option->current_value < option->max_value) {
                     option->current_value += option->step;
+                }
+            }
+        } else if (options[i]->type == MenuOption::OptionType::RICH_ITERABLE) {
+            auto option = std::static_pointer_cast<RichIterableOption>(options[i]);
+            draw_rich_iterable_option_background(option.get(), option_component_start, y0, option_component_end, y1, graphics::Color::RED());
+            draw_rich_iterable_option(option.get(), option_component_start, y0, option_component_end, y1, SETTINGSLIKESCREEN_OPTION_FONTSIZE/2);
+            if (selected_option_index == i) {
+                if (input::is_key_pressed(input::BUTTON_DPAD_LEFT) && option->selected_value_index > 0) {
+                    option->selected_value_index--;
+                } else if (input::is_key_pressed(input::BUTTON_DPAD_RIGHT) && option->selected_value_index < (int)option->items.size() - 1) {
+                    option->selected_value_index++;
                 }
             }
         }
