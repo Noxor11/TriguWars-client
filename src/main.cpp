@@ -108,12 +108,12 @@ int main() {
 
         screen_manager.get_current_screen()->update(frametime);
 
-        graphics::text::draw_text(10, 60, std::to_string(frametime), graphics::text::pt_to_size(15), false, Color::GREEN());
-
-        for (int i = frametime_start; i < 120 + frametime_start; i++) {
-            graphics::draw_line(i - frametime_start, SCREEN_HEIGHT, i - frametime_start, SCREEN_HEIGHT - frametime_graph[i % 120] * 10, {0, 255, 0, 90});
-        }
-
+        #ifdef DEBUG
+            graphics::text::draw_text(10, 60, std::to_string(frametime), graphics::text::pt_to_size(15), false, Color::GREEN());
+            for (int i = frametime_start; i < 120 + frametime_start; i++) {
+                graphics::draw_line(i - frametime_start, SCREEN_HEIGHT, i - frametime_start, SCREEN_HEIGHT - frametime_graph[i % 120] * 10, {0, 255, 0, 90});
+            }
+        #endif
         graphics::end_frame();
     }
 

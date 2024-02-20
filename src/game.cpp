@@ -134,21 +134,6 @@ void Game::update(float dt) {
     for(auto& obj : objects) {
         obj->update(dt);
     }
-    //if (player_respawning) {
-    //    respawn_timer_acum += dt;
-    //    if (respawn_timer_acum > game_config.respawn_time) {
-    //        switch (game_config.respawn_method) {
-    //            case GameConfig::RespawnMethod::CENTER:
-    //                player.body->SetTransform({0, 0}, 0);
-    //                break;
-    //        }
-
-    //        player.body->SetEnabled(true);
-    //        respawn_timer_acum = 0;
-    //        player_respawning = false;
-    //        player.hidden = false;
-    //    }
-    //}
 
     if (!player->is_dead && game_config.enable_barrier) {
         auto pos = player->body->GetPosition();
@@ -176,25 +161,12 @@ void Game::update(float dt) {
         b->handle_game_logic(dt, this);
     }
 
-    //if (!player_respawning) {
-    //    handle_player_move();
-    //}
-
     float time_logic = (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now() - proflogic).count() / 10E5;
 
     profphys = std::chrono::steady_clock::now();
     world->Step(dt, velocity_iterations, position_iterations);
 
     float time_physics = (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now() - profphys).count() / 10E5;
-
-    // for (float fx = -1.5f * scale; fx < 1.5f * scale; fx+= 0.1f) {
-    //     for (float fy = -1.0f * scale; fy < 1.0f * scale; fy += 0.1f) {
-    //         graphics::draw_rectangle(vscreen.translate_x(fx * scale), vscreen.translate_y(fy * scale), 0.05f * scale * vscreen.scale, 0.05f * scale * vscreen.scale, graphics::Color {100, 100, 100});
-    //     }
-    // }
-    //scale_t += dt;
-    //if (scale != target_scale) {
-    //
 
     profdraw = std::chrono::steady_clock::now();
 
@@ -208,12 +180,6 @@ void Game::update(float dt) {
 
     // v = (x - x0) / t
     scale += dt * scale_grow_direction * ( abs(scale - target_scale) / (scale_grow_duration) );
-
-    // if (input::is_key_pressed(input::Buttons::BUTTON_CONFIRM)) {
-    //     auto obj = this->create_trigu(20, 20, 20, 40, 0.1f, 0.3f, graphics::Color::BLUE());
-    //     const auto pos = player->body->GetPosition();
-    //     obj->body->SetTransform({pos.x, pos.y}, obj->body->GetAngle());
-    // }
 
     for(auto& obj : objects) {
         #ifdef __3DS__
@@ -323,13 +289,14 @@ void Game::update(float dt) {
         graphics::draw_rectangle(vscreen.offset_x, (vscreen.height - 20) * vscreen.scale,
                                  (player->respawn_accumulator / game_config.respawn_time) * vscreen.width * vscreen.scale, vscreen.height * vscreen.scale, graphics::Color(100, 100, 255, 255 * 0.7f));
     }
-    graphics::text::draw_text(170, 170, to_string(game_config.respawn_time));
 
     float time_draw = (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now() - profdraw).count() / 10E5;
 
-    graphics::text::draw_text(10, SCREEN_HEIGHT-120, std::string("logic ").append(std::to_string(time_logic)), 30, false, graphics::Color::BLUE());
-    graphics::text::draw_text(10, SCREEN_HEIGHT-90,  std::string("phys  ").append(std::to_string(time_physics)), 30, false, graphics::Color::GREEN());
-    graphics::text::draw_text(10, SCREEN_HEIGHT-60,  std::string("draw  ").append(std::to_string(time_draw)), 30, false, graphics::Color::YELLOW());
+    #ifdef DEBUG
+        graphics::text::draw_text(10, SCREEN_HEIGHT-120, std::string("logic ").append(std::to_string(time_logic)), graphics::text::pt_to_size(30), false, graphics::Color::BLUE());
+        graphics::text::draw_text(10, SCREEN_HEIGHT-90,  std::string("phys  ").append(std::to_string(time_physics)), graphics::text::pt_to_size(30), false, graphics::Color::GREEN());
+        graphics::text::draw_text(10, SCREEN_HEIGHT-60,  std::string("draw  ").append(std::to_string(time_draw)), graphics::text::pt_to_size(30), false, graphics::Color::YELLOW());
+    #endif
 
     for (auto it = queued_bullets_for_deletion.begin(); it != queued_bullets_for_deletion.end();) {
         for (auto itb = bullets.begin(); itb != bullets.end();) {

@@ -16,8 +16,7 @@ static const std::vector<std::string> values ({"On", "Off"});
 SettingsScreen::SettingsScreen() 
     : SettingsLikeScreen (
         {
-            IterableMenuOption::create("Coso1", {"A", "B", "C", "D"}),
-            IterableMenuOption::create("Invert Y axis", {"1", "2", "3", "4"}),
+            IterableMenuOption::create("Invert Y axis", {"true", "false"}),
             IterableMenuOption::create("Compatibility mode", {"FULL", "PSVITA/3DS", "PSP", "GBA", "GB"}),
             RangeMenuOption::create("text scale", 0.5, 2.0, 0.25, float(get_ppi()) / DEFAULT_PPI),
             RichIterableOption::create("Example RichIterableOption", {
@@ -37,7 +36,8 @@ SettingsScreen::SettingsScreen()
         },
         "Settings",
         [this]() {
-            auto option = std::static_pointer_cast<RangeMenuOption>(options[3]);
+            auto item = std::find_if(this->options.begin(), this->options.end(), [&](std::shared_ptr<MenuOption> option){return option->name == "text scale";});
+            auto option = std::static_pointer_cast<RangeMenuOption>(*item);
             set_ppi(option->current_value * DEFAULT_PPI);
             calculate_sizes();
             ScreenManager::get_instance().transition_to_last_screen();

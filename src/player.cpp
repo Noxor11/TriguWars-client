@@ -108,15 +108,6 @@ void Player::draw(const VirtualScreen &vscreen, bool rotate, float scale) {
         // NOTE: Es posible que falle por cosas de cpp
         PolygonalObject::draw(vscreen, rotate, scale);
         auto angle = b2Vec2(-sin(body->GetAngle()), cos(body->GetAngle()));
-        graphics::draw_line(100, 100, 100 + angle.x * 50, 100 + angle.y * 50, graphics::Color::PURPLE());
-
-        graphics::draw_line(
-            vscreen.translate_x((body->GetPosition().x * scale + vscreen.width/2) * vscreen.scale),
-            vscreen.translate_y((body->GetPosition().y * scale + vscreen.height/2) * vscreen.scale),
-            vscreen.translate_x(((body->GetPosition().x + angle.x * 0.2) * scale + vscreen.width/2) * vscreen.scale),
-            vscreen.translate_y(((body->GetPosition().y + angle.y * 0.2) * scale + vscreen.height/2) * vscreen.scale),
-            graphics::Color::PURPLE()
-        );
 
     } else {
         graphics::draw_rectangle(vscreen.offset_x, (vscreen.height - 20) * vscreen.scale,
