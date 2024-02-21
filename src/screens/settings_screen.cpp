@@ -84,7 +84,8 @@ SettingsScreen::SettingsScreen()
         },
         "Settings",
         [this]() {
-            auto option = (RangeMenuOption*)(&widgets[3]->option);
+            auto widget = std::find_if(this->widgets.begin(), this->widgets.end(), [&](std::shared_ptr<Widget> widget){return widget->id == "text scale";});
+            auto option = std::static_pointer_cast<RangeMenuOption>((*widget)->option);
             set_ppi(option->current_value * DEFAULT_PPI);
             scrollable_list->calculate_sizes();
             ScreenManager::get_instance().transition_to_last_screen();
